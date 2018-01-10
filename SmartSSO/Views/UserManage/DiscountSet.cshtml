@@ -1,0 +1,51 @@
+﻿@model Dictionary<string,decimal>
+
+@{
+    ViewBag.Title = "添加用户";
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/UserManage">用户管理</a></li>
+            <li class="active">折扣设置</li>
+        </ol>
+
+        <div class="form-horizontal">
+ 
+        @foreach (var item in Model)
+        {
+            <div class="form-group"> 
+                
+                <label class="col-md-2 control-label" name="@item.Key">@item.Key</label>
+                <div class="col-md-10">
+                    @*@Html.TextBoxFor(model => item.Value, new { @class = "form-control", style = "width: 280px" })*@
+                    <input class="form-control" data-val="true" data-val-number="字段 折扣 必须是一个数字。" data-val-required="折扣 字段是必需的。"  name="@item.Key+_Value" style="width: 280px" type="text" value="@item.Value">
+                </div>
+            </div>
+        }
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationSummary(false)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary"> 提交</button>
+                <a href="/UserManage" class="btn btn-default">取消</a>
+            </div>
+        </div> 
+
+        </div>
+    </div>
+</div>

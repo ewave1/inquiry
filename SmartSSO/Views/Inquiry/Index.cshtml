@@ -1,0 +1,77 @@
+﻿@model SmartSSO.Services.Util.PagedResult<Data.Entities.InquiryLog>
+@{
+    ViewBag.Title = "报价管理";
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/Inquiry">报价管理</a></li>
+            <li class="active">查看历史报价</li>
+        </ol>
+
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>内径</th>
+                    <th>线径</th>
+                    <th>客户类型</th>
+                    <th>数量</th>
+                    <th>材料</th>
+                    <th>报价人</th>
+                    <th>报价时间</th>
+                    <th>单价</th>
+                    <th>总价</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in Model.Result)
+                {
+                <tr>
+                    <td>@(item.Id)</td>
+                    <td>@item.SizeA </td>
+                    <td>@item.SizeB </td>
+
+                    <td>@item.Factory </td>
+                    <td>@item.Number </td>
+                    <td>@item.Material </td>
+                    <td>@item.User </td>
+                    <td>@item.CreateTime </td>
+                    <td>@item.Price </td>
+                    <td>@item.TotalPrice </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default">更多操作</button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/Inquiry/delete?id=@item.Id">删除</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Result.Any())
+        {
+            <div class="alert alert-info">
+                <strong>提示</strong> 没有查询到记录。
+            </div>
+        }
+
+    </div>
+</div>

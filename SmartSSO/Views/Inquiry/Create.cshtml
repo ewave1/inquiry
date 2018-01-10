@@ -1,0 +1,172 @@
+﻿@model Data.Models.InquiryModelRequest
+
+@{
+    ViewBag.Title = "新建报价";
+    List<SelectListItem> FactoryLst = ViewBag.Factories;
+    List<SelectListItem> MaterialLst = ViewBag.Materials;
+    List<SelectListItem> SealCodeLst = ViewBag.SealCodes;
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb"> 
+            <li><a href="/Inquiry">报价管理</a></li>
+            <li class="active">新建报价</li>
+        </ol>
+
+        <div>
+
+            <div class="col-xs-12 col-sm-6">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Factory, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.Factory, FactoryLst, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SizeA, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.SizeA, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MaterialId, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.MaterialId, MaterialLst, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+
+                   
+                </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Code, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.Code, SealCodeLst, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SizeB, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.SizeB, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Number, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Number, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.ValidationSummary(false)
+                </div>
+            </div>
+
+            <div class="info"></div>
+             
+            <div class="form-group">
+                <div class="col-md-offset-5 col-md-10">
+                    <button id="inquiry" type="button" class="btn btn-primary">询价</button>
+                    <a href="/Inquiry" class="btn btn-default">取消</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <script>
+        
+        $('#Code').change(() => {  
+            //$.get("/Inquiry/GetSealCode",    { Code: $('#Code').val() } , function (response) { 
+            //    $('#SizeA').val(result.SizeA);
+            //    $('#SizeB').val(result.SizeB);
+            //}); 
+
+            $.ajax({
+                url: "/Inquiry/GetSealCode",
+                type: 'post',
+                dataType: 'json',
+                data:   { Code: $('#Code').val() },
+                success: function (result) {
+                    if (result.Success) {
+                        $('#SizeA').val(result.Data.SizeA);
+                        $('#SizeB').val(result.Data.SizeB);
+                    } else { 
+                        $('#SizeA').val('');
+                        $('#SizeB').val('');
+                    }
+                    event.stopPropagation();
+                }
+            }); 
+        });
+        $('#SizeA,#SizeB').change(() => {
+            $.ajax({
+                url: "/Inquiry/GetSealCode",
+                type: 'post',
+                dataType: 'json',
+                data: { SizeA: $('#SizeA').val(), SizeB:$('#SizeB').val() },
+                success: function (result) {
+                    if (result.Success) {
+                        $('#Code').val(result.Data.Code); 
+                    } else {
+                        $('#Code').val(''); 
+                    }
+                    event.stopPropagation();
+                }
+            }); 
+        });
+
+        $('#inquiry').click(() => {
+
+            $.ajax({
+                url: "/Inquiry/CreateInquiry",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    SizeA: $('#SizeA').val(),
+                    SizeB: $('#SizeB').val(),
+                    Code: $('#Code').val(),
+                    MaterialId: $('#MaterialId').val(),
+                    Number: $('#Number').val(),
+                    Factory: $('#Factory').val() 
+                },
+                success: function (result) {
+                    if (result.Code == -2) {
+                        window.location.href = "/Home/LoginOut";
+                        return;
+                    }
+                    var alert = result.Success == true ? "success" : "warning";
+                    $('.info').empty().append('<div class="alert alert-' + alert +' alert-dismissable">\
+                <button type= "button" class="close" data- dismiss="alert"\
+                    aria- hidden="true" >\
+                        &times;\
+                    </button>'+ result.Msg+'</div>' );
+                   
+                }
+            }); 
+
+            
+        });
+    </script>
+</div>
