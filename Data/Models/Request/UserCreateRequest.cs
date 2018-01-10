@@ -16,7 +16,7 @@ namespace SmartSSO.Models
         [Display(Name = "账号")]
         public string UserName { get; set; }
 
-        [MinLength(6)]
+        [MinLength(3)]
         [MaxLength(12)]
         [Required]
         [DataType(DataType.Password)]

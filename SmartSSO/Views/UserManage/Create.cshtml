@@ -64,7 +64,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-primary">@(Model.IsAdd?"创建":"修改" )</button>
+                <button type="submit" class="btn btn-primary">@(Model != null && Model.IsAdd == false ? "修改" : "创建" )</button>
                 <a href="/UserManage" class="btn btn-default">取消</a>
             </div>
         </div>
