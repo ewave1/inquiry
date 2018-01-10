@@ -96,8 +96,8 @@
         </div>
     </div>
     <script>
-        
-        $('#Code').change(() => {  
+
+        $('#Code').change(function() {  
             //$.get("/Inquiry/GetSealCode",    { Code: $('#Code').val() } , function (response) { 
             //    $('#SizeA').val(result.SizeA);
             //    $('#SizeB').val(result.SizeB);
@@ -120,7 +120,7 @@
                 }
             }); 
         });
-        $('#SizeA,#SizeB').change(() => {
+        $('#SizeA,#SizeB').change(function () {
             $.ajax({
                 url: "/Inquiry/GetSealCode",
                 type: 'post',
@@ -137,7 +137,7 @@
             }); 
         });
 
-        $('#inquiry').click(() => {
+        $('#inquiry').click(function (){
 
             $.ajax({
                 url: "/Inquiry/CreateInquiry",

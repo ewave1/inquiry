@@ -56,8 +56,12 @@ namespace Services
                 return new RepResult<InquiryLog> { Code = -2, Msg = "请重新登陆" };
             var factory = DbContext.DiscountSet.Find(model.Factory);
             var discount = factory.Discount * user.Discount;
+            //判断是否特殊件
+            var special = DbContext.DiscountSet.Find("特殊件");
+            if (product.SizeA != model.SizeA || product.SizeB != model.SizeB)
+                discount = factory.Discount * (special == null ? 1 : special.Discount);
             discount = Math.Round(discount, 2);
-            var price = product.Price * (1 + discount);
+            var price = product.Price * ( discount);
             price = Math.Round(price, 3);
             var totalprice = Math.Round(price * model.Number, 2);
             var log = new InquiryLog
