@@ -1,4 +1,5 @@
-﻿using IServices;
+﻿using Data.Models;
+using IServices;
 using SmartSSO.Services.Util;
 using System;
 using System.Collections.Generic;
@@ -11,25 +12,40 @@ namespace Services
 {
     public  class DiscountService: ServiceContext, IDiscountService
     {
-        public Dictionary<string,decimal> GetDiscounts()
+        public List<DiscountModel> GetDiscounts()
         {
             var lst =  DbContext.DiscountSet.ToList();
-            var dic = new Dictionary<string, decimal>();
-            lst.ForEach(v => dic.Add(v.Name, v.Discount));
-            return dic;
+
+            return lst.Select(v => new DiscountModel {
+                Name = v.Name,
+                Discount=v.Discount,
+                Remark=v.Remark,
+                Type=v.Type 
+            }).ToList();
         }
 
-        public void SetDiscounts(Dictionary<string,decimal> dics)
+        public void SetDiscounts(List<DiscountModel> lst)
         {
-            foreach(var dic  in dics)
+            foreach(var dic  in lst)
             {
-                var item = DbContext.DiscountSet.Find(dic.Key);
+                DbContext.DiscountSet.RemoveRange(DbContext.DiscountSet.Where(v => v.Type == Data.Entities.DisCountType.Material));
+             
+                var item = DbContext.DiscountSet.Find(dic.Name);
                 if (item == null)
                 {
-                    DbContext.DiscountSet.Add(new Data.Entities.DiscountSet { Discount = dic.Value, Name = dic.Key });
+                    DbContext.DiscountSet.Add(new Data.Entities.DiscountSet
+                    {
+                        Discount = dic.Discount,
+                        Name = dic.Name,
+                        Remark = dic.Remark,
+                        Type = dic.Type
+                    });
                 }
                 else
-                    item.Discount = dic.Value;
+                {
+                    item.Discount = dic.Discount;
+                    item.Remark = dic.Remark;
+                } 
             }
             DbContext.SaveChanges();
         }
