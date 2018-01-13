@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Data.Models;
 using IServices;
 using Microsoft.Practices.Unity;
 using MyDemo.Controllers;
@@ -91,8 +92,11 @@ namespace SmartSSO.Controllers
         [ValidateModelState]
         public ActionResult DiscountSet(Dictionary<string,decimal> model)
         {
-            return View();
+            _discountService.SetDiscounts(model);
+            return Json(new RepResult { Code  =0,Msg = "更改成功" } );
         }
+
+
 
         #endregion
     }
