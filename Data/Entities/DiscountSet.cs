@@ -28,7 +28,8 @@ namespace Data.Entities
 
     public enum DisCountType
     {
-        FACTORY = 0,
-        Other = 1 
+        FACTORY = 0,//只能修改折扣
+        Other = 1 , //只能修改折扣
+        Material = 2 //可以新增及修改
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +13,12 @@ namespace IServices
         /// 查询折扣设置
         /// </summary>
         /// <returns></returns>
-        Dictionary<string, decimal> GetDiscounts();
+        List<DiscountModel> GetDiscounts();
 
         /// <summary>
         /// 设置折扣
         /// </summary>
         /// <param name="dics"></param>
-        void SetDiscounts(Dictionary<string, decimal> dics);
+        void SetDiscounts(List<DiscountModel> lst);
     }
 }
