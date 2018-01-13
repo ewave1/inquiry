@@ -13,6 +13,7 @@ namespace Data.Entities
     public  class DiscountSet
     {
         [Key]
+        public int Id { get; set; }
         [MaxLength(50)]
         public string Name { get; set; }
 
@@ -28,7 +29,9 @@ namespace Data.Entities
 
     public enum DisCountType
     {
-        FACTORY = 0,
-        Other = 1 
+        FACTORY = 0,//只能修改折扣
+        Other = 1, //只能修改折扣
+        材料物性 = 2 ,//可以新增及修改
+        表面物性=3,
     }
 }

@@ -57,6 +57,16 @@ namespace Data.Models
         [Required]
         [Display(Name = "材料")]
         public int MaterialId { get; set; }
+
+        [Required]
+        [Display(Name = "材料物性")]
+
+        public string Material1 { get; set; }
+
+        [Required]
+        [Display(Name = "表面物性")]
+        public string Material2 { get; set; }
+
          
          
     }

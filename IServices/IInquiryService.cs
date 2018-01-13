@@ -22,7 +22,7 @@ namespace IServices
         /// 工厂
         /// </summary>
         /// <returns></returns>
-        List<DiscountSet> Factories();
+        List<DiscountSet> GetDiscountNames(DisCountType type);
 
         /// <summary>
         /// 获取粟

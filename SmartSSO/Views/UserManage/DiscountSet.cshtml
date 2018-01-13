@@ -1,9 +1,9 @@
-﻿@model Dictionary<string,decimal>
+﻿@model List<Data.Models.DiscountModel>
 
 @{
     ViewBag.Title = "添加用户";
 }
-
+<link href="~/Content/splashy.css" rel="stylesheet" />
 <div class="row">
 
     <div class="col-md-3">
@@ -18,18 +18,39 @@
             <li class="active">折扣设置</li>
         </ol>
 
-        <div class="form-horizontal">
+        <div id="databody" class="form-horizontal">
  
-        @foreach (var item in Model)
+        @foreach (var detail in Model)
         {
-            <div class="form-group"> 
-                
-                <label class="col-md-2 control-label" name="@item.Key">@item.Key</label>
-                <div class="col-md-10">
-                    @*@Html.TextBoxFor(model => item.Value, new { @class = "form-control", style = "width: 280px" })*@
-                    <input class="form-control discount" data-val="true" data-val-number="字段 折扣 必须是一个数字。" data-val-required="折扣 字段是必需的。"  name="@item.Key" style="width: 280px" type="text" value="@item.Value">
+            <div class="form-group" >
+                <div class="panel-heading rowhead" itemvalue="@detail.Type.GetHashCode()" style="margin-left:10px;">
+                    @detail.Name
                 </div>
-            </div>
+                        @foreach (var item in detail.Values)
+                        {
+                <div class="form-group datarow" style="margin-left:20px;">
+
+                    <div class="col-md-2">
+                        <input class="form-control name" name="@item.Name" @detail.IsReadOnly style="width: 100px" type="text" value="@item.Name">
+                    </div>
+                    <div class="col-md-6">
+                        @*@Html.TextBoxFor(model => item.Value, new { @class = "form-control", style = "width: 280px" })*@
+                        <input class="form-control discount" data-val="true" data-val-number="字段 折扣 必须是一个数字。" data-val-required="折扣 字段是必需的。" name="@item.Name" style="width: 280px" type="text" value="@item.Value">
+                    </div>
+                    @if (detail.IsCanAdd)
+                    {
+                        <div class="col-md-2">
+                            <a class="splashy-add">
+                            </a>
+                            <a class="splashy-remove">
+                            </a>
+                        </div> 
+                    }
+                </div>
+                        }
+
+                    </div>
+            
         }
 
 
@@ -49,18 +70,39 @@
         </div>
     </div>
     <script>
+        $('#databody').on('click', '.splashy-add', function () {
+            var row = $(this).parents('.datarow');
+            var p = $(row).parent();
+            var newRow = $(row).clone();
+            $(newRow).find('.name').val('');
+            $(newRow).find('.discount').val('0');
+            $(p).append(newRow);
+           
+        });
+        $('#databody').on('click', '.splashy-remove', function () {
+            alert('remove');
+        });
+        //提交
         $('#updateDiscount').on('click', function () {
-            var dic = {};
-            $('.discount').each(function (n, value) {
-                var name = $(value).attr('name');
-                var value = $(value).val();
-                dic[name] = value;
+            var datas = [];
+            $('.rowhead').each(function (m, single) {
+                var model = {};
+                var dic =[];
+                $(single).parent().find('.datarow').each(function (n, value) {
+                    var name = $(value).find('.name').val();
+                    var value = $(value).find('.discount').val(); 
+                    dic.push({Name:name,Value:value});
+                })
+                model.Values = dic;
+                model.Type = $(single).attr('itemvalue');
+                datas.push(model);
             })
+           
             $.ajax({
                 url: "/UserManage/DiscountSet",
                 type: 'post',
                 dataType: 'json',
-                data: { model: dic },
+                data: { models: JSON.stringify( datas) },
                 success: function (result) {
                     if (result.Success) {
                         window.location.href = '/UserManage';

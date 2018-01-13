@@ -40,15 +40,17 @@ namespace SmartSSO.Controllers
         }
         public ActionResult Create( )
         {
-            ViewBag.Factories = GetFactories();
+            ViewBag.Factories = GetDiscountNames( DisCountType.FACTORY);
+            ViewBag.M1 = GetDiscountNames(DisCountType.材料物性);
+            ViewBag.M2 = GetDiscountNames(DisCountType.表面物性);
             ViewBag.Materials = GetMaterials();
             ViewBag.SealCodes = GetSealCodes(); 
             return View();
         }
 
-        private List<SelectListItem> GetFactories()
+        private List<SelectListItem> GetDiscountNames(DisCountType type)
         {
-            var lst = _inquiryService.Factories().Select(v => new SelectListItem
+            var lst = _inquiryService.GetDiscountNames(type).Select(v => new SelectListItem
             {
                 Text = v.Name,
                 Value = v.Name,

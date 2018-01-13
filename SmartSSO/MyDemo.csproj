@@ -179,6 +179,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\img\default-app.png" />
     <Content Include="Content\img\page-bg-black.png" />
+    <Content Include="Content\img\splashy.png" />
+    <Content Include="Content\splashy.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

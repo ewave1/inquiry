@@ -90,8 +90,9 @@ namespace SmartSSO.Controllers
 
         [HttpPost]
         [ValidateModelState]
-        public ActionResult DiscountSet(Dictionary<string,decimal> model)
+        public ActionResult DiscountSet(string models)
         {
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject< List < DiscountModel >  > (models);
             _discountService.SetDiscounts(model);
             return Json(new RepResult { Code  =0,Msg = "更改成功" } );
         }

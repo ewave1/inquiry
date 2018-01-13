@@ -49,7 +49,13 @@ namespace Data.Entities
         /// </summary>
         public string Material { get; set; }
         public int MaterialId { get; set; }
+         
+        [Display(Name = "材料物性")]
 
+        public string Material1 { get; set; }
+         
+        [Display(Name = "表面物性")]
+        public string Material2 { get; set; }
 
         public decimal discount { get; set; }
         

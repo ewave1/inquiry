@@ -54,10 +54,16 @@ namespace Services
             var user = DbContext.ManageUser.Find(User);
             if (user == null)
                 return new RepResult<InquiryLog> { Code = -2, Msg = "请重新登陆" };
-            var factory = DbContext.DiscountSet.Find(model.Factory);
+            var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
             var discount = factory.Discount * user.Discount;
+
+            //物性
+            var m1 = DbContext.DiscountSet.Where(v => v.Type == DisCountType.材料物性 && v.Name == model.Material1).FirstOrDefault();
+            var m2 = DbContext.DiscountSet.Where(v => v.Type == DisCountType.表面物性 && v.Name == model.Material2).FirstOrDefault();
+            discount = discount * ((m1 == null) ? 1 : m1.Discount) * ((m2 == null) ? 1 : m2.Discount);
+
             //判断是否特殊件
-            var special = DbContext.DiscountSet.Find("特殊件");
+            var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
             if (product.SizeA != model.SizeA || product.SizeB != model.SizeB)
                 discount = factory.Discount * (special == null ? 1 : special.Discount);
             discount = Math.Round(discount, 2);
@@ -105,7 +111,7 @@ namespace Services
         /// <summary>
         /// 
         /// </summary>
-        public List<DiscountSet> Factories() => DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY).ToList();
+        public List<DiscountSet> GetDiscountNames(DisCountType type) => DbContext.DiscountSet.Where(v=>v.Type== type).ToList();
 
         /// <summary>
         /// 材料

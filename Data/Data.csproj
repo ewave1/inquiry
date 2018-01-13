@@ -73,7 +73,16 @@
     <Compile Include="Migrations\201801091532590_InitralCreate.Designer.cs">
       <DependentUpon>201801091532590_InitralCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801131443218_InitralCreate1.cs" />
+    <Compile Include="Migrations\201801131443218_InitralCreate1.Designer.cs">
+      <DependentUpon>201801131443218_InitralCreate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801131516105_InitralCreate2.cs" />
+    <Compile Include="Migrations\201801131516105_InitralCreate2.Designer.cs">
+      <DependentUpon>201801131516105_InitralCreate2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Request\DiscountModel.cs" />
     <Compile Include="Models\Request\HomeLoginRequest.cs" />
     <Compile Include="Models\Request\InquiryModelRequest.cs" />
     <Compile Include="Models\Request\PassportLoginRequest.cs" />
@@ -94,6 +103,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201801091532590_InitralCreate.resx">
       <DependentUpon>201801091532590_InitralCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801131443218_InitralCreate1.resx">
+      <DependentUpon>201801131443218_InitralCreate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801131516105_InitralCreate2.resx">
+      <DependentUpon>201801131516105_InitralCreate2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
