@@ -80,7 +80,8 @@
            
         });
         $('#databody').on('click', '.splashy-remove', function () {
-            alert('remove');
+            var row = $(this).parents('.datarow');
+            $(row).remove();
         });
         //提交
         $('#updateDiscount').on('click', function () {
