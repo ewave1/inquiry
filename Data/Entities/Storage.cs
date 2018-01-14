@@ -12,6 +12,9 @@ namespace Data.Entities
     /// </summary>
     public  class Storage
     {
+
+        [Key]
+        public int Id { get; set; }
         /// <summary>
         /// 内径
         /// </summary> 
