@@ -34,11 +34,63 @@ namespace SmartSSO.Entities
         /// </summary>
         public DbSet<UserAuthSession> UserAuthSession { get; set; }
 
-        public DbSet<Material> Material { get; set; }
+        /// <summary>
+        /// 通用的折扣设置
+        /// </summary>
         public DbSet<DiscountSet> DiscountSet { get; set; }
         public DbSet<Product> Product { get; set; }
+        /// <summary>
+        /// 编码（No use)
+        /// </summary>
         public DbSet<SealCode> SealCode { get; set; }
+
+        /// <summary>
+        /// 询价记录
+        /// </summary>
         public DbSet<InquiryLog> InquiryLog { get; set; }
+
+
+        /// <summary>
+        /// 上传的文件
+        /// </summary>
+        public DbSet<UploadFile> UploadFile { get; set; }
+        /// <summary>
+        /// 客户
+        /// </summary>
+        public DbSet<Customer> Customer { get; set; }
+
+        /// <summary>
+        /// 库存
+        /// </summary>
+        public DbSet<Storage> Storage { get; set; }
+
+        /// <summary>
+        /// 材料
+        /// </summary>
+        public DbSet<Material> Material { get; set; }
+
+        /// <summary>
+        /// 物性，颜色
+        /// </summary>
+        public DbSet<MaterialFeature> MaterialFeature { get; set; }
+        /// <summary>
+        /// 比重
+        /// </summary>
+        public DbSet<MaterialGravity> MaterialGravity { get; set; }
+        /// <summary>
+        /// 孔数
+        /// </summary>
+        public DbSet<MaterialHole> MaterialHole { get; set; }
+        /// <summary>
+        /// 时数
+        /// </summary>
+        public DbSet<MaterialHour> MaterialHour { get; set; }
+        /// <summary>
+        /// 利用率和不良率
+        /// </summary>
+        public DbSet<MaterialRate> MaterialRate { get; set; } 
+
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

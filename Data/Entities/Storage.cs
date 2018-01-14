@@ -8,22 +8,10 @@ using System.Threading.Tasks;
 namespace Data.Entities
 {
     /// <summary>
-    /// 报价记录
+    /// 库存
     /// </summary>
-    public class InquiryLog
+    public  class Storage
     {
-        //输入
-        /// <summary>
-        /// 自增
-        /// </summary>
-        [Key]
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 编码 no use 
-        /// </summary>  
-        public string Code { get; set; }
-
         /// <summary>
         /// 内径
         /// </summary> 
@@ -33,27 +21,23 @@ namespace Data.Entities
         /// 线径
         /// </summary> 
         public decimal SizeB { get; set; }
-     
+
         /// <summary>
         /// 工厂或贸易商
         /// </summary>
         public string Factory { get; set; }
 
-        /// <summary>
-        /// 数量
-        /// </summary>
-        public int Number { get; set; }
 
         /// <summary>
         /// 材料
         /// </summary>
         public string Material { get; set; }
         public int MaterialId { get; set; }
-         
+
         [Display(Name = "材料物性")]
 
         public string Material1 { get; set; }
-         
+
         [Display(Name = "表面物性")]
         public string Material2 { get; set; }
 
@@ -64,24 +48,15 @@ namespace Data.Entities
         [Display(Name = "硬度")]
         public int Hardness { get; set; }
 
-        public decimal discount { get; set; }
-        
-        public decimal Price { get; set; }
-
-        public decimal TotalPrice { get; set; }
 
         /// <summary>
-        /// 创建时间
+        /// 库存数
         /// </summary>
-        [Required]
-        public DateTime CreateTime { get; set; }
-      
-         
+        public int Number { get; set; } = 0;
 
-        public string User { get; set; }
-         
-        
+
+        public DateTime UpdateTime { get; set; }
+
+        public int? UpdateUser { get; set; }
     }
-
-  
 }

@@ -15,8 +15,26 @@ namespace Data.Entities
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Code 
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// 显示 
+        /// </summary>
+        public string Display { get; set; }
+
+        /// <summary>
+        /// 特殊件折扣
+        /// </summary>
+        public decimal SpecialDiscount { get; set; }
+
         public string Remark { get; set; }
+
+
+        public DateTime UpdateTime { get; set; }
+
+        public int? UpdateUser { get; set; }
     }
 }
