@@ -23,11 +23,14 @@ namespace Data.Entities
         /// <summary>
         /// DiscountSet 设置表Type = 客户级别
         /// </summary>
-        public int CustomerLevel { get; set; }
+        public string CustomerLevel { get; set; }
 
         public DateTime CreateTime { get; set; }
 
         public string Remark { get; set; }
-        public int? CreateUser { get; set; }
+        public string CreateUser { get; set; }
+
+        public DateTime? UpdateTime { get; set; }
+        public string UpdateUser { get; set; }
     }
 }

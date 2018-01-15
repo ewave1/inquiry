@@ -60,6 +60,7 @@
     <Compile Include="IManageService.cs" />
     <Compile Include="IPassportService.cs" />
     <Compile Include="IProfileService.cs" />
+    <Compile Include="ICustomerService.cs" />
     <Compile Include="IUserAuthOperateService.cs" />
     <Compile Include="IUserAuthSessionService.cs" />
     <Compile Include="IUserManageService.cs" />

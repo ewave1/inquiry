@@ -1,0 +1,71 @@
+﻿@model SmartSSO.Services.Util.PagedResult<Data.Entities.Customer>
+@{
+    ViewBag.Title = "客户管理";
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb"> 
+            <li><a href="/Customer">客户管理</a></li>
+            <li class="active">查看列表</li>
+        </ol>
+
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>客户名称</th>
+                    <th>联系人</th>
+                    <th>联系方式</th>
+                    <th>客户级别</th>
+                    <th>创建时间</th>
+                    <th>创建人</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Result.Count; i++)
+                {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model.Result[i].CompanyName </td>
+                    <td>@Model.Result[i].ContactName </td>
+
+                    <td>@Model.Result[i].ContactMobile </td>
+                    <td>@Model.Result[i].CustomerLevel</td>
+                    <td>@Model.Result[i].CreateTime.ToString("yyyy-MM-dd HH:mm") </td>
+                    <td>@Model.Result[i].CreateUser</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default">更多操作</button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/Customer/delete?username=@Model.Result[i].Id">删除</a></li>
+                                <li><a href="/Customer/create?username=@Model.Result[i].Id">修改</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Result.Any())
+        {
+            <div class="alert alert-info">
+                <strong>提示</strong> 没有查询到记录。
+            </div>
+        }
+
+    </div>
+</div>

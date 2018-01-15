@@ -28,6 +28,6 @@ namespace Data.Entities
 
         public DateTime UpdateTime { get; set; }
 
-        public int? UpdateUser { get; set; }
+        public string UpdateUser { get; set; }
     }
 }

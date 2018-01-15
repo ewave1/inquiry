@@ -1,0 +1,76 @@
+﻿@model Data.Models.CustomerModel
+
+@{
+    ViewBag.Title = "维护客户";
+    List<SelectListItem> CustomerLevelLst = ViewBag.CustomerLevels;
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb"> 
+            <li><a href="/UserManage">客户管理</a></li>
+            <li class="active">新建客户</li>
+        </ol>
+
+        <div class="container">
+
+            @using (Html.BeginForm("create", "Customer", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(model => model.Id )
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.CompanyName, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ContactName, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactMobile, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ContactMobile, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomerLevel, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CustomerLevel, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Remark, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationSummary(false)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">@(Model != null && Model.Id >0 ? "修改" : "创建" )</button>
+                <a href="/UserManage" class="btn btn-default">取消</a>
+            </div>
+        </div>
+}
+
+        </div>
+    </div>
+</div>

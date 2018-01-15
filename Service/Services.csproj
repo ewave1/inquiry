@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AppInfoService.cs" />
     <Compile Include="AppUserService.cs" />
+    <Compile Include="CustomerService.cs" />
     <Compile Include="DiscountService.cs" />
     <Compile Include="Extendsions\DateTimeExtendsions.cs" />
     <Compile Include="Extendsions\StringExtendsions.cs" />

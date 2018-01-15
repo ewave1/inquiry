@@ -13,6 +13,8 @@ namespace Data.Models
     public sealed  class CustomerModel
     {
 
+        public int Id { get; set; }
+
         [MinLength(3)]
         [MaxLength(12)]
         [Required]
@@ -42,6 +44,10 @@ namespace Data.Models
         [DataType(DataType.Text)]
         [Display(Name = "备注")]
         public string Remark { get; set; }
-        public int? CreateUser { get; set; }
+
+
+        [DataType(DataType.Text)]
+        [Display(Name = "客户级别")]
+        public string CustomerLevel { get; set; }
     }
 }
