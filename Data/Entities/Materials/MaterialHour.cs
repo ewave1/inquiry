@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Data.Entities
 {
+    /// <summary>
+    /// 时效
+    /// </summary>
     public  class MaterialHour
     {
 

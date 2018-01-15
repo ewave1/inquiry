@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Entities
-{
+{ 
+    /// <summary>
+    /// 孔数
+    /// </summary>
     public   class MaterialHole
     {
         public int Id { get; set; }

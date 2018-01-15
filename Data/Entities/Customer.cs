@@ -20,6 +20,11 @@ namespace Data.Entities
 
         public string ContactMobile { get; set; }
 
+        /// <summary>
+        /// DiscountSet 设置表Type = 客户级别
+        /// </summary>
+        public int CustomerLevel { get; set; }
+
         public DateTime CreateTime { get; set; }
 
         public string Remark { get; set; }

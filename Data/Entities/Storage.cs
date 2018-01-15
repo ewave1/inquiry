@@ -24,12 +24,7 @@ namespace Data.Entities
         /// 线径
         /// </summary> 
         public decimal SizeB { get; set; }
-
-        /// <summary>
-        /// 工厂或贸易商
-        /// </summary>
-        public string Factory { get; set; }
-
+         
 
         /// <summary>
         /// 材料
