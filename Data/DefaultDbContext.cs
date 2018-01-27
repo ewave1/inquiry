@@ -91,6 +91,10 @@ namespace SmartSSO.Entities
         public DbSet<MaterialRate> MaterialRate { get; set; } 
 
 
+        public DbSet<PT_ImportHistory> PT_ImportHistory { get; set; }
+
+        public DbSet <PT_ImportHistoryDetail> PT_ImportHistoryDetail { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -24,5 +24,7 @@ namespace IServices
         /// <returns></returns>
         RepResult<UploadFile> UploadFile(string User, HttpRequestBase Request, FILETYPE filetype = FILETYPE.其它);
 
+
+        bool Delete(int id);
     }
 }

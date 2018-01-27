@@ -47,16 +47,9 @@ namespace InquiryDemo.Controllers
             if (result == null)
                 return RedirectToAction("Login", "Home");
 
-            var lst = new List<SelectListItem> {
-                new SelectListItem{ Text = "所有",Value =FILETYPE.None.GetHashCode().ToString() },
-                new SelectListItem{ Text = "其它",Value =FILETYPE.其它.GetHashCode().ToString() },
-                new SelectListItem{ Text = "库存",Value =FILETYPE.库存.GetHashCode().ToString() },
-                new SelectListItem{ Text = "孔数",Value =FILETYPE.孔数.GetHashCode().ToString() },
-                new SelectListItem{ Text = "比重",Value =FILETYPE.比重.GetHashCode().ToString() },
-                new SelectListItem{ Text = "物性",Value =FILETYPE.物性.GetHashCode().ToString() },
-                new SelectListItem{ Text = "生产效率",Value =FILETYPE.生产效率.GetHashCode().ToString() },
-                new SelectListItem{ Text = "颜色",Value =FILETYPE.颜色.GetHashCode().ToString() }
-            };
+            
+            var lst = GetFileTypeList();
+
             ViewBag.FileTypes = lst;
             return View(result); 
         }
@@ -73,7 +66,7 @@ namespace InquiryDemo.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            _inquiryService.Delete(id);
+            _iservice.Delete(id);
 
             return RedirectToAction("Index");
         }

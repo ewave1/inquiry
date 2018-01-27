@@ -1,8 +1,8 @@
 ﻿@using PagedList.Mvc;
 @using PagedList;
-@model IPagedList<Data.Entities.UploadFile>
+@model IPagedList<Data.Entities.Storage>
 @{
-    ViewBag.Title = "文件管理";
+    ViewBag.Title = "库存管理";
 }
 <script src="~/Scripts/util.js"></script>
 <div class="row">
@@ -15,8 +15,8 @@
     <div class="col-md-9 ">
 
         <ol class="breadcrumb">
-            <li><a href="/Inquiry">文件管理</a></li>
-            <li class="active">查看文件列表</li>
+            <li><a href="/Inquiry">库存管理</a></li>
+            <li class="active">查看库存列表</li>
         </ol>
 
         <div class="panel panel-info">
@@ -24,7 +24,7 @@
             <div class="panel-body">
 
 
-                @using (Html.BeginForm("Index", "Upload", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
+                @using (Html.BeginForm("Index", "Storage", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
                 {
 
                     <div class="form-group">
@@ -46,13 +46,7 @@
                             </button>
                             <div class="" id="warning" style="display:none"></div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">文件类型</label>
-                        <div class="col-sm-6 col-lg-8 col-xs-12"> 
-                            @Html.DropDownList("fileType", ViewBag.FileTypes as List<System.Web.Mvc.SelectListItem>)
-                        </div>
-                    </div>
+                    </div> 
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传时间</label>
                         <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12">
@@ -76,8 +70,6 @@
             <thead>
                 <tr>
                     <th>序号</th>
-                    <th>文件类型</th>
-                    <th>文件名</th>
                     <th>上传时间</th>
                     <th>操作人</th>
                     <th>操作</th>
@@ -88,8 +80,7 @@
                 {
                     <tr>
                         <td>@(item.Id)</td>
-                        <td>@item.FileType </td>
-                        <td>@item.FileName </td>
+                     
 
                         <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
                         <td>@item.UpdateUser </td>
@@ -100,8 +91,7 @@
                                     <span class="sr-only"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="@item.FileUrl">下载</a></li>
-                                    <li><a href="/Upload/delete/@item.Id">删除</a></li>
+                                    <li><a href="/Storage/delete/@item.Id">删除</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -137,7 +127,7 @@
         data.append("file", file);
         data.append("fileType", 7);//其它
         $.ajax({
-            url: '/Upload/UploadFile',
+            url: '/Storage/UploadFile',
             type: 'POST',
             //dataType: 'JSON',
             data: data,
@@ -152,9 +142,9 @@
             success: function (res) {
 
                 if (res.Success) {
-                    util.message('导入成功 ', '/Upload/Index', 'success');
+                    util.message('导入成功 ', '/Storage/Index', 'success');
                 } else {
-                    util.message('导入失败，' + res.Msg, '/Upload/Index', 'error');
+                    util.message('导入失败，' + res.Msg, '/Storage/Index', 'error');
                 }
             }, error: function (event, request, settings) {
                 if (request == "parsererror")

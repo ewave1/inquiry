@@ -31,13 +31,12 @@
                 <ul class="nav navbar-nav">
 
                     @if (ViewBag.CurrentUser != null && ViewBag.CurrentUser.IsAdmin)
-    {
-
-        //其他功能菜单
-
-                <li><a href="/Upload">文件管理</a></li>
-                <li><a href="/UserManage">用户管理</a></li>
-}
+                    { 
+                        //其他功能菜单 
+                        <li><a href="/Storage">库存管理</a></li>
+                        <li><a href="/Upload">文件管理</a></li>
+                        <li><a href="/UserManage">用户管理</a></li>
+                    }
 
                 </ul>
 

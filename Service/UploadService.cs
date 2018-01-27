@@ -6,6 +6,7 @@ using PagedList;
 using SmartSSO.Services.Util;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,17 @@ namespace Services
 {
     public class UploadService: ServiceContext,IUploadService
     {
+        public bool Delete(int id)
+        {
+            var model = DbContext.UploadFile.Find(id);
+            if (model != null)
+            {
+                DbContext.Entry(model).State = EntityState.Deleted;
+                return DbContext.SaveChanges() > 0;
+            }
+            return false; 
+        }
+
         public IPagedList<UploadFile> GetAll(string CreateUser, DateTime timeStart, DateTime timeEnd, FILETYPE fileType, int pageIndex)
         {
             return   DbContext.UploadFile.Where(v => v.UpdateTime >= timeStart && v.UpdateTime < timeEnd && (v.FileType == fileType || fileType == FILETYPE.None))
