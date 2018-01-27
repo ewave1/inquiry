@@ -36,7 +36,8 @@ namespace Common
 
                 if (columnMapping.ColumnType == ReflectionColumnType.Identity || columnMapping.ColumnType == ReflectionColumnType.PrimaryKey)
                 {
-                    keys.Add(columnMapping.Column);
+                    //keys.Add(columnMapping.Column);
+                    keys.Add(p.Name);
                 }
 
             }

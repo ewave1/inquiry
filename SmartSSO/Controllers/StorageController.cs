@@ -47,7 +47,20 @@ namespace InquiryDemo.Controllers
              
             return View(result);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadFile(FILETYPE fileType = FILETYPE.其它)
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadStorage(user?.UserName, Request);
 
+            return Json(uploadFile);
+
+        }
 
         public ActionResult Delete(int id)
         {

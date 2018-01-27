@@ -2,6 +2,7 @@
 using Data.Entities;
 using Data.Models;
 using IServices;
+using Newtonsoft.Json;
 using PagedList;
 using SmartSSO.Services.Util;
 using System;
@@ -25,13 +26,15 @@ namespace Services
                 .ToPagedList(pageIndex, Const.PageSize); 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
         public RepResult<Storage> UploadStorage(string User, HttpRequestBase Request)
         {
-            return ImportFile(User, Request, FILETYPE.库存);
-        }
 
-        private RepResult<Storage> ImportFile(string User, HttpRequestBase Request,FILETYPE filetype)
-        {
             UploadService service = new UploadService();
             var result = service.UploadFile(User, Request, FILETYPE.库存);
             if (!result.Success)//导入失败
@@ -44,36 +47,52 @@ namespace Services
             {
                 User = User,
                 ImportTime = DateTime.Now,
-                ImportType = filetype,
+                ImportType = FILETYPE.库存,
                 ImportFile = file.LocalPath,
                 ImportFileName = file.FileName,
-               
+
             };
             DbContext.PT_ImportHistory.Add(importItem);
             DbContext.SaveChanges();
-            var type = GetImportFileType(filetype);
-            var details =     ImportHelper.AddToImport(type, importItem.Id, file.LocalPath);
-            DbContext.PT_ImportHistoryDetail.AddRange(details); 
-            DbContext.SaveChanges();
-            foreach(var item in details)
+            var details = ImportHelper.AddToImport(typeof(StorageModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
             {
                 //保存结果
                 SaveImportResult(item, importItem, User);
             }
-
-            return new RepResult<Storage> { }; 
+            DbContext.SaveChanges();
+            return new RepResult<Storage> { Code = 0 };
         }
+         
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportResult(PT_ImportHistoryDetail item,PT_ImportHistory importItem,string User  )
+        { 
+            var relateItem  = JsonConvert.DeserializeObject<StorageModel>( item.Json);
+            var storage = new Storage {
+                Color = relateItem.Color,
+                Hardness = relateItem.Hardness,
+                Material = relateItem.Material,
+                Material1 = relateItem.Material1,
+                Material2 = relateItem.Material2,
+                Number = relateItem.Number,
+                SizeA = relateItem.SizeA,
+                SizeB = relateItem.SizeB,
+                UpdateTime = DateTime.Now,
+                UpdateUser = User
+            };
 
-        public void SaveImportResult(PT_ImportHistoryDetail item,PT_ImportHistory importItem,string User)
-        {
-
-        }
-        private Type GetImportFileType(FILETYPE filetype)
-        {
-            var type = typeof(StorageModel);
-
-            return type;
-        }
+            DbContext.Storage.Add(storage);
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = storage.Id;
+        } 
 
         public bool Delete(int id)
         {

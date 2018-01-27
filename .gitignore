@@ -110,3 +110,4 @@ UpgradeLog*.XML
 /.vs/config
 /.vs/Demo/v15/Server/sqlite3
 /.vs/InquiryDemo/v15/Server/sqlite3
+/SmartSSO/Content/Upload/ToExecl
