@@ -1,0 +1,72 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model List<Data.Entities.Material>
+@{
+    ViewBag.Title = "材料管理";
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/Inquiry">材料管理</a></li>
+            <li class="active">查看基本资料</li>
+        </ol>
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>特殊件折扣</th>
+                    <th>备注</th> 
+                    <th>修改人</th>
+                    <th>修改时间</th> 
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(item.Id)</td>
+                        <td>@item.Name </td>
+                        <td>@item.Display </td>
+
+                        <td>@item.SpecialDiscount </td>
+                        <td>@item.Remark </td>
+                        <td>@item.UpdateUser </td>
+                        <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td> 
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/Material/UpdateMaterial/@item.Id">修改</a></li>
+                                    <li><a href="/Material/DeleteMaterial/@item.Id">删除</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+         
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                <strong>提示</strong> 没有查询到记录。
+            </div>
+        }
+
+    </div>
+</div>

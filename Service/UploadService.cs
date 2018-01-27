@@ -17,16 +17,6 @@ namespace Services
 {
     public class UploadService: ServiceContext,IUploadService
     {
-        public bool Delete(int id)
-        {
-            var model = DbContext.UploadFile.Find(id);
-            if (model != null)
-            {
-                DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
-            }
-            return false; 
-        }
 
         public IPagedList<UploadFile> GetAll(string CreateUser, DateTime timeStart, DateTime timeEnd, FILETYPE fileType, int pageIndex)
         {
@@ -68,6 +58,18 @@ namespace Services
             DbContext.SaveChanges();
 
             return new RepResult<Data.Entities.UploadFile> { Data = uploadfile};
+        }
+
+
+        public bool Delete(int id)
+        {
+            var model = DbContext.UploadFile.Find(id);
+            if (model != null)
+            {
+                DbContext.Entry(model).State = EntityState.Deleted;
+                return DbContext.SaveChanges() > 0;
+            }
+            return false;
         }
     }
 }

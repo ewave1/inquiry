@@ -1,30 +1,31 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Entities
-{
+{ 
     /// <summary>
-    /// 时效
+    /// 孔数
     /// </summary>
-    public  class MaterialHour
+    public   class MaterialHoleModel
     {
-        [Key]
+
+        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
         public int MaterialId { get; set; }
 
         /// <summary>
-        /// 线径
+        /// 外径=SizeA+SizeB
         /// </summary>
-        public decimal SizeB { get; set; }
+        public decimal SizeC { get; set; }
 
         /// <summary>
         /// 孔数
         /// </summary>
-        public int Hours { get; set; }
+        public int HoleCount { get; set; }
 
 
         public DateTime UpdateTime { get; set; }

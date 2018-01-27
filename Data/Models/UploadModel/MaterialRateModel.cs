@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 namespace Data.Entities
 {
     /// <summary>
-    /// 时效
+    /// 利用率和不良第
     /// </summary>
-    public  class MaterialHour
+    public class MaterialRateModel
     {
-        [Key]
+
+        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
         public int MaterialId { get; set; }
 
@@ -22,9 +23,14 @@ namespace Data.Entities
         public decimal SizeB { get; set; }
 
         /// <summary>
-        /// 孔数
+        /// 利用率
         /// </summary>
-        public int Hours { get; set; }
+        public decimal UseRate { get; set; }
+
+        /// <summary>
+        /// 不良率
+        /// </summary>
+        public decimal BadRate { get; set; }
 
 
         public DateTime UpdateTime { get; set; }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +10,10 @@ namespace Data.Entities
     /// <summary>
     /// 比重
     /// </summary>
-    public class MaterialGravity
+    public class MaterialGravityModel
     {
-        [Key]
+
+        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
 
         public int MaterialId { get; set; }

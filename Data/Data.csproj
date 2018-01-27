@@ -129,6 +129,12 @@
     <Compile Include="Models\Base\ProfileChangePasswordRequest.cs" />
     <Compile Include="Models\Base\UserCreateRequest.cs" />
     <Compile Include="Models\Base\UserManageChangePassword.cs" />
+    <Compile Include="Models\UploadModel\MaterialModel.cs" />
+    <Compile Include="Models\UploadModel\MaterialFeatureModel.cs" />
+    <Compile Include="Models\UploadModel\MaterialGravityModel.cs" />
+    <Compile Include="Models\UploadModel\MaterialHoleModel.cs" />
+    <Compile Include="Models\UploadModel\MaterialHourModel.cs" />
+    <Compile Include="Models\UploadModel\MaterialRateModel.cs" />
     <Compile Include="Models\UploadModel\StorageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepResult.cs" />

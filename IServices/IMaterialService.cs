@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Data.Models;
 using SmartSSO.Services.Util;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ namespace IServices
         /// <returns></returns>
         List<Material> GetMaterialList();
 
-        Material UpdateMaterial(Material material, string User);
+        RepResult<Material> UpdateMaterial(MaterialModel material, string User);
 
-        void DeleteMatial(Material material);
-
+        MaterialModel GetMaterial(int? id);
+        bool DeleteMatial(int id);
         PagedResult<MaterialFeature> GetMaterialFeatures();
 
         void ImportMaterialFeatures(string User);

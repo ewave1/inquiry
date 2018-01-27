@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +11,10 @@ namespace Data.Entities
     /// 物性
     /// 颜色 
     /// </summary>
-    public  class MaterialFeature
+    public  class MaterialFeatureModel
     {
-        [Key]
+
+        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
 
         public int MaterialId { get; set; }
@@ -31,12 +32,5 @@ namespace Data.Entities
         /// </summary>
         public MATERIALTYPE Type { get; set; }
     }
-
-    public enum MATERIALTYPE
-    {
-        材料物性= 0,
-        表面物性 = 1 ,
-        颜色 =2 ,
-
-    }
+     
 }

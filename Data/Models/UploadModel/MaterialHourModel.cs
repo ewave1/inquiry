@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +10,11 @@ namespace Data.Entities
     /// <summary>
     /// 时效
     /// </summary>
-    public  class MaterialHour
+    public  class MaterialHourModel
     {
-        [Key]
+
+
+        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
         public int MaterialId { get; set; }
 
