@@ -11,6 +11,7 @@
 // 完成日期：2014年05月05日
 // 
 
+using Common;
 using System.Collections.Generic;
 
 namespace SmartSSO.Services.Util
@@ -22,6 +23,8 @@ namespace SmartSSO.Services.Util
         public PagedResult()
         {
             Result = new List<T>();
+            PageSize = Const.PageSize;
+
         }
     }
 }

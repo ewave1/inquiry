@@ -9,27 +9,30 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PagedList;
+using PagedList.Mvc;
+using Common;
 
 namespace Services
 {
 
     public sealed class InquiryService : ServiceContext, IInquiryService
     {
-        public PagedResult<InquiryLog> GetAll(ManageUser user)
+        public IPagedList<InquiryLog> GetAll(ManageUser user, string CreateUser, DateTime timeStart, DateTime timeEnd, int pageIndex)
         {
             if (user == null)
-                return new PagedResult<InquiryLog> {  };
-            if(user !=null && user.IsAdmin)
-            return  new PagedResult<InquiryLog>
+                return null;
+            DbContext.InquiryLog.OrderBy(p => p.CreateTime).ToPagedList(10, 10);;
+            if (user != null && user.IsAdmin)
             {
-                Result = DbContext.InquiryLog.OrderByDescending(p => p.CreateTime).ToList()
-            };
-            else 
-                return new PagedResult<InquiryLog>
-                {
-                    Result = DbContext.InquiryLog.Where(v=>v.User == user.UserName)
-                    .OrderByDescending(p => p.CreateTime).ToList()
-                };
+
+                return DbContext.InquiryLog.Where(v=>v.CreateTime>=timeStart&& v.CreateTime< timeEnd)
+                    .OrderByDescending(p => p.CreateTime).ToPagedList(pageIndex, Const.PageSize);
+
+            }
+            else
+                return DbContext.InquiryLog.Where(v => v.User == user.UserName&& v.CreateTime >= timeStart && v.CreateTime < timeEnd)
+                       .OrderByDescending(p => p.CreateTime).ToPagedList(pageIndex, Const.PageSize);
         }
 
         public RepResult<InquiryLog> Create(InquiryModelRequest model, string User)

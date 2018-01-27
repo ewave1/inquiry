@@ -63,6 +63,7 @@
     <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\DiscountSet.cs" />
+    <Compile Include="Entities\ImportHistory.cs" />
     <Compile Include="Entities\InquiryLog.cs" />
     <Compile Include="Entities\ManageUser.cs" />
     <Compile Include="Entities\Materials\MaterialRate.cs" />
@@ -143,6 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\Cus\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{f55c62d2-b7d3-477c-b6ef-55da9d2b27b7}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

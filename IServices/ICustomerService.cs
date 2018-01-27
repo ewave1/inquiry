@@ -13,6 +13,8 @@ namespace IServices
     { 
         PagedResult<Customer> GetAll( );
 
+        CustomerModel Get(int? id);
+
         RepResult<Customer> Create(CustomerModel model, string User);
 
         bool Delete(int id);

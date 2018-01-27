@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Models;
+using PagedList;
 using SmartSSO.Entities;
 using SmartSSO.Services.Util;
 using System;
@@ -12,7 +13,7 @@ namespace IServices
 {
     public  interface IInquiryService
     {
-        PagedResult<InquiryLog> GetAll(ManageUser user);
+        IPagedList<InquiryLog> GetAll(ManageUser user,string CreateUser,DateTime timeStart,DateTime timeEnd,int pageIndex);
 
         RepResult<InquiryLog> Create(InquiryModelRequest model,string User);
 

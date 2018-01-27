@@ -13,7 +13,7 @@ namespace Data.Models
     public sealed  class CustomerModel
     {
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [MinLength(3)]
         [MaxLength(12)]
@@ -30,7 +30,7 @@ namespace Data.Models
         public string ContactName { get; set; }
 
         [MinLength(6)]
-        [MaxLength(12)]
+        [MaxLength(11)]
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "联系方式")]
@@ -38,8 +38,7 @@ namespace Data.Models
 
         public DateTime CreateTime { get; set; }
 
-
-        [MinLength(3)]
+         
         [MaxLength(120)] 
         [DataType(DataType.Text)]
         [Display(Name = "备注")]

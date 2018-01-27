@@ -1,4 +1,6 @@
-﻿@model SmartSSO.Services.Util.PagedResult<Data.Entities.InquiryLog>
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model IPagedList<Data.Entities.InquiryLog>
 @{
     ViewBag.Title = "报价管理";
 }
@@ -17,6 +19,36 @@
             <li class="active">查看历史报价</li>
         </ol>
 
+        <div class="panel panel-info">
+            <div class="panel-heading">筛选</div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Index", "Inquiry", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
+            {
+                @*<div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">报价人</label>
+                    <div class="col-sm-6 col-lg-8 col-xs-12">
+                        <input type="text" name="CreateUser" class="form-control" value="@ViewBag.CreateUser" placeholder="输入报价人">
+                    </div>
+                </div>*@
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">报价时间</label>
+                    <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12"> 
+                        <input type="date" name="timeStart" value="@ViewBag.timeStart" />
+                        <label>至</label>
+                        <input type="date" name="timeEnd" value="@ViewBag.timeEnd" /> 
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">查询</label>
+                    <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+        }
+            </div>
+        </div>
 
         <table class="table table-hover table-striped">
             <thead>
@@ -35,8 +67,8 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var item in Model.Result)
-                {
+                @foreach (var item in Model)
+            {
                 <tr>
                     <td>@(item.Id)</td>
                     <td>@item.SizeA </td>
@@ -62,16 +94,21 @@
                         </div>
                     </td>
                 </tr>
-                }
+        }
             </tbody>
         </table>
 
-        @if (!Model.Result.Any())
-        {
-            <div class="alert alert-info">
-                <strong>提示</strong> 没有查询到记录。
-            </div>
-        }
+        @Html.PagedListPager(Model, page => Url.Action("Index", new {
+               CreateUser  =ViewBag.CreateUser, timeStart = ViewBag.timeStart,
+               timeEnd = ViewBag.timeEnd,
+                page }))
+        
+        @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <strong>提示</strong> 没有查询到记录。
+        </div>
+}
 
     </div>
 </div>

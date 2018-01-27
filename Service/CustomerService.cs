@@ -66,5 +66,23 @@ namespace Services
             }
             return false;
         }
+
+        public CustomerModel Get(int? id)
+        {
+            if(id!=null)
+            { 
+                var customer = DbContext.Customer.Find(id);
+                return new CustomerModel {
+                    CompanyName = customer.CompanyName,
+                    ContactMobile = customer.ContactMobile,
+                    ContactName = customer.ContactName,
+                    CreateTime = customer.CreateTime,
+                    CustomerLevel = customer.CustomerLevel,
+                    Remark = customer.Remark,
+                    Id = customer.Id
+                };
+            }
+            return null;
+        }
     }
 }

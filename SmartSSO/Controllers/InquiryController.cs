@@ -32,11 +32,20 @@ namespace SmartSSO.Controllers
 
         #endregion
         // GET: Inquiry
-        public ActionResult Index()
+        public ActionResult Index(string CreateUser, string timeStart, string timeEnd, int page = 1)
         {
             var user = GetCurrentUser();
 
-            return View(_inquiryService.GetAll(user));
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+
+            ViewBag.CreateUser = CreateUser;
+            var result = _inquiryService.GetAll(user, CreateUser, timeRange.TimeStart, timeRange.TimeEnd, page);
+            if (result == null)
+                return    RedirectToAction("Login", "Home");
+             
+
+
+            return View(result);
         }
         public ActionResult Create( )
         {
