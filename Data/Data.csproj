@@ -63,7 +63,6 @@
     <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\DiscountSet.cs" />
-    <Compile Include="Entities\ImportHistory.cs" />
     <Compile Include="Entities\InquiryLog.cs" />
     <Compile Include="Entities\ManageUser.cs" />
     <Compile Include="Entities\Materials\MaterialRate.cs" />
@@ -101,6 +100,14 @@
     <Compile Include="Migrations\201801151532162_InitralCreate5.cs" />
     <Compile Include="Migrations\201801151532162_InitralCreate5.Designer.cs">
       <DependentUpon>201801151532162_InitralCreate5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801270452533_InitralCreate6.cs" />
+    <Compile Include="Migrations\201801270452533_InitralCreate6.Designer.cs">
+      <DependentUpon>201801270452533_InitralCreate6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801270514166_InitralCreate7.cs" />
+    <Compile Include="Migrations\201801270514166_InitralCreate7.Designer.cs">
+      <DependentUpon>201801270514166_InitralCreate7.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CustomerModel.cs" />
@@ -140,6 +147,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801151532162_InitralCreate5.resx">
       <DependentUpon>201801151532162_InitralCreate5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801270452533_InitralCreate6.resx">
+      <DependentUpon>201801270452533_InitralCreate6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801270514166_InitralCreate7.resx">
+      <DependentUpon>201801270514166_InitralCreate7.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
