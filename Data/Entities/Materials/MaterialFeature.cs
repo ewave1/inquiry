@@ -18,6 +18,8 @@ namespace Data.Entities
 
         public int MaterialId { get; set; }
 
+        public string Name { get; set; }
+
         public decimal Discount { get; set; }
 
         public DateTime UpdateTime { get; set; }
@@ -27,7 +29,7 @@ namespace Data.Entities
         /// <summary>
         /// 材料物性= 0 
         /// 表面物性 = 1
-        /// 
+        ///  颜色 =2 , 
         /// </summary>
         public MATERIALTYPE Type { get; set; }
     }
@@ -36,7 +38,6 @@ namespace Data.Entities
     {
         材料物性= 0,
         表面物性 = 1 ,
-        颜色 =2 ,
-
+        颜色 =2 , 
     }
 }

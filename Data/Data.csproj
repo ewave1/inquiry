@@ -71,6 +71,7 @@
     <Compile Include="Entities\DiscountSet.cs" />
     <Compile Include="Entities\InquiryLog.cs" />
     <Compile Include="Entities\ManageUser.cs" />
+    <Compile Include="Entities\Materials\BaseHole.cs" />
     <Compile Include="Entities\Materials\MaterialRate.cs" />
     <Compile Include="Entities\Materials\MaterialHour.cs" />
     <Compile Include="Entities\Materials\MaterialHole.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Models\Base\ProfileChangePasswordRequest.cs" />
     <Compile Include="Models\Base\UserCreateRequest.cs" />
     <Compile Include="Models\Base\UserManageChangePassword.cs" />
+    <Compile Include="Models\UploadModel\BaseHoleModel.cs" />
     <Compile Include="Models\UploadModel\MaterialModel.cs" />
     <Compile Include="Models\UploadModel\MaterialFeatureModel.cs" />
     <Compile Include="Models\UploadModel\MaterialGravityModel.cs" />

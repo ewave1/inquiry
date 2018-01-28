@@ -17,9 +17,11 @@ namespace Data.Entities
 
         public int MaterialId { get; set; }
 
+        public string Color { get; set; }
+
         public int Hardness { get; set; }
 
-        public int  Gravity { get; set; }
+        public decimal  Gravity { get; set; }
 
         public DateTime UpdateTime { get; set; }
 

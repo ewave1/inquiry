@@ -20,6 +20,8 @@ namespace Data.Entities
         /// </summary>
         public string Name { get; set; }
 
+        public int Hardness { get; set; }
+
         /// <summary>
         /// 显示 
         /// </summary>

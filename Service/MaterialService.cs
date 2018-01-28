@@ -318,7 +318,7 @@ namespace Services
                 };
                 DbContext.MaterialHour.Add(original);
             }
-            original.Hours = material.Hours;
+            original.MosInHour = material.Hours;
             original.MaterialId = material.MaterialId;
             original.SizeB = material.SizeB; 
             original.UpdateTime = DateTime.Now;
@@ -334,7 +334,7 @@ namespace Services
                 return new MaterialHourModel { };
             return new MaterialHourModel
             {
-                Hours = model.Hours,
+                Hours = model.MosInHour,
                 MaterialId = model.MaterialId,
                 SizeB = model.SizeB,
                 UpdateTime = model.UpdateTime,

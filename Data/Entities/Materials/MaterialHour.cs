@@ -16,15 +16,18 @@ namespace Data.Entities
         public int Id { get; set; }
         public int MaterialId { get; set; }
 
+        public int Hardness { get; set; }
         /// <summary>
         /// 线径
         /// </summary>
         public decimal SizeB { get; set; }
 
+        public decimal SizeB2 { get; set; }
+
         /// <summary>
-        /// 孔数
+        /// 每小时模数
         /// </summary>
-        public int Hours { get; set; }
+        public int MosInHour { get; set; }
 
 
         public DateTime UpdateTime { get; set; }

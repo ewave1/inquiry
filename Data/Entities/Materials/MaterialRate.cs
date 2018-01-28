@@ -14,12 +14,19 @@ namespace Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int MaterialId { get; set; }
+        //public int MaterialId { get; set; }
+
+        //public int Hardness { get; set; }
 
         /// <summary>
         /// 线径
         /// </summary>
         public decimal SizeB { get; set; }
+
+        /// <summary>
+        /// 线径2 
+        /// </summary>
+        public decimal SizeB2 { get; set; }
 
         /// <summary>
         /// 利用率

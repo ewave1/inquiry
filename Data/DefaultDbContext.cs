@@ -78,9 +78,14 @@ namespace SmartSSO.Entities
         /// </summary>
         public DbSet<MaterialGravity> MaterialGravity { get; set; }
         /// <summary>
-        /// 孔数
+        /// 孔数 = 基础孔数* （材质*硬度*外径 计算比率）
         /// </summary>
         public DbSet<MaterialHole> MaterialHole { get; set; }
+
+        /// <summary>
+        /// 基础孔数
+        /// </summary>
+        public DbSet<BaseHole> BaseHole { get; set; }
         /// <summary>
         /// 时数
         /// </summary>
