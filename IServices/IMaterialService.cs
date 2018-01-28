@@ -35,7 +35,7 @@ namespace IServices
         MaterialFeatureModel GetMaterialFeature(int? id);
 
         IPagedList<MaterialGravity> GetMaterialGravities(int? MaterialId, int page);
-        void ImportMaterialGravity(string User);
+        RepResult<MaterialGravity> UploadMaterialGravity(string User, HttpRequestBase Request);
         bool DeleteMatialGravity(int Id);
 
 
@@ -53,12 +53,12 @@ namespace IServices
 
         IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page);
 
-        void ImportMaterialHour(string User);
+        RepResult<MaterialHour> UploadMaterialHour(string User, HttpRequestBase Request);
         bool DeleteMatialHour(int Id);
 
         RepResult<MaterialHour> UpdateMaterialHour(MaterialHourModel material, string User);
 
-        MaterialHourModel GetMaterialHoure(int? id);
+        MaterialHourModel GetMaterialHour(int? id);
 
         IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page);
 

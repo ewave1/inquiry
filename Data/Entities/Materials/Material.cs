@@ -37,6 +37,8 @@ namespace Data.Entities
 
         public string Remark { get; set; }
 
+        public decimal Price { get; set; }
+
 
         public DateTime UpdateTime { get; set; }
 

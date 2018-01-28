@@ -219,6 +219,10 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\Template\库存模板.xlsx" />
+    <Content Include="Content\Template\不良率模板.xlsx" />
+    <Content Include="Content\Template\孔数模板.xlsx" />
+    <Content Include="Content\Template\比重模板.xlsx" />
+    <Content Include="Content\Template\生产效率模板.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -282,6 +286,12 @@
     <Content Include="Views\Material\UpdateMaterial.cshtml" />
     <Content Include="Views\Material\MaterialHoleList.cshtml" />
     <Content Include="Views\Material\UpdateMaterialHole.cshtml" />
+    <Content Include="Views\Material\MaterialRateList.cshtml" />
+    <Content Include="Views\Material\UpdateMaterialRate.cshtml" />
+    <Content Include="Views\Material\MaterialHourList.cshtml" />
+    <Content Include="Views\Material\UpdateMaterialHour.cshtml" />
+    <Content Include="Views\Material\MaterialGravityList.cshtml" />
+    <Content Include="Views\Material\UpdateMaterialGravity.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

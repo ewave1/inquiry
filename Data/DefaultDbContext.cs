@@ -105,6 +105,7 @@ namespace SmartSSO.Entities
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<InquiryLog>().Property(p => p.Price).HasPrecision(18, 3);
             modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(18, 3);
+            modelBuilder.Entity<MaterialGravity>().Property(p => p.Gravity).HasPrecision(18, 3);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,23 +19,35 @@ namespace Data.Entities
          
 
         [ColumnMapping("线径1", ColumnType = ReflectionColumnType.PrimaryKey)]
+        [DataType(DataType.Text)]
+        [Display(Name = "线径1")]
+        [Required]
         /// <summary>
         /// 线径
         /// </summary>
         public decimal SizeB { get; set; }
         [ColumnMapping("线径2", ColumnType = ReflectionColumnType.PrimaryKey)]
+        [DataType(DataType.Text)]
+        [Display(Name = "线径2")]
+        [Required]
         /// <summary>
         /// 线径
         /// </summary>
         public decimal SizeB2 { get; set; }
 
         [ColumnMapping("效率")]
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "效率")]
         /// <summary>
         /// 利用率
         /// </summary>
         public decimal UseRate { get; set; }
 
         [ColumnMapping("不良率")]
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "不良率")]
         /// <summary>
         /// 不良率
         /// </summary>

@@ -132,6 +132,7 @@ namespace InquiryDemo.Controllers
 
          
         #endregion
+
         #region 材质
 
         public ActionResult MaterialFeatureDetail(int? materialId,int page)
@@ -150,10 +151,119 @@ namespace InquiryDemo.Controllers
 
         #region 比重
 
+
+        // GET: Material
+        public ActionResult MaterialGravityList(int? MaterialId, int page = 1)
+        {
+            var result = _iservice.GetMaterialGravities(MaterialId, page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
+
+        public ActionResult UpdateMaterialGravity(int? id)
+        {
+            var model = _iservice.GetMaterialGravity(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateMaterialGravity(MaterialGravityModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateMaterialGravity(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("MaterialGravityList");
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteMaterialGravity(int id)
+        {
+            _iservice.DeleteMatialGravity(id);
+
+            return RedirectToAction("MaterialGravityList");
+
+        }
+
+
+        /// <summary>
+        /// 上传孔数的数据
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadMaterialGravity()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadMaterialGravity(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
         #endregion
 
 
-        #region 时数
+        #region 生产效率
+
+
+        // GET: Material
+        public ActionResult MaterialHourList(int? MaterialId, int page = 1)
+        {
+            var result = _iservice.GetMaterialHours(MaterialId, page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
+
+        public ActionResult UpdateMaterialHour(int? id)
+        {
+            var model = _iservice.GetMaterialHour(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateMaterialHour(MaterialHourModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateMaterialHour(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("MaterialHourList");
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteMaterialHour(int id)
+        {
+            _iservice.DeleteMatialHour(id);
+
+            return RedirectToAction("MaterialHourList");
+
+        }
+
+
+        /// <summary>
+        /// 上传孔数的数据
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadMaterialHour()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadMaterialHour(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
 
         #endregion
 

@@ -45,14 +45,20 @@ namespace Data.Entities
         /// 显示 
         /// </summary>
         public string Display { get; set; }
-         
-        [Required]
+          
         [DataType(DataType.Text)]
         [Display(Name = "特殊件折扣")]
         /// <summary>
         /// 特殊件折扣
         /// </summary>
         public decimal SpecialDiscount { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "单价")]
+        /// <summary>
+        /// 特殊件折扣
+        /// </summary>
+        public decimal Price { get; set; }
 
         [Display(Name = "备注")]
         public string Remark { get; set; }

@@ -159,9 +159,74 @@ namespace Services
                   .OrderByDescending(p => p.UpdateTime).ToPagedList(page,Const.PageSize);
         }
 
-        public void ImportMaterialGravity(string User)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
+        public RepResult<MaterialGravity> UploadMaterialGravity(string User, HttpRequestBase Request)
         {
-            throw new NotImplementedException();
+
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.比重);
+            if (!result.Success)//导入失败
+                return new RepResult<MaterialGravity> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.比重,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(MaterialGravityModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportMaterailGravityResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<MaterialGravity> { Code = 0 };
+        }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportMaterailGravityResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<MaterialGravityModel>(item.Json);
+
+            var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
+            var storage = new MaterialGravity
+            {
+                UpdateTime = DateTime.Now,
+                UpdateUser = User, 
+                MaterialCode = relateItem.MaterialCode,
+                Hardness = relateItem.Hardness, 
+                Gravity = relateItem.Gravity,
+                Color = relateItem.Color,
+                MaterialId = material == null ? 0 : material.Id
+            };
+
+
+            DbContext.MaterialGravity.Add(storage);
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = storage.Id;
         }
         public bool DeleteMatialGravity(int Id)
         {
@@ -349,7 +414,7 @@ namespace Services
         }
         #endregion
 
-        #region 模数
+        #region 模数 生产效率
 
         public IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page)
         {
@@ -358,9 +423,74 @@ namespace Services
                   .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
-        public void ImportMaterialHour(string User)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
+        public RepResult<MaterialHour> UploadMaterialHour(string User, HttpRequestBase Request)
         {
-            throw new NotImplementedException();
+
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.生产效率);
+            if (!result.Success)//导入失败
+                return new RepResult<MaterialHour> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.生产效率,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(MaterialHourModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportMaterailHourResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<MaterialHour> { Code = 0 };
+        }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportMaterailHourResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<MaterialHourModel>(item.Json);
+
+            var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
+            var storage = new MaterialHour
+            {
+                UpdateTime = DateTime.Now,
+                UpdateUser = User, 
+                SizeB = relateItem.SizeB,
+                SizeB2 = relateItem.SizeB2, 
+                MaterialCode = relateItem.MaterialCode,
+                Hardness = relateItem.Hardness,
+                MosInHour = relateItem.MosInHour,
+                MaterialId = material==null ?0:material.Id
+            };
+
+
+            DbContext.MaterialHour.Add(storage);
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = storage.Id;
         }
 
         public bool DeleteMatialHour(int Id)
@@ -396,7 +526,7 @@ namespace Services
             return new RepResult<MaterialHour> { Data = original };
         }
 
-        public MaterialHourModel GetMaterialHoure(int? id)
+        public MaterialHourModel GetMaterialHour(int? id)
         {
             var model = DbContext.MaterialHour.Find(id);
             if (model == null)
