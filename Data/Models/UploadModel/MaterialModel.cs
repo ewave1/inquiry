@@ -16,6 +16,9 @@ namespace Data.Entities
         [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
 
+        /// <summary>
+        /// 如EP
+        /// </summary>
         [MinLength(3)]
         [MaxLength(12)]
         [Required]
@@ -25,7 +28,16 @@ namespace Data.Entities
         /// Code 
         /// </summary>
         public string Name { get; set; }
+
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "硬度")]
+        public int Hardness { get; set; }
          
+        /// <summary>
+        /// 如EP70 
+        /// </summary>
         [MaxLength(12)] 
         [DataType(DataType.Text)]
         [Display(Name = "名称")]

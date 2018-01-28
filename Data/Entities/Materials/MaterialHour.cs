@@ -16,6 +16,7 @@ namespace Data.Entities
         public int Id { get; set; }
         public int MaterialId { get; set; }
 
+        public string MaterialCode { get; set; }
         public int Hardness { get; set; }
         /// <summary>
         /// 线径

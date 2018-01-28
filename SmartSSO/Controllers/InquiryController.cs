@@ -75,7 +75,7 @@ namespace SmartSSO.Controllers
         {
             var lst = _inquiryService.Materials().Select(v => new SelectListItem
             {
-                Text = v.Name,
+                Text = v.MaterialCode,
                 Value = v.Id.ToString(),
 
             }).ToList()

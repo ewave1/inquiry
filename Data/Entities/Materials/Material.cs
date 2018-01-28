@@ -16,14 +16,17 @@ namespace Data.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// Code 
+        /// Code 如EP
         /// </summary>
-        public string Name { get; set; }
+        public string MaterialCode { get; set; }
 
+        /// <summary>
+        /// 如70 
+        /// </summary>
         public int Hardness { get; set; }
 
         /// <summary>
-        /// 显示 
+        /// 显示 如EP70(
         /// </summary>
         public string Display { get; set; }
 

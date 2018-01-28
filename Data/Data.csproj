@@ -122,6 +122,10 @@
     <Compile Include="Migrations\201801271432187_InitralCreate8.Designer.cs">
       <DependentUpon>201801271432187_InitralCreate8.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801281252214_InitralCreate9.cs" />
+    <Compile Include="Migrations\201801281252214_InitralCreate9.Designer.cs">
+      <DependentUpon>201801281252214_InitralCreate9.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />
@@ -177,6 +181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801271432187_InitralCreate8.resx">
       <DependentUpon>201801271432187_InitralCreate8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801281252214_InitralCreate9.resx">
+      <DependentUpon>201801281252214_InitralCreate9.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,7 @@ namespace Services
                 return new MaterialModel {  };
             return new MaterialModel {
                 Display = model.Display,
-                Name = model.Name,
+                Name = model.MaterialCode,
                 Remark = model.Remark,
                 SpecialDiscount = model.SpecialDiscount,
                 UpdateTime = model.UpdateTime,
@@ -40,11 +40,11 @@ namespace Services
 
         public RepResult<Material> UpdateMaterial(MaterialModel material, string User)
         {
-            var original = DbContext.Material.Where(v => v.Name == material.Name).FirstOrDefault();
+            var original = DbContext.Material.Where(v => v.MaterialCode == material.Name).FirstOrDefault();
             if (original == null)
             {
                 original = new Material {
-                    Name = material.Name,
+                    MaterialCode = material.Name,
                     Display  =material.Display??material.Name,
                    
                 };
@@ -106,8 +106,7 @@ namespace Services
 
         public IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page)
         {
-            return DbContext.MaterialRate
-                .Where(v => v.MaterialId == MaterialId || MaterialId == null)
+            return DbContext.MaterialRate 
                   .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
@@ -318,7 +317,7 @@ namespace Services
                 };
                 DbContext.MaterialHour.Add(original);
             }
-            original.MosInHour = material.Hours;
+            original.MosInHour = material.MosInHour;
             original.MaterialId = material.MaterialId;
             original.SizeB = material.SizeB; 
             original.UpdateTime = DateTime.Now;
@@ -334,7 +333,7 @@ namespace Services
                 return new MaterialHourModel { };
             return new MaterialHourModel
             {
-                Hours = model.MosInHour,
+                MosInHour = model.MosInHour,
                 MaterialId = model.MaterialId,
                 SizeB = model.SizeB,
                 UpdateTime = model.UpdateTime,
@@ -348,13 +347,9 @@ namespace Services
             var original = DbContext.MaterialRate.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
             {
-                original = new MaterialRate
-                {
-                    MaterialId = material.MaterialId,  
-                };
+                original = new MaterialRate();
                 DbContext.MaterialRate.Add(original);
-            }
-            original.MaterialId = material.MaterialId;
+            } 
             original.SizeB = material.SizeB;
             original.UseRate = material.UseRate;
             original.UpdateTime = DateTime.Now;
@@ -370,8 +365,7 @@ namespace Services
                 return new MaterialRateModel { };
             return new MaterialRateModel
             {
-                BadRate = model.BadRate,
-                MaterialId = model.MaterialId,
+                BadRate = model.BadRate, 
                 SizeB = model.SizeB,
                 UseRate = model.UseRate,
                 UpdateTime = model.UpdateTime,

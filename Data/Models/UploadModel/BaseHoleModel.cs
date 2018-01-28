@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +15,10 @@ namespace Data.Models.UploadModel
         /// <summary>
         /// 外径=内径SizeA+线径SizeB
         /// </summary>
+        [ColumnMapping("外径", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int SizeC { get; set; }
 
+        [ColumnMapping("孔数")]
         /// <summary>
         /// 基础的孔数
         /// </summary>

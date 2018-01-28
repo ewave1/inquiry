@@ -79,7 +79,7 @@ namespace Services
                 Code = model.Code,
                 Factory = model.Factory,
                 MaterialId = model.MaterialId,
-                Material = material.Name,
+                Material = material.MaterialCode,
                 Number = model.Number,
                 SizeA = sc.SizeA,
                 SizeB = sc.SizeB,

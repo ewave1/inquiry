@@ -18,6 +18,12 @@ namespace Data.Entities
 
         public int MaterialId { get; set; }
 
+        public string MaterialCode { get; set; }
+
+        public int Hardness { get; set; }
+        /// <summary>
+        /// 显示的名称，比如颜色，或物性
+        /// </summary>
         public string Name { get; set; }
 
         public decimal Discount { get; set; }
