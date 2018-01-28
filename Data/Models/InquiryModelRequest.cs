@@ -6,25 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Models
-{  
+{
     /// <summary>
     /// 询价
     /// </summary>
     public class InquiryModelRequest
     {
         public InquiryModelRequest()
-        { 
+        {
         }
 
         /// <summary>
         /// 编码
         /// </summary>  
 
-        [MaxLength(50)]  
+        [MaxLength(50)]
         [Display(Name = "编码")]
         public string Code { get; set; }
 
-        [Required] 
+        [Required]
         [Display(Name = "内径")]
         /// <summary>
         /// 内径
@@ -51,7 +51,7 @@ namespace Data.Models
         /// 数量
         /// </summary>
         public int Number { get; set; }
-         
+
 
 
         [Required]
@@ -72,7 +72,11 @@ namespace Data.Models
 
         public int Hardness { get; set; }
 
-         
-         
+
+        [Required]
+        [Display(Name = "颜色")]
+        public string Color { get; set; }
+
+
     }
 }
