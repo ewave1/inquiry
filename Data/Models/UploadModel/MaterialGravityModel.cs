@@ -13,13 +13,20 @@ namespace Data.Entities
     public class MaterialGravityModel
     {
 
-        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
+        [ColumnMapping("序号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
+
+        [ColumnMapping("材料")]
+        public string MaterialCode { get; set; }
 
         public int MaterialId { get; set; }
 
+
+
+        [ColumnMapping("硬度")]
         public int Hardness { get; set; }
 
+        [ColumnMapping("比重")]
         public int  Gravity { get; set; }
 
         public DateTime UpdateTime { get; set; }

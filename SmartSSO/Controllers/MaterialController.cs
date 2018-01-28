@@ -30,6 +30,8 @@ namespace InquiryDemo.Controllers
         private readonly IMaterialService _iservice = UnityHelper.Instance.Unity.Resolve<IMaterialService>();
 
         #endregion
+
+        #region 基本资料
         // GET: Material
         public ActionResult Index( )
         {  
@@ -68,8 +70,18 @@ namespace InquiryDemo.Controllers
 
         }
 
+        #endregion
+
+
         #region 材质
 
+        public ActionResult MaterialFeatureDetail(int? materialId,int page)
+        {
+            var result = _iservice.GetMaterialFeatures(materialId,page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
 
         #endregion
 

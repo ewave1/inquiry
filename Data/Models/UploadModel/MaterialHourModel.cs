@@ -14,17 +14,22 @@ namespace Data.Entities
     {
 
 
-        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
+        [ColumnMapping("序号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
+
+        [ColumnMapping("材料")]
+        public string MaterialCode { get; set; }
         public int MaterialId { get; set; }
 
+        [ColumnMapping("线径")]
         /// <summary>
         /// 线径
         /// </summary>
         public decimal SizeB { get; set; }
 
+        [ColumnMapping("时数")]
         /// <summary>
-        /// 孔数
+        /// 时数
         /// </summary>
         public int Hours { get; set; }
 

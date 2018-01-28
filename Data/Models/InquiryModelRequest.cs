@@ -67,6 +67,11 @@ namespace Data.Models
         [Display(Name = "表面物性")]
         public string Material2 { get; set; }
 
+        [Required]
+        [Display(Name = "硬度")]
+
+        public int Hardness { get; set; }
+
          
          
     }

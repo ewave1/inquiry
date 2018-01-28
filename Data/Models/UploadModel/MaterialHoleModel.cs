@@ -13,15 +13,20 @@ namespace Data.Entities
     public   class MaterialHoleModel
     {
 
-        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
+        [ColumnMapping("序号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
+
+        [ColumnMapping("材料")]
+        public string MaterialCode { get; set; }
         public int MaterialId { get; set; }
 
+        [ColumnMapping("外径")]
         /// <summary>
         /// 外径=SizeA+SizeB
         /// </summary>
         public decimal SizeC { get; set; }
 
+        [ColumnMapping("孔数")]
         /// <summary>
         /// 孔数
         /// </summary>

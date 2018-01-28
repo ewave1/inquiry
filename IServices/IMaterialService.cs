@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Models;
+using PagedList;
 using SmartSSO.Services.Util;
 using System;
 using System.Collections.Generic;
@@ -21,33 +22,52 @@ namespace IServices
 
         MaterialModel GetMaterial(int? id);
         bool DeleteMatial(int id);
-        PagedResult<MaterialFeature> GetMaterialFeatures();
+
+        IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, int page);
 
         void ImportMaterialFeatures(string User);
-        void DeleteMatialFeature(Material material);
+        bool DeleteMatialFeature(int Id);
 
-        PagedResult<MaterialGravity> GetMaterialGravities();
+
+        RepResult<MaterialFeature> UpdateMaterialFeature(MaterialFeatureModel material, string User);
+
+        MaterialFeatureModel GetMaterialFeature(int? id);
+
+        IPagedList<MaterialGravity> GetMaterialGravities(int? MaterialId, int page);
         void ImportMaterialGravity(string User);
-        void DeleteMatialGravity(Material material);
+        bool DeleteMatialGravity(int Id);
 
 
-        PagedResult<MaterialHole> GetMaterialHoles();
+        RepResult<MaterialGravity> UpdateMaterialGravity(MaterialGravityModel material, string User);
+
+        MaterialGravityModel GetMaterialGravity(int? id);
+
+        IPagedList<MaterialHole> GetMaterialHoles(int? MaterialId, int page);
 
         void ImportMaterialHole(string User);
-        void DeleteMatialHole(Material material);
+        bool DeleteMatialHole(int Id);
 
+        RepResult<MaterialHole> UpdateMaterialHole(MaterialHoleModel material, string User);
 
-        PagedResult<MaterialHour> GetMaterialHours();
+        MaterialHoleModel GetMaterialHole(int? id);
+
+        IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page);
 
         void ImportMaterialHour(string User);
-        void DeleteMatialHour(Material material);
+        bool DeleteMatialHour(int Id);
 
+        RepResult<MaterialHour> UpdateMaterialHour(MaterialHourModel material, string User);
 
-        PagedResult<MaterialRate> GetMaterialRates();
+        MaterialHourModel GetMaterialHoure(int? id);
+
+        IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page);
 
         void ImportMaterialRate(string User);
-        void DeleteMatialRate(Material material);
+        bool DeleteMatialRate(int Id);
 
+        RepResult<MaterialRate> UpdateMaterialRate(MaterialRateModel material, string User);
+
+        MaterialRateModel GetMaterialRate(int? id);
 
 
     }
