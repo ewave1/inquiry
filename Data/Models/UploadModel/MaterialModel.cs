@@ -19,15 +19,15 @@ namespace Data.Entities
         /// <summary>
         /// 如EP
         /// </summary>
-        [MinLength(3)]
+        [MinLength(2)]
         [MaxLength(12)]
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "编码")]
+        [Display(Name = "材质")]
         /// <summary>
         /// Code 
         /// </summary>
-        public string Name { get; set; }
+        public string MaterialCode { get; set; }
 
 
         [Required]
@@ -40,7 +40,7 @@ namespace Data.Entities
         /// </summary>
         [MaxLength(12)] 
         [DataType(DataType.Text)]
-        [Display(Name = "名称")]
+        [Display(Name = "编码")]
         /// <summary>
         /// 显示 
         /// </summary>

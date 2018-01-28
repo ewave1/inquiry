@@ -23,8 +23,9 @@
             <thead>
                 <tr>
                     <th>序号</th>
-                    <th>编号</th>
-                    <th>名称</th>
+                    <th>材质</th>
+                    <td>硬度</td>
+                    <th>编码</th>
                     <th>特殊件折扣</th>
                     <th>备注</th> 
                     <th>修改人</th>
@@ -37,7 +38,8 @@
                 {
                     <tr>
                         <td>@(item.Id)</td>
-                        <td>@item.Name </td>
+                        <td>@item.MaterialCode </td>
+                        <td>@item.Hardness</td>
                         <td>@item.Display </td>
 
                         <td>@item.SpecialDiscount </td>

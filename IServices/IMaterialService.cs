@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace IServices
 {
@@ -43,8 +44,7 @@ namespace IServices
         MaterialGravityModel GetMaterialGravity(int? id);
 
         IPagedList<MaterialHole> GetMaterialHoles(int? MaterialId, int page);
-
-        void ImportMaterialHole(string User);
+        RepResult<MaterialHole> UploadMaterialHole(string User, HttpRequestBase Request);
         bool DeleteMatialHole(int Id);
 
         RepResult<MaterialHole> UpdateMaterialHole(MaterialHoleModel material, string User);
@@ -62,7 +62,7 @@ namespace IServices
 
         IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page);
 
-        void ImportMaterialRate(string User);
+        RepResult<MaterialRate> UploadMaterialRate(string User, HttpRequestBase Request);
         bool DeleteMatialRate(int Id);
 
         RepResult<MaterialRate> UpdateMaterialRate(MaterialRateModel material, string User);

@@ -58,7 +58,7 @@ namespace InquiryDemo.Controllers
         public ActionResult UploadFile( FILETYPE fileType= FILETYPE.其它)
         {
             var user = GetCurrentUser();
-            var uploadFile =   _iservice.UploadFile(user?.UserName, Request,fileType); 
+            var uploadFile =_iservice.UploadFile(user?.UserName, Request,fileType); 
 
             return Json(uploadFile);
 
