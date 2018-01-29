@@ -18,6 +18,11 @@ namespace Common
             Column = column;
         }
 
+        public ColumnMappingAttribute(string [] columns)
+        {
+            AlterColumns = columns.ToList();
+        }
+
         public ColumnMappingAttribute(string column, ReflectionColumnType columnType)
         {
             Column = column;
@@ -32,6 +37,11 @@ namespace Common
         }
 
         public string Column { get; set; }
+
+        /// <summary>
+        /// 可能的名称
+        /// </summary>
+        public List<string> AlterColumns { get; set; }
 
         bool _CanSet = true;
         public bool CanSave { get { return _CanSet; } set { _CanSet = value; } }

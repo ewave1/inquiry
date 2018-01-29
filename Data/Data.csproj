@@ -143,6 +143,7 @@
     <Compile Include="Models\Base\ProfileChangePasswordRequest.cs" />
     <Compile Include="Models\Base\UserCreateRequest.cs" />
     <Compile Include="Models\Base\UserManageChangePassword.cs" />
+    <Compile Include="Models\TemplateModel.cs" />
     <Compile Include="Models\UploadModel\BaseHoleModel.cs" />
     <Compile Include="Models\UploadModel\MaterialModel.cs" />
     <Compile Include="Models\UploadModel\MaterialFeatureModel.cs" />

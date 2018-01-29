@@ -56,8 +56,22 @@ namespace Common
             if (attrs == null || attrs.Length == 0)
                 return null;
             ColumnMappingAttribute attr = (ColumnMappingAttribute)attrs[0];
-            if (!row.Table.Columns.Contains(attr.Column))
-                return null;
+            if (!row.Table.Columns.Contains(attr.Column??""))
+            {
+                if(attr.AlterColumns!=null)
+                {
+                    foreach(var col in attr.AlterColumns)
+                    {
+                        if(row.Table.Columns.Contains(col))
+                        {
+                            attr.Column = col;
+                            break;
+                        }
+                    }
+                }
+                if (!row.Table.Columns.Contains(attr.Column))
+                    return null;
+            }
             object sourceValue = row[attr.Column];
             if (sourceValue == DBNull.Value) sourceValue = null;
             Type sType = sourceValue == null ? null : sourceValue.GetType();

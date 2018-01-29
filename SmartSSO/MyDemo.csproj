@@ -223,6 +223,10 @@
     <Content Include="Content\Template\孔数模板.xlsx" />
     <Content Include="Content\Template\比重模板.xlsx" />
     <Content Include="Content\Template\生产效率模板.xlsx" />
+    <Content Include="Content\Template\原料模板.xlsx" />
+    <Content Include="Content\Template\特殊处理外模板.xlsx" />
+    <Content Include="Content\Template\特殊配方模板.xlsx" />
+    <Content Include="Content\Template\颜色模板.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -292,6 +296,9 @@
     <Content Include="Views\Material\UpdateMaterialHour.cshtml" />
     <Content Include="Views\Material\MaterialGravityList.cshtml" />
     <Content Include="Views\Material\UpdateMaterialGravity.cshtml" />
+    <Content Include="Views\Material\MaterialFeatureList.cshtml" />
+    <Content Include="Views\Material\UpdateMaterialFeature.cshtml" />
+    <Content Include="Views\Upload\TemplateList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

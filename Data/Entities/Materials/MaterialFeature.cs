@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Data.Entities
 {
     /// <summary>
-    /// 物性
+    /// 表面物性
     /// 颜色 
     /// </summary>
     public  class MaterialFeature

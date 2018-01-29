@@ -17,16 +17,18 @@ namespace IServices
         /// 获取所有的材质
         /// </summary>
         /// <returns></returns>
-        List<Material> GetMaterialList();
+        IPagedList<Material> GetMaterialList(int? MaterialId, int page);
 
         RepResult<Material> UpdateMaterial(MaterialModel material, string User);
 
         MaterialModel GetMaterial(int? id);
         bool DeleteMatial(int id);
 
-        IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, int page);
+        RepResult<Material> UploadMaterial(string User, HttpRequestBase Request);
 
-        void ImportMaterialFeatures(string User);
+        IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, MATERIALTYPE type, int page);
+
+        RepResult<MaterialFeature> UploadMaterialFeature(string User, HttpRequestBase Request, MATERIALTYPE type = MATERIALTYPE.材料物性);
         bool DeleteMatialFeature(int Id);
 
 

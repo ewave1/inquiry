@@ -60,7 +60,7 @@ namespace Services
             var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
             var discount = factory.Discount * user.Discount;
 
-            //物性
+            //表面物性
             var m1 = DbContext.DiscountSet.Where(v => v.Type == DisCountType.材料物性 && v.Name == model.Material1).FirstOrDefault();
             var m2 = DbContext.DiscountSet.Where(v => v.Type == DisCountType.表面物性 && v.Name == model.Material2).FirstOrDefault();
             discount = discount * ((m1 == null) ? 1 : m1.Discount) * ((m2 == null) ? 1 : m2.Discount);

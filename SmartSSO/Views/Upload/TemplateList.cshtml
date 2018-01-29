@@ -1,0 +1,54 @@
+﻿@model List< Data.Models.TemplateModel>
+
+@{
+    ViewBag.Title = "模板列表";
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/Upload">文件管理</a></li>
+            <li class="active">模板列表</li>
+        </ol>
+
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>模板名称</th> 
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(item.Id)</td> 
+                    <td>@item.FileName </td>
+                     
+                    <td>
+                        <a href="@item.Url">下载</a>
+                        @*<div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li></li>
+            </ul>
+        </div>*@
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+</div>

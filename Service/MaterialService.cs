@@ -19,10 +19,9 @@ namespace Services
     {
 
         #region 基本资料
-        public List<Material> GetMaterialList()
+        public IPagedList<Material> GetMaterialList(int? MaterialId, int page)
         {
-
-            return DbContext.Material.ToList(); 
+            return DbContext.Material.OrderByDescending(v => v.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
         public   MaterialModel GetMaterial(int? id)
@@ -75,23 +74,168 @@ namespace Services
             return false;
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
+        public RepResult<Material> UploadMaterial(string User, HttpRequestBase Request)
+        {
+
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.原料);
+            if (!result.Success)//导入失败
+                return new RepResult<Material> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.原料,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(MaterialModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportMaterailResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<Material> { Code = 0 };
+        }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportMaterailResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<MaterialModel>(item.Json);
+
+            var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
+
+            if (material == null)
+            {
+                material = new Material { MaterialCode = relateItem.MaterialCode,Hardness = relateItem.Hardness};
+                DbContext.Material.Add(material);
+            }
+            material.Price = relateItem.Price;
+            if (!string.IsNullOrEmpty(relateItem.Display))
+                material.Display = relateItem.Display;
+
+            if(!string.IsNullOrEmpty(relateItem.Remark))
+            material.Remark = relateItem.Remark;
+
+            if (relateItem.SpecialDiscount > 0)
+                material.SpecialDiscount = relateItem.SpecialDiscount;
+
+             
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = material.Id;
+        }
+
         #endregion
 
         #region 特性
 
 
-        public IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, int page)
+        public IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, MATERIALTYPE type, int page)
         {
             return DbContext.MaterialFeature
-                .Where(v => v.MaterialId == MaterialId || MaterialId == null)
+                .Where(v => (v.MaterialId == MaterialId || MaterialId == null) && v.Type==type)
                   .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
-        public void ImportMaterialFeatures(string User)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
+        public RepResult<MaterialFeature> UploadMaterialFeature(string User, HttpRequestBase Request, MATERIALTYPE type = MATERIALTYPE.材料物性)
         {
 
-            throw new NotImplementedException();
+            UploadService service = new UploadService();
+            var fileType = FILETYPE.材料物性;
+            if (type == MATERIALTYPE.表面物性)
+                fileType = FILETYPE.表面物性;
+            if (type == MATERIALTYPE.颜色)
+                fileType = FILETYPE.颜色;
+            var result = service.UploadFile(User, Request, fileType);
+            if (!result.Success)//导入失败
+                return new RepResult<MaterialFeature> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = fileType,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(MaterialFeatureModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportMaterailFeatureResult(item, importItem, User,type );
+            }
+            DbContext.SaveChanges();
+            return new RepResult<MaterialFeature> { Code = 0 };
         }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportMaterailFeatureResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User, MATERIALTYPE type )
+        {
+            var relateItem = JsonConvert.DeserializeObject<MaterialFeatureModel>(item.Json);
+
+            var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
+            var storage = new MaterialFeature
+            {
+                UpdateTime = DateTime.Now,
+                UpdateUser = User,
+                MaterialCode = relateItem.MaterialCode,
+                Hardness = relateItem.Hardness, 
+                MaterialId = material == null ? 0 : material.Id,
+                Discount = relateItem.Discount,
+                Name = relateItem.Name,
+                Type = type 
+            };
+
+
+            DbContext.MaterialFeature.Add(storage);
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = storage.Id;
+        }
+
 
 
         public bool DeleteMatialFeature(int Id)
@@ -147,6 +291,7 @@ namespace Services
                 UpdateUser = model.UpdateUser
             };
         }
+       
         #endregion
 
         #region 比重

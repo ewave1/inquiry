@@ -12,8 +12,7 @@ namespace Data.Entities
     /// 材质
     /// </summary>
     public  class MaterialModel
-    {
-        [ColumnMapping("编号", ColumnType = ReflectionColumnType.PrimaryKey)]
+    { 
         public int Id { get; set; }
 
         /// <summary>
@@ -24,6 +23,7 @@ namespace Data.Entities
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "材质")]
+        [ColumnMapping("材质", ColumnType = ReflectionColumnType.PrimaryKey)]
         /// <summary>
         /// Code 
         /// </summary>
@@ -33,6 +33,7 @@ namespace Data.Entities
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "硬度")]
+        [ColumnMapping("硬度", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Hardness { get; set; }
          
         /// <summary>
@@ -41,6 +42,7 @@ namespace Data.Entities
         [MaxLength(12)] 
         [DataType(DataType.Text)]
         [Display(Name = "编码")]
+        [ColumnMapping("编码")]
         /// <summary>
         /// 显示 
         /// </summary>
@@ -48,6 +50,7 @@ namespace Data.Entities
           
         [DataType(DataType.Text)]
         [Display(Name = "特殊件折扣")]
+        [ColumnMapping("特殊件折扣")]
         /// <summary>
         /// 特殊件折扣
         /// </summary>
@@ -55,6 +58,7 @@ namespace Data.Entities
 
         [DataType(DataType.Text)]
         [Display(Name = "单价")]
+        [ColumnMapping("单价")]
         /// <summary>
         /// 特殊件折扣
         /// </summary>

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Data.Entities
 {
     /// <summary>
-    /// 物性
+    /// 表面物性
     /// 颜色 
     /// </summary>
     public  class MaterialFeatureModel
@@ -34,7 +34,7 @@ namespace Data.Entities
         public int Hardness { get; set; }
 
 
-        [ColumnMapping("物性或颜色")]
+        [ColumnMapping(new string[] { "特殊性","颜色","表面物性","特性"})]
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "物性或颜色")]

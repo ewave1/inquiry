@@ -1,10 +1,9 @@
 ﻿@using PagedList.Mvc;
 @using PagedList;
-@model IPagedList<Data.Entities.Material>
+@model IPagedList<Data.Entities.MaterialFeature>
 @{
-    ViewBag.Title = "材料管理";
+    //ViewBag.Title = "特殊配方内";
 }
-
 <script src="~/Scripts/util.js"></script>
 <div class="row">
 
@@ -17,7 +16,7 @@
 
         <ol class="breadcrumb">
             <li><a href="/Material">材料管理</a></li>
-            <li class="active">查看基本资料</li>
+            <li class="active">@ViewBag.Title</li>
         </ol>
 
         <div class="panel panel-info">
@@ -25,7 +24,7 @@
             <div class="panel-body">
 
 
-                @using (Html.BeginForm("Index", "Material", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
+                @using (Html.BeginForm("MaterialFeatureList", "Material", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
                 {
 
                     <div class="form-group">
@@ -66,18 +65,20 @@
                 }
             </div>
         </div>
+
         <table class="table table-hover table-striped">
             <thead>
                 <tr>
                     <th>序号</th>
+
+
                     <th>材质</th>
-                    <td>硬度</td>
-                    <th>编码</th>
-                    <th>单价</th>
-                    <th>特殊件折扣</th>
-                    <th>备注</th>
-                    <th>修改人</th>
-                    <th>修改时间</th>
+                    <th>硬度</th>
+                    <th>@ViewBag.ColumnName</th> 
+                    <th>系数</th>
+
+                    <th>上传时间</th>
+                    <th>操作人</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -86,14 +87,13 @@
                 {
                     <tr>
                         <td>@(item.Id)</td>
-                        <td>@item.MaterialCode </td>
+                        <td>@item.MaterialCode</td>
                         <td>@item.Hardness</td>
-                        <td>@item.Display </td>
-                        <td>@item.Price</td>
-                        <td>@item.SpecialDiscount </td>
-                        <td>@item.Remark </td>
-                        <td>@item.UpdateUser </td>
+                        <td>@item.Name</td> 
+                        <td>@item.Discount</td>
+
                         <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
+                        <td>@item.UpdateUser </td>
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -101,8 +101,8 @@
                                     <span class="sr-only"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="/Material/UpdateMaterial/@item.Id">修改</a></li>
-                                    <li><a href="/Material/DeleteMaterial/@item.Id">删除</a></li>
+                                    <li><a href="/Material/UpdateMaterialFeature/@item.Id?type=@ViewBag.Type">修改</a></li>
+                                    <li><a href="/Material/DeleteMaterialFeature/@item.Id?type=@ViewBag.Type">删除</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -110,6 +110,7 @@
                 }
             </tbody>
         </table>
+
         @Html.PagedListPager(Model, page => Url.Action("Index", new
         {
             CreateUser = ViewBag.CreateUser,
@@ -117,6 +118,7 @@
             timeEnd = ViewBag.timeEnd,
             page
         }))
+
         @if (!Model.Any())
         {
             <div class="alert alert-info">
@@ -126,8 +128,6 @@
 
     </div>
 </div>
-
-
 <script>
     $("#fileUpload").change(function () {
         $("#fileText").val($(this).val());
@@ -136,8 +136,9 @@
         var file = $('#fileUpload').prop('files')[0];
         var data = new FormData();
         data.append("file", file);
+        data.append("type",'@ViewBag.Type');
         $.ajax({
-            url: '/Material/UploadMaterial',
+            url: '/Material/UploadMaterialFeature',
             type: 'POST',
             //dataType: 'JSON',
             data: data,
@@ -152,9 +153,9 @@
             success: function (res) {
 
                 if (res.Success) {
-                    util.message('导入成功 ', '/Material/Index', 'success');
+                    util.message('导入成功 ', '/Material/MaterialFeatureList?type=@ViewBag.Type', 'success');
                 } else {
-                    util.message('导入失败，' + res.Msg, '/Material/Index', 'error');
+                    util.message('导入失败，' + res.Msg, '/Material/MaterialFeatureList?type=@ViewBag.Type', 'error');
                 }
             }, error: function (event, request, settings) {
                 if (request == "parsererror")

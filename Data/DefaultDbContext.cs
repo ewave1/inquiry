@@ -70,7 +70,7 @@ namespace SmartSSO.Entities
         public DbSet<Material> Material { get; set; }
 
         /// <summary>
-        /// 物性，颜色
+        /// 表面物性，颜色
         /// </summary>
         public DbSet<MaterialFeature> MaterialFeature { get; set; }
         /// <summary>

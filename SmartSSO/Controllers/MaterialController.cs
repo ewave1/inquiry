@@ -33,9 +33,9 @@ namespace InquiryDemo.Controllers
 
         #region 基本资料
         // GET: Material
-        public ActionResult Index( )
+        public ActionResult Index( int page = 1 )
         {  
-            var result = _iservice.GetMaterialList( );
+            var result = _iservice.GetMaterialList( null,page );
             if (result == null)
                 return RedirectToAction("Login", "Home"); 
             return View(result);
@@ -70,8 +70,23 @@ namespace InquiryDemo.Controllers
 
         }
 
-        #endregion
 
+        /// <summary>
+        /// 上传基本数据
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadMaterial()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadMaterial(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
+
+        #endregion
 
         #region 孔数
 
@@ -130,22 +145,92 @@ namespace InquiryDemo.Controllers
 
         }
 
-         
-        #endregion
-
-        #region 材质
-
-        public ActionResult MaterialFeatureDetail(int? materialId,int page)
-        {
-            var result = _iservice.GetMaterialFeatures(materialId,page);
-            if (result == null)
-                return RedirectToAction("Login", "Home");
-            return View(result);
-        }
 
         #endregion
 
         #region 物性，顔色
+
+
+        // GET: Material
+        public ActionResult MaterialFeatureList(int? MaterialId, MATERIALTYPE type = MATERIALTYPE.材料物性, int page = 1)
+        {
+            var result = _iservice.GetMaterialFeatures(MaterialId,type, page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            ViewBag.Type = type.GetHashCode();
+            ViewBag.Title = "特殊配方内列表";
+            ViewBag.ColumnName = "特性";
+            if (type == MATERIALTYPE.表面物性)
+            {
+
+                ViewBag.Title = "特殊处理外列表";
+            }
+            if (type == MATERIALTYPE.颜色)
+            { 
+                ViewBag.ColumnName = "颜色";
+                ViewBag.Title = "颜色列表";
+            }
+            return View(result);
+        }
+
+        public ActionResult UpdateMaterialFeature(int? id, MATERIALTYPE type = MATERIALTYPE.材料物性)
+        {
+            var model = _iservice.GetMaterialFeature(id);
+            if (model != null)
+                type = model.Type;
+            ViewBag.Type = type.GetHashCode();
+            ViewBag.Title = "维护特殊配方内";
+            ViewBag.ColumnName = "特性";
+            if (type == MATERIALTYPE.表面物性)
+            {
+                ViewBag.Title = "维护特殊处理外";
+
+            }
+            if (type == MATERIALTYPE.颜色)
+            { 
+                ViewBag.ColumnName = "颜色";
+                ViewBag.Title = "维护颜色数据";
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateMaterialFeature(MaterialFeatureModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateMaterialFeature(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("MaterialFeatureList", new { type = result.Data?.Type });
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteMaterialFeature(int id, MATERIALTYPE type = MATERIALTYPE.材料物性)
+        {
+            _iservice.DeleteMatialFeature(id);
+
+            return RedirectToAction("MaterialFeatureList",new { type = type });
+
+        }
+
+
+        /// <summary>
+        /// 上传孔数的数据
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadMaterialFeature(MATERIALTYPE type = MATERIALTYPE.材料物性)
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadMaterialFeature(user?.UserName, Request,type);
+
+            return Json(uploadFile);
+
+        }
 
         #endregion
 

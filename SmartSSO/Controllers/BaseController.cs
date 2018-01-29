@@ -92,7 +92,7 @@ namespace MyDemo.Controllers
                 new SelectListItem{ Text = "库存",Value =FILETYPE.库存.GetHashCode().ToString() },
                 new SelectListItem{ Text = "孔数",Value =FILETYPE.孔数.GetHashCode().ToString() },
                 new SelectListItem{ Text = "比重",Value =FILETYPE.比重.GetHashCode().ToString() },
-                new SelectListItem{ Text = "物性",Value =FILETYPE.物性.GetHashCode().ToString() },
+                new SelectListItem{ Text = "表面物性",Value =FILETYPE.表面物性.GetHashCode().ToString() },
                 new SelectListItem{ Text = "生产效率",Value =FILETYPE.生产效率.GetHashCode().ToString() },
                 new SelectListItem{ Text = "颜色",Value =FILETYPE.颜色.GetHashCode().ToString() }
             };
