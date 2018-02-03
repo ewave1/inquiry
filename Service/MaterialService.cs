@@ -92,6 +92,7 @@ namespace Services
                 original.Remark = material.Remark;
             original.Hardness = material.Hardness;
             original.MaterialCode = material.MaterialCode;
+          
             original.SpecialDiscount = material.SpecialDiscount;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
@@ -257,23 +258,33 @@ namespace Services
             var relateItem = JsonConvert.DeserializeObject<MaterialFeatureModel>(item.Json);
 
             var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
-            var storage = new MaterialFeature
+
+            var feature = DbContext.MaterialFeature.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness && v.Type == type && v.Name == relateItem.Name).FirstOrDefault();
+            if(feature==null)
             {
-                UpdateTime = DateTime.Now,
-                UpdateUser = User,
-                MaterialCode = relateItem.MaterialCode,
-                Hardness = relateItem.Hardness, 
-                MaterialId = material == null ? 0 : material.Id,
-                Discount = relateItem.Discount,
-                Name = relateItem.Name,
-                Type = type 
-            };
+                feature = new MaterialFeature
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    MaterialCode = relateItem.MaterialCode,
+                    Hardness = relateItem.Hardness,
+                    MaterialId = material == null ? 0 : material.Id,
+                    Discount = relateItem.Discount,
+                    Name = relateItem.Name,
+                    Type = type
+                };
+                DbContext.MaterialFeature.Add(feature);
+            }
+            else
+            {
+                feature.Discount = relateItem.Discount;
+                feature.UpdateTime = DateTime.Now;
+                feature.UpdateUser = User;
+            }
 
-
-            DbContext.MaterialFeature.Add(storage);
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
-            item.RelateID = storage.Id;
+            item.RelateID = feature.Id;
         }
 
 
@@ -302,6 +313,7 @@ namespace Services
                 };
                 DbContext.MaterialFeature.Add(original);
             }
+            original.Name = material.Name;
             original.MaterialCode = material.MaterialCode;
             original.Discount = material.Discount;
             original.Hardness = material.Hardness;
@@ -337,8 +349,7 @@ namespace Services
         #region 比重
 
         public IPagedList<MaterialGravity> GetMaterialGravities( int? MaterialId,int page)
-        {
-
+        { 
             return DbContext.MaterialGravity
                 .Where(v=>v.MaterialId == MaterialId || MaterialId==null)
                   .OrderByDescending(p => p.UpdateTime).ToPagedList(page,Const.PageSize);
@@ -368,8 +379,7 @@ namespace Services
                 ImportTime = DateTime.Now,
                 ImportType = FILETYPE.比重,
                 ImportFile = file.LocalPath,
-                ImportFileName = file.FileName,
-
+                ImportFileName = file.FileName, 
             };
             DbContext.PT_ImportHistory.Add(importItem);
             DbContext.SaveChanges();
@@ -396,22 +406,35 @@ namespace Services
             var relateItem = JsonConvert.DeserializeObject<MaterialGravityModel>(item.Json);
 
             var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
-            var storage = new MaterialGravity
+
+            var gravity = DbContext.MaterialGravity.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness && v.Color == relateItem.Color).FirstOrDefault();
+            if(gravity==null)
             {
-                UpdateTime = DateTime.Now,
-                UpdateUser = User, 
-                MaterialCode = relateItem.MaterialCode,
-                Hardness = relateItem.Hardness, 
-                Gravity = relateItem.Gravity,
-                Color = relateItem.Color,
-                MaterialId = material == null ? 0 : material.Id
-            };
+                gravity = new MaterialGravity
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    MaterialCode = relateItem.MaterialCode,
+                    Hardness = relateItem.Hardness,
+                    Gravity = relateItem.Gravity,
+                    Color = relateItem.Color,
+                    MaterialId = material == null ? 0 : material.Id
+                };
 
 
-            DbContext.MaterialGravity.Add(storage);
+                DbContext.MaterialGravity.Add(gravity);
+            }
+            else
+            {
+                gravity.Gravity = relateItem.Gravity;
+                gravity.UpdateTime = DateTime.Now;
+                gravity.UpdateUser = User;
+            }
+
+            
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
-            item.RelateID = storage.Id;
+            item.RelateID = gravity.Id;
         }
         public bool DeleteMatialGravity(int Id)
         {
@@ -437,6 +460,7 @@ namespace Services
                 };
                 DbContext.MaterialGravity.Add(original);
             }
+            original.Color = material.Color;
             original.Hardness = material.Hardness;
             original.Gravity = material.Gravity;
             original.MaterialId = material.MaterialId;
@@ -655,24 +679,41 @@ namespace Services
         {
             var relateItem = JsonConvert.DeserializeObject<MaterialHoleModel>(item.Json);
             var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
-             
-            var storage = new MaterialHole
-            {                
-                UpdateTime = DateTime.Now,
-                UpdateUser = User,
-                Hardness = relateItem.Hardness,
-                HoleCount = relateItem.HoleCount,
-                MaterialCode = relateItem.MaterialCode,
-                Rate  = relateItem.Rate,
-                SizeC = relateItem.SizeC,
-                MaterialId = material==null?0:material.Id
-            };
+
+            var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness && v.SizeC == relateItem.SizeC).FirstOrDefault();
+
+            var baseHole = DbContext.BaseHole.Where(v => v.SizeC == relateItem.SizeC).FirstOrDefault();
+
+            if(hole==null)
+            {
+                 hole = new MaterialHole
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    Hardness = relateItem.Hardness,
+                    HoleCount = relateItem.HoleCount,
+                    MaterialCode = relateItem.MaterialCode,
+                    Rate = relateItem.Rate,
+                    SizeC = relateItem.SizeC,
+                    MaterialId = material == null ? 0 : material.Id
+                };
 
 
-            DbContext.MaterialHole.Add(storage);
+                DbContext.MaterialHole.Add(hole);
+            }
+            else
+            {
+                hole.UpdateTime = DateTime.Now;
+                hole.UpdateUser = User;
+                hole.HoleCount = relateItem.HoleCount;
+                hole.Rate = relateItem.Rate;
+
+            }
+            if (baseHole != null && relateItem.HoleCount == 0)
+                hole.HoleCount =Convert.ToInt32( baseHole.HoleCount * hole.Rate);
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
-            item.RelateID = storage.Id;
+            item.RelateID = hole.Id;
         }
 
         public bool DeleteMatialHole(int Id)
@@ -790,23 +831,35 @@ namespace Services
             var relateItem = JsonConvert.DeserializeObject<MaterialHourModel>(item.Json);
 
             var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
-            var storage = new MaterialHour
+            var hour = DbContext.MaterialHour.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness && v.SizeB == relateItem.SizeB && v.SizeB2 == relateItem.SizeB2).FirstOrDefault();
+
+            if(hour ==null)
             {
-                UpdateTime = DateTime.Now,
-                UpdateUser = User, 
-                SizeB = relateItem.SizeB,
-                SizeB2 = relateItem.SizeB2, 
-                MaterialCode = relateItem.MaterialCode,
-                Hardness = relateItem.Hardness,
-                MosInHour = relateItem.MosInHour,
-                MaterialId = material==null ?0:material.Id
-            };
+                hour = new MaterialHour
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    SizeB = relateItem.SizeB,
+                    SizeB2 = relateItem.SizeB2,
+                    MaterialCode = relateItem.MaterialCode,
+                    Hardness = relateItem.Hardness,
+                    MosInHour = relateItem.MosInHour,
+                    MaterialId = material == null ? 0 : material.Id
+                };
 
 
-            DbContext.MaterialHour.Add(storage);
+                DbContext.MaterialHour.Add(hour);
+
+            }
+            else
+            {
+                hour.UpdateTime = DateTime.Now;
+                hour.UpdateUser = User;
+                hour.MosInHour = relateItem.MosInHour;
+            }
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
-            item.RelateID = storage.Id;
+            item.RelateID = hour.Id;
         }
 
         public bool DeleteMatialHour(int Id)
@@ -832,10 +885,10 @@ namespace Services
             }
             original.Hardness = material.Hardness;
             original.MaterialCode = material.MaterialCode;
+            original.SizeB = material.SizeB;
             original.SizeB2 = material.SizeB2; 
             original.MosInHour = material.MosInHour;
             original.MaterialId = material.MaterialId;
-            original.SizeB = material.SizeB;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
             DbContext.SaveChanges();
@@ -919,24 +972,34 @@ namespace Services
         public void SaveImportMaterailRateResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
         {
             var relateItem = JsonConvert.DeserializeObject<MaterialRateModel>(item.Json);
-          
 
-            var storage = new MaterialRate
+            var rate = DbContext.MaterialRate.Where(v => v.SizeB == relateItem.SizeB && v.SizeB2 == relateItem.SizeB2).FirstOrDefault();
+            if(rate==null)
+            { 
+                rate = new MaterialRate
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    BadRate = relateItem.BadRate,
+                    SizeB = relateItem.SizeB,
+                    SizeB2 = relateItem.SizeB2,
+                    UseRate = relateItem.UseRate,
+
+                };
+
+
+                DbContext.MaterialRate.Add(rate);
+            }
+            else
             {
-                UpdateTime = DateTime.Now,
-                UpdateUser = User,
-                BadRate = relateItem.BadRate,
-                SizeB = relateItem.SizeB,
-                SizeB2 = relateItem.SizeB2,
-                UseRate = relateItem.UseRate,
-                
-            };
-
-
-            DbContext.MaterialRate.Add(storage);
+                rate.BadRate = relateItem.BadRate;
+                rate.UseRate = relateItem.UseRate;
+                rate.UpdateTime = DateTime.Now;
+                rate.UpdateUser = User;
+            }
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
-            item.RelateID = storage.Id;
+            item.RelateID = rate.Id;
         }
 
         public bool DeleteMatialRate(int Id)
