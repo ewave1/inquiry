@@ -21,9 +21,9 @@ namespace Data.Models
         {
             get
             {
-                if (Type == DisCountType.Other||Type== DisCountType.FACTORY)
-                    return false;
-                return true;
+                if (Type ==  DisCountType.客户级别)
+                    return true;
+                return false;
             }
         }
 
