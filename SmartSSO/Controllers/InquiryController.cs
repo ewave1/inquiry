@@ -52,8 +52,8 @@ namespace SmartSSO.Controllers
         public ActionResult Create( )
         {
             ViewBag.Factories = GetDiscountNames( DisCountType.FACTORY);
-            ViewBag.M1 = GetDiscountNames(DisCountType.材料物性);
-            ViewBag.M2 = GetDiscountNames(DisCountType.表面物性);
+            //ViewBag.M1 = GetDiscountNames(DisCountType.材料物性);
+            //ViewBag.M2 = GetDiscountNames(DisCountType.表面物性);
             ViewBag.Materials = GetMaterials();
             ViewBag.SealCodes = GetSealCodes();
              

@@ -49,9 +49,9 @@ namespace Services
 
             if (model.Number == 0)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "数量不能为0" };
-            var sc = DbContext.SealCode.Find(model.Code);
-            if (sc == null)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "请选择编码或者输入尺寸" };
+            //var sc = DbContext.SealCode.Find(model.Code);
+            //if (sc == null)
+            //    return new RepResult<InquiryLog> { Code = -1, Msg = "请选择编码或者输入尺寸" };
           
             if (model.SizeA < 1M || model.SizeB < 1M)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "内径或线径小于 1，请重新输入！" };
@@ -70,14 +70,22 @@ namespace Services
                 return new RepResult<InquiryLog> { Code = -1, Msg = "不良率数据找不到，请先导入不良率数据" };
 
             //特殊材料
-            var material1 = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness&&v.Type== MATERIALTYPE.材料物性).FirstOrDefault();
+            MaterialFeature material1;
+            if (model.Material1 == "Normal")
+                material1 = new MaterialFeature { Discount = 1 };
+            else 
+            material1 = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness&&v.Type== MATERIALTYPE.材料物性&&v.Name==model.Material1).FirstOrDefault();
             if (material1 == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "特殊材料数据找不到，请先导入特殊材料(材料物性)数据" };
 
-            var material2 = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Type == MATERIALTYPE.表面物性).FirstOrDefault();
+            MaterialFeature material2 = null;
+            if (model.Material2 == "Normal")
+                material2 = new MaterialFeature { Discount = 1 }; 
+            else 
+            material2 = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Type == MATERIALTYPE.表面物性 && v.Name == model.Material2).FirstOrDefault();
             if (material2 == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "特殊处理数据找不到，请先导入特殊处理(表面物性)数据" };
-            var color = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Type == MATERIALTYPE.颜色).FirstOrDefault();
+            var color = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Type == MATERIALTYPE.颜色 && v.Name == model.Color).FirstOrDefault();
             if (color == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "颜色数据找不到，请先导入颜色数据" };
 
@@ -98,7 +106,8 @@ namespace Services
             var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, hole.HoleCount, profile.Discount);
 
             //库存
-            var storage =   DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB).Sum(v=>v.Number);
+            var storages = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB).ToList();
+            var storage = storages.Sum(v=>v.Number);
 
             var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
             var customerLevel = DbContext.DiscountSet.Where(v => v.Type == DisCountType.客户级别 && v.Name == model.CustomerLevel).FirstOrDefault();
@@ -109,6 +118,8 @@ namespace Services
             var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
         
             discount = Math.Round(discount, 2);
+
+            price = Math.Round(price, 4);
             
             var totalprice = Math.Round(price * discount * model.Number, 2);
             var log = new InquiryLog
@@ -125,19 +136,24 @@ namespace Services
                 Color = color.Name,
                 CustomerLevel = customerLevel.Name,
                 Number = model.Number,
-                SizeA = sc.SizeA,
-                SizeB = sc.SizeB,
+                SizeA = model.SizeA,
+                SizeB = model.SizeB,
                 discount = discount,
                 User = User,
                 Price = price,
-                TotalPrice = price * model.Number, 
+                TotalPrice = totalprice, 
             };
 
             DbContext.InquiryLog.Add(log);
 
             DbContext.SaveChanges();
+            var storageText = "";
+            if (storages.Count == 0)
+                storageText = "无模具";
+            else 
+                storageText = storage.ToString();
 
-            var info = string.Format("单价：{0}，总价：{1}，库存：{2}",   price, price * model.Number, storage);
+            var info = string.Format("单价：{0}，总价：{1}，库存：{2}",   price, price * model.Number, storageText);
 
             return new RepResult<InquiryLog> { Data = log, Msg = info };
         }
