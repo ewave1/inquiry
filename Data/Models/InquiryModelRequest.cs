@@ -45,6 +45,11 @@ namespace Data.Models
         /// </summary>
         public string Factory { get; set; }
 
+
+        [Required]
+        [Display(Name = "客户级别")]
+        public string CustomerLevel { get; set; }
+
         [Required]
         [Display(Name = "数量")]
         /// <summary>
@@ -53,10 +58,20 @@ namespace Data.Models
         public int Number { get; set; }
 
 
+         
+        [Display(Name = "材料编号")]
+        public int MaterialId { get; set; }
+
 
         [Required]
-        [Display(Name = "材料")]
-        public int MaterialId { get; set; }
+        [Display(Name = "材质")]
+        public string MaterialCode { get; set; }
+
+
+        [Required]
+        [Display(Name = "硬度")]
+
+        public int Hardness { get; set; }
 
         [Required]
         [Display(Name = "材料物性")]
@@ -67,10 +82,6 @@ namespace Data.Models
         [Display(Name = "表面物性")]
         public string Material2 { get; set; }
 
-        [Required]
-        [Display(Name = "硬度")]
-
-        public int Hardness { get; set; }
 
 
         [Required]

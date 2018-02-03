@@ -7,6 +7,8 @@
     List<SelectListItem> M1Lst = ViewBag.M1;
     List<SelectListItem> M2Lst = ViewBag.M2;
     List<SelectListItem> SealCodeLst = ViewBag.SealCodes;
+    List<SelectListItem> CustomerLevels = ViewBag.CustomerLevels;
+    List<SelectListItem> nonList = new List<SelectListItem>();
 }
 
 <div class="row">
@@ -40,9 +42,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.MaterialId, new { @class = "col-md-3 control-label" })
+                        @Html.LabelFor(model => model.MaterialCode, new { @class = "col-md-3 control-label" })
                         <div class="col-md-6">
-                            @Html.DropDownListFor(model => model.MaterialId, MaterialLst, new { @class = "form-control", style = "width: 280px" })
+                            @Html.DropDownListFor(model => model.MaterialCode, MaterialLst, new { @class = "form-control", style = "width: 280px" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -52,6 +54,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Color, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.Color, nonList, new { @class = "form-control", style = "width: 280px" })
+                        </div>
+                    </div>
+                   
                 </div>
 
             </div>
@@ -59,10 +68,16 @@
             <div class="col-xs-12 col-sm-6">
                 <div class="form-horizontal">
 
+                    @*<div class="form-group">
+            @Html.LabelFor(model => model.Code, new { @class = "col-md-3 control-label" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Code, SealCodeLst, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>*@
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Code, new { @class = "col-md-3 control-label" })
+                        @Html.LabelFor(model => model.CustomerLevel, new { @class = "col-md-3 control-label" })
                         <div class="col-md-6">
-                            @Html.DropDownListFor(model => model.Code, SealCodeLst, new { @class = "form-control", style = "width: 280px" })
+                            @Html.DropDownListFor(model => model.CustomerLevel, CustomerLevels, new { @class = "form-control", style = "width: 280px" })
                         </div>
                     </div>
 
@@ -73,13 +88,13 @@
                             @Html.TextBoxFor(model => model.SizeB, new { @class = "form-control", style = "width: 280px" })
                         </div>
                     </div>
+
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Number, new { @class = "col-md-3 control-label" })
+                        @Html.LabelFor(model => model.Hardness, new { @class = "col-md-3 control-label" })
                         <div class="col-md-6">
-                            @Html.TextBoxFor(model => model.Number, new { @class = "form-control", style = "width: 280px" })
+                            @Html.DropDownListFor(model => model.Hardness, nonList, new { @class = "form-control", style = "width: 280px" })
                         </div>
                     </div>
-
                     <div class="form-group">
                         @Html.LabelFor(model => model.Material2, new { @class = "col-md-3 control-label" })
                         <div class="col-md-6">
@@ -88,16 +103,9 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Hardness, new { @class = "col-md-3 control-label" })
+                        @Html.LabelFor(model => model.Number, new { @class = "col-md-3 control-label" })
                         <div class="col-md-6">
-                            @Html.TextBoxFor(model => model.Hardness, new { @class = "form-control", style = "width: 280px" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Color, new { @class = "col-md-3 control-label" })
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(model => model.Color, new { @class = "form-control", style = "width: 280px" })
+                            @Html.TextBoxFor(model => model.Number, new { @class = "form-control", style = "width: 280px" })
                         </div>
                     </div>
                 </div>
@@ -125,47 +133,113 @@
     </div>
     <script>
 
-        $('#Code').change(function() {  
-            //$.get("/Inquiry/GetSealCode",    { Code: $('#Code').val() } , function (response) { 
-            //    $('#SizeA').val(result.SizeA);
-            //    $('#SizeB').val(result.SizeB);
-            //}); 
+        //编码（取消）
+        //$('#Code').change(function() {   
+        //    $.ajax({
+        //        url: "/Inquiry/GetSealCode",
+        //        type: 'post',
+        //        dataType: 'json',
+        //        data:   { Code: $('#Code').val() },
+        //        success: function (result) {
+        //            if (result.Success) {
+        //                $('#SizeA').val(result.Data.SizeA);
+        //                $('#SizeB').val(result.Data.SizeB);
+        //            } else { 
+        //                $('#SizeA').val('');
+        //                $('#SizeB').val('');
+        //            }
+        //            event.stopPropagation();
+        //        }
+        //    }); 
+        //});
 
+        //$('#SizeA,#SizeB').change(function () {
+        //    $.ajax({
+        //        url: "/Inquiry/GetSealCode",
+        //        type: 'post',
+        //        dataType: 'json',
+        //        data: { SizeA: $('#SizeA').val(), SizeB:$('#SizeB').val() },
+        //        success: function (result) {
+        //            if (result.Success) {
+        //                $('#Code').val(result.Data.Code); 
+        //            } else {
+        //                $('#Code').val(''); 
+        //            }
+        //            event.stopPropagation();
+        //        }
+        //    }); 
+        //});
+        function changeMaterial() {
+            //硬度
             $.ajax({
-                url: "/Inquiry/GetSealCode",
+                url: "/Inquiry/GetMaterialData",
                 type: 'post',
                 dataType: 'json',
-                data:   { Code: $('#Code').val() },
+                data: { MaterialCode: $('#MaterialId').val(), getType: 0 },
                 success: function (result) {
-                    if (result.Success) {
-                        $('#SizeA').val(result.Data.SizeA);
-                        $('#SizeB').val(result.Data.SizeB);
-                    } else { 
-                        $('#SizeA').val('');
-                        $('#SizeB').val('');
-                    }
-                    event.stopPropagation();
+                    $('#Hardness').empty();
+                    $.each(result, function (n, value) {
+                        $('#Hardness').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+                    })
+
+
+                    changeHardness();
                 }
-            }); 
-        });
-        $('#SizeA,#SizeB').change(function () {
+            });
+        }
+
+        function changeHardness() {
+            //材料物性
             $.ajax({
-                url: "/Inquiry/GetSealCode",
+                url: "/Inquiry/GetMaterialData",
                 type: 'post',
                 dataType: 'json',
-                data: { SizeA: $('#SizeA').val(), SizeB:$('#SizeB').val() },
+                data: {
+                    MaterialCode: $('#MaterialId').val(), Hardness: $('#Hardness').val(), getType: 1
+                },
                 success: function (result) {
-                    if (result.Success) {
-                        $('#Code').val(result.Data.Code); 
-                    } else {
-                        $('#Code').val(''); 
-                    }
-                    event.stopPropagation();
+                    $('#Material1').empty();
+                    $.each(result, function (n, value) {
+                        $('#Material1').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+                    })
                 }
-            }); 
-        });
+            });
 
-        $('#inquiry').click(function (){
+            //材料物性
+            $.ajax({
+                url: "/Inquiry/GetMaterialData",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    MaterialCode: $('#MaterialId').val(), Hardness: $('#Hardness').val(), getType: 2
+                },
+                success: function (result) {
+                    $('#Material2').empty();
+                    $.each(result, function (n, value) {
+                        $('#Material2').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+                    })
+                }
+            });
+
+
+            //颜色
+            $.ajax({
+                url: "/Inquiry/GetMaterialData",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    MaterialCode: $('#MaterialId').val(), Hardness: $('#Hardness').val(), getType: 3
+                },
+                success: function (result) {
+                    $('#Color').empty();
+                    $.each(result, function (n, value) {
+                        $('#Color').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+                    })
+                }
+            });
+        }
+
+        function submitInquiry() {
 
             $.ajax({
                 url: "/Inquiry/CreateInquiry",
@@ -174,13 +248,15 @@
                 data: {
                     SizeA: $('#SizeA').val(),
                     SizeB: $('#SizeB').val(),
-                    Code: $('#Code').val(),
-                    MaterialId: $('#MaterialId').val(),
+                    //Code: $('#Code').val(),
+                    MaterialCode: $('#MaterialCode').val(),
+                    Hardness: $('#Hardness').val(),
                     Number: $('#Number').val(),
                     Factory: $('#Factory').val(),
                     Material1: $('#Material1').val(),
                     Material2: $('#Material2').val(),
-
+                    Color: $('#Color').val(),
+                    CustomerLevel: $('#CustomerLevels').val()
                 },
                 success: function (result) {
                     if (result.Code == -2) {
@@ -188,16 +264,31 @@
                         return;
                     }
                     var alert = result.Success == true ? "success" : "warning";
-                    $('.info').empty().append('<div class="alert alert-' + alert +' alert-dismissable">\
+                    $('.info').empty().append('<div class="alert alert-' + alert + ' alert-dismissable">\
                 <button type= "button" class="close" data- dismiss="alert"\
                     aria- hidden="true" >\
                         &times;\
-                    </button>'+ result.Msg+'</div>' );
-                   
-                }
-            }); 
+                    </button>'+ result.Msg + '</div>');
 
-            
-        });
+                }
+            });
+
+
+        }
+
+        $(function () {
+
+            //绑定事件
+            $('#MaterialId').change(changeMaterial);
+
+            $('#Hardness').change(changeHardness)
+
+            $('#inquiry').click(submitInquiry);
+
+            //初始化数据
+            changeMaterial();
+            changeHardness();
+        })
+
     </script>
 </div>

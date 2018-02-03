@@ -78,7 +78,7 @@ namespace Services
             var storage = new Storage {
                 Color = relateItem.Color,
                 Hardness = relateItem.Hardness,
-                Material = relateItem.Material,
+                MaterialCode = relateItem.MaterialCode,
                 Material1 = relateItem.Material1,
                 Material2 = relateItem.Material2,
                 Number = relateItem.Number,

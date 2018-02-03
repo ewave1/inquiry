@@ -37,69 +37,116 @@ namespace Services
 
         public RepResult<InquiryLog> Create(InquiryModelRequest model, string User)
         {
-            var material = DbContext.Material.Find(model.MaterialId);
-            if (material == null)
+            var user = DbContext.ManageUser.Find(User);
+            if (user == null)
+                return new RepResult<InquiryLog> { Code = -2, Msg = "请重新登陆" };
+            if (string.IsNullOrEmpty( model.MaterialCode ))
                 return new RepResult<InquiryLog> { Code = -1, Msg = "材料不能为空" };
+
+            var material = DbContext.Material.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).FirstOrDefault();
+            if (material==null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "原料数据找不到，请导入原料数据" };
+
             if (model.Number == 0)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "数量不能为0" };
             var sc = DbContext.SealCode.Find(model.Code);
             if (sc == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "请选择编码或者输入尺寸" };
-            var product = DbContext.Product.Where(v => v.Code == sc.Code && v.MaterialId == material.Id).FirstOrDefault();
-            if (product == null)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "当前产品不存在，请重新输入！" };
+          
             if (model.SizeA < 1M || model.SizeB < 1M)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "内径或线径小于 1，请重新输入！" };
             if (model.SizeA > 200M || model.SizeB > 8M)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "内径大于200或线径大于8，请重新输入！" };
+            //SizeA
+            //SizeB
+            //Gravity
+            var gravity = DbContext.MaterialGravity.Where(v => v.Color == model.Color && v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).FirstOrDefault();
+            if(gravity==null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "比重数据找不到，请先导入比重数据" };
+            //userate,badrate
 
+            var materialRate = DbContext.MaterialRate.Where(v => v.SizeB <= model.SizeB && v.SizeB2 > model.SizeB).FirstOrDefault();
+            if (materialRate == null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "不良率数据找不到，请先导入不良率数据" };
 
-            var user = DbContext.ManageUser.Find(User);
-            if (user == null)
-                return new RepResult<InquiryLog> { Code = -2, Msg = "请重新登陆" };
+            //特殊材料
+            var material1 = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness&&v.Type== MATERIALTYPE.材料物性).FirstOrDefault();
+            if (material1 == null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "特殊材料数据找不到，请先导入特殊材料(材料物性)数据" };
+
+            var material2 = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Type == MATERIALTYPE.表面物性).FirstOrDefault();
+            if (material2 == null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "特殊处理数据找不到，请先导入特殊处理(表面物性)数据" };
+            var color = DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Type == MATERIALTYPE.颜色).FirstOrDefault();
+            if (color == null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "颜色数据找不到，请先导入颜色数据" };
+
+            //hour
+            var hour = DbContext.MaterialHour.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeB <= model.SizeB && v.SizeB2 > model.SizeB).FirstOrDefault();
+
+            if (hour == null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "生产效率数据找不到，请先导入生产效率数据" };
+
+            var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeC == (model.SizeA + model.SizeB)).FirstOrDefault();
+
+            if (hole == null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "开模孔数数据找不到，请先导入开模孔数数据" };
+            //profile 
+            var profile = DbContext.DiscountSet.Where(v => v.Type == DisCountType.利润率).FirstOrDefault();
+            var costByHour = DbContext.DiscountSet.Where(v => v.Type == DisCountType.每小时成本).FirstOrDefault();
+
+            var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, hole.HoleCount, profile.Discount);
+
+            //库存
+            var storage =   DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB).Sum(v=>v.Number);
+
             var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
-            var discount = factory.Discount * user.Discount;
-
-            //表面物性
-            var m1 = DbContext.DiscountSet.Where(v => v.Type == DisCountType.材料物性 && v.Name == model.Material1).FirstOrDefault();
-            var m2 = DbContext.DiscountSet.Where(v => v.Type == DisCountType.表面物性 && v.Name == model.Material2).FirstOrDefault();
-            discount = discount * ((m1 == null) ? 1 : m1.Discount) * ((m2 == null) ? 1 : m2.Discount);
-
+            var customerLevel = DbContext.DiscountSet.Where(v => v.Type == DisCountType.客户级别 && v.Name == model.CustomerLevel).FirstOrDefault();
+            //折扣
+            var discount = factory.Discount * user.Discount* (customerLevel==null ?1:customerLevel.Discount);
+             
             //判断是否特殊件
             var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
-            if (product.SizeA != model.SizeA || product.SizeB != model.SizeB)
-                discount = factory.Discount * (special == null ? 1 : special.Discount);
+        
             discount = Math.Round(discount, 2);
-            var price = product.Price * ( discount);
-            price = Math.Round(price, 3);
-            var totalprice = Math.Round(price * model.Number, 2);
+            
+            var totalprice = Math.Round(price * discount * model.Number, 2);
             var log = new InquiryLog
             {
                 CreateTime = DateTime.Now,
                 Code = model.Code,
                 Factory = model.Factory,
                 MaterialId = model.MaterialId,
-                Material = material.MaterialCode,
+                MaterialCode = material.MaterialCode,
+                Hardness = material.Hardness,
+                Material1 = material1.Name,
+                Material2 = material2.Name,
+                Storage = storage.ToString(),
+                Color = color.Name,
+                CustomerLevel = customerLevel.Name,
                 Number = model.Number,
                 SizeA = sc.SizeA,
                 SizeB = sc.SizeB,
                 discount = discount,
                 User = User,
                 Price = price,
-                TotalPrice = price * model.Number,
-
-
+                TotalPrice = price * model.Number, 
             };
 
             DbContext.InquiryLog.Add(log);
 
             DbContext.SaveChanges();
 
-            var info = string.Format("折扣：{0}，单价：{1}，总价：{2}", discount, price, price * model.Number);
+            var info = string.Format("单价：{0}，总价：{1}，库存：{2}",   price, price * model.Number, storage);
 
             return new RepResult<InquiryLog> { Data = log, Msg = info };
         }
 
+
+        private static decimal CalUnitPrice(decimal SizeA,decimal SizeB,decimal Gravity,decimal UseRate,decimal BadRate,decimal Material1,decimal Material2,decimal Color,decimal MaterilaPrice,decimal CostByHour,int MosInHour,int HoleCount,decimal Rate)
+        {
+            return   ((((SizeA + SizeB) * 3.14159M * (3.14159M * SizeB / 2 * SizeB / 2)) / 1000 * Gravity * UseRate * BadRate / 1000) * Material1 * Color * MaterilaPrice + (CostByHour / MosInHour / HoleCount) * Material2) * Rate; 
+        }
         public bool Delete(int id)
         {
             var model = DbContext.InquiryLog.Find(id);

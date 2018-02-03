@@ -40,6 +40,15 @@ namespace Data.Entities
         public string Factory { get; set; }
 
         /// <summary>
+        /// 客户级别
+        /// </summary>
+        public string CustomerLevel { get; set; }
+
+        public string Storage { get; set; }
+
+
+
+        /// <summary>
         /// 数量
         /// </summary>
         public int Number { get; set; }
@@ -47,7 +56,7 @@ namespace Data.Entities
         /// <summary>
         /// 材料
         /// </summary>
-        public string Material { get; set; }
+        public string MaterialCode { get; set; }
         public int MaterialId { get; set; }
          
         [Display(Name = "材料物性")]

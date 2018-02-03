@@ -19,6 +19,43 @@ namespace Services
     {
 
         #region 基本资料
+
+        /// <summary>
+        /// 获取 材料的基础明细数据
+        /// </summary>
+        /// <param name="MaterialCode"></param>
+        /// <param name="Hardness"></param>
+        /// <param name="Type"></param>
+        /// <returns></returns>
+        public  List<NameValueModel >GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type = MATERIALMODELTYPE.Hardness)
+        {
+            //获取硬度
+            if (Type ==  MATERIALMODELTYPE.Hardness)
+            {
+                var hardness =    DbContext.Material.Where(v => v.MaterialCode == MaterialCode).Select(v => v.Hardness).Distinct().ToList();
+                return hardness.Select(v => new NameValueModel {Name = v.ToString(),Value = v.ToString () }).ToList();
+            }
+            if(Type== MATERIALMODELTYPE.Material1)
+            {
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode&& v.Hardness== Hardness && v.Type== MATERIALTYPE.材料物性 ).Select(v => v.Name).Distinct().ToList();
+                hardness.Insert(0, Const.MaterialNormal);
+                return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+            }
+            if (Type == MATERIALMODELTYPE.Material2)
+            {
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.表面物性).Select(v => v.Name).Distinct().ToList();
+                hardness.Insert(0, Const.MaterialNormal);
+                return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+            }
+            if (Type == MATERIALMODELTYPE.Color)
+            {
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v => v.Name).Distinct().ToList();
+                return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+            }
+
+            throw new NotImplementedException();
+
+        }
         public IPagedList<Material> GetMaterialList(int? MaterialId, int page)
         {
             return DbContext.Material.OrderByDescending(v => v.UpdateTime).ToPagedList(page, Const.PageSize);
@@ -148,6 +185,9 @@ namespace Services
             item.IsSuccess = SuccessENUM.导入成功;
             item.RelateID = material.Id;
         }
+
+
+
 
         #endregion
 
@@ -423,7 +463,138 @@ namespace Services
                 UpdateUser = model.UpdateUser
             };
         }
-        #endregion 
+        #endregion
+
+
+        #region 基础孔数
+
+        public IPagedList<BaseHole> GetBaseHoles(  int page)
+        {
+            return DbContext.BaseHole 
+                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
+        public RepResult<BaseHole> UploadBaseHole(string User, HttpRequestBase Request)
+        {
+
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.孔数);
+            if (!result.Success)//导入失败
+                return new RepResult<BaseHole> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.孔数,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(BaseHoleModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportHoleResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<BaseHole> { Code = 0 };
+        }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportHoleResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<BaseHoleModel>(item.Json);
+            var hole =  DbContext.BaseHole.Where(v => v.SizeC == relateItem.SizeC).FirstOrDefault();
+            if (hole == null)
+            {
+
+                hole = new BaseHole
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    HoleCount = relateItem.HoleCount,
+                    SizeC = relateItem.SizeC,
+                };
+
+                DbContext.BaseHole.Add(hole);
+            }
+            else
+            {
+                hole.HoleCount = relateItem.HoleCount;
+                hole.UpdateTime = DateTime.Now;
+                hole.UpdateUser = User;
+
+            }
+
+
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = hole.Id;
+        }
+
+        public bool DeleteBaseHole(int Id)
+        {
+            var model = DbContext.BaseHole.Find(Id);
+            if (model != null)
+            {
+                DbContext.Entry(model).State = EntityState.Deleted;
+                return DbContext.SaveChanges() > 0;
+            }
+            return false;
+        }
+
+        public RepResult<BaseHole> UpdateBaseHole(BaseHoleModel Base, string User)
+        {
+            var original = DbContext.BaseHole.Where(v => v.Id == Base.Id).FirstOrDefault();
+            if (original == null)
+            {
+                original = new BaseHole
+                { 
+                };
+                DbContext.BaseHole.Add(original);
+            } 
+            original.HoleCount = Base.HoleCount; 
+            original.SizeC = Base.SizeC;
+            original.UpdateTime = DateTime.Now;
+            original.UpdateUser = User;
+            DbContext.SaveChanges();
+            return new RepResult<BaseHole> { Data = original };
+        }
+
+        public BaseHoleModel GetBaseHole(int? id)
+        {
+            var model = DbContext.BaseHole.Find(id);
+            if (model == null)
+                return new BaseHoleModel { };
+            return new BaseHoleModel
+            { 
+                HoleCount = model.HoleCount,
+                SizeC = model.SizeC,
+                UpdateTime = model.UpdateTime,
+                Id = model.Id,
+                UpdateUser = model.UpdateUser
+            };
+        }
+        #endregion
 
         #region 孔数
 
@@ -558,7 +729,7 @@ namespace Services
             };
         }
         #endregion
-
+        
         #region 模数 生产效率
 
         public IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page)

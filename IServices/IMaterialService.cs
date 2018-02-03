@@ -22,6 +22,10 @@ namespace IServices
         RepResult<Material> UpdateMaterial(MaterialModel material, string User);
 
         MaterialModel GetMaterial(int? id);
+
+
+        List<NameValueModel> GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type =  MATERIALMODELTYPE.Hardness);
+
         bool DeleteMatial(int id);
 
         RepResult<Material> UploadMaterial(string User, HttpRequestBase Request);
@@ -52,6 +56,17 @@ namespace IServices
         RepResult<MaterialHole> UpdateMaterialHole(MaterialHoleModel material, string User);
 
         MaterialHoleModel GetMaterialHole(int? id);
+
+
+
+        IPagedList<BaseHole> GetBaseHoles(  int page);
+        RepResult<BaseHole> UploadBaseHole(string User, HttpRequestBase Request);
+        bool DeleteBaseHole(int Id);
+
+        RepResult<BaseHole> UpdateBaseHole(BaseHoleModel material, string User);
+
+        BaseHoleModel GetBaseHole(int? id);
+
 
         IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page);
 

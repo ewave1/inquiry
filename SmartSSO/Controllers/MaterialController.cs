@@ -88,6 +88,67 @@ namespace InquiryDemo.Controllers
 
         #endregion
 
+
+        #region 基础孔数
+
+
+        // GET: Base
+        public ActionResult BaseHoleList(int? BaseId, int page = 1)
+        {
+            var result = _iservice.GetBaseHoles( page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
+
+        public ActionResult UpdateBaseHole(int? id)
+        {
+            var model = _iservice.GetBaseHole(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateBaseHole(BaseHoleModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateBaseHole(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("BaseHoleList");
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteBaseHole(int id)
+        {
+            _iservice.DeleteMatialHole(id);
+
+            return RedirectToAction("BaseHoleList");
+
+        }
+
+
+        /// <summary>
+        /// 上传孔数的数据
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadBaseHole()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadBaseHole(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
+
+
+        #endregion
+
         #region 孔数
 
 

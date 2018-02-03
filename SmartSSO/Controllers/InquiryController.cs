@@ -29,6 +29,8 @@ namespace SmartSSO.Controllers
 
         private readonly IInquiryService _inquiryService = UnityHelper.Instance.Unity.Resolve<IInquiryService>();
 
+        private readonly IMaterialService _iService = UnityHelper.Instance.Unity.Resolve<IMaterialService>();
+
 
         #endregion
         // GET: Inquiry
@@ -53,9 +55,27 @@ namespace SmartSSO.Controllers
             ViewBag.M1 = GetDiscountNames(DisCountType.材料物性);
             ViewBag.M2 = GetDiscountNames(DisCountType.表面物性);
             ViewBag.Materials = GetMaterials();
-            ViewBag.SealCodes = GetSealCodes(); 
+            ViewBag.SealCodes = GetSealCodes();
+             
+            ViewBag.CustomerLevels = GetDiscountNames(DisCountType.客户级别);
             return View();
         }
+
+        
+          
+        /// <summary>
+        /// 获取明细数据
+        /// </summary>
+        /// <param name="MaterialCode"></param>
+        /// <param name="Hardness"></param>
+        /// <param name="getType"></param>
+        /// <returns></returns>
+        public ActionResult GetMaterialData(string MaterialCode,int? Hardness,MATERIALMODELTYPE getType )
+        {
+            var lst = _iService.GetMaterialDetailData(MaterialCode, Hardness, getType);
+            return Json(lst);
+        }
+         
 
         private List<SelectListItem> GetDiscountNames(DisCountType type)
         {
@@ -73,10 +93,10 @@ namespace SmartSSO.Controllers
 
         private List<SelectListItem> GetMaterials()
         {
-            var lst = _inquiryService.Materials().Select(v => new SelectListItem
+            var lst = _inquiryService.Materials().Select(v=>v.MaterialCode).Distinct().ToList().Select(v => new SelectListItem
             {
-                Text = v.MaterialCode,
-                Value = v.Id.ToString(),
+                Text = v,
+                Value = v,
 
             }).ToList()
              ;

@@ -134,6 +134,10 @@
     <Compile Include="Migrations\201801281534553_InitralCreate11.Designer.cs">
       <DependentUpon>201801281534553_InitralCreate11.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802030302593_InitralCreate12.cs" />
+    <Compile Include="Migrations\201802030302593_InitralCreate12.Designer.cs">
+      <DependentUpon>201802030302593_InitralCreate12.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="Models\Base\ProfileChangePasswordRequest.cs" />
     <Compile Include="Models\Base\UserCreateRequest.cs" />
     <Compile Include="Models\Base\UserManageChangePassword.cs" />
+    <Compile Include="Models\NameValueModel.cs" />
     <Compile Include="Models\TemplateModel.cs" />
     <Compile Include="Models\UploadModel\BaseHoleModel.cs" />
     <Compile Include="Models\UploadModel\MaterialModel.cs" />
@@ -199,6 +204,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801281534553_InitralCreate11.resx">
       <DependentUpon>201801281534553_InitralCreate11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802030302593_InitralCreate12.resx">
+      <DependentUpon>201802030302593_InitralCreate12.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -32,8 +32,8 @@ namespace Data.Models
         /// <summary>
         /// 材料
         /// </summary>
-        [ColumnMapping("材料")]
-        public string Material { get; set; }
+        [ColumnMapping("材质")]
+        public string MaterialCode { get; set; }
         public int MaterialId { get; set; }
 
         [Display(Name = "材料物性")]

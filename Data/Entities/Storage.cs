@@ -27,9 +27,12 @@ namespace Data.Entities
          
 
         /// <summary>
-        /// 材料
+        /// 材质
         /// </summary>
-        public string Material { get; set; }
+        public string MaterialCode { get; set; }
+
+        [Display(Name = "硬度")]
+        public int Hardness { get; set; }
         public int MaterialId { get; set; }
 
         [Display(Name = "材料物性")]
@@ -43,8 +46,6 @@ namespace Data.Entities
 
         public string Color { get; set; }
 
-        [Display(Name = "硬度")]
-        public int Hardness { get; set; }
 
 
         /// <summary>

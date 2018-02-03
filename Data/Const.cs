@@ -13,5 +13,6 @@ namespace Common
     {
         public static int PageSize = 10;
 
+        public static string MaterialNormal = "Normal";
     }
 }

@@ -227,6 +227,8 @@
     <Content Include="Content\Template\特殊处理外模板.xlsx" />
     <Content Include="Content\Template\特殊配方模板.xlsx" />
     <Content Include="Content\Template\颜色模板.xlsx" />
+    <Content Include="Content\Template\基础孔数模板.xlsx" />
+    <Content Include="Content\Template\模板.xls" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -299,6 +301,8 @@
     <Content Include="Views\Material\MaterialFeatureList.cshtml" />
     <Content Include="Views\Material\UpdateMaterialFeature.cshtml" />
     <Content Include="Views\Upload\TemplateList.cshtml" />
+    <Content Include="Views\Material\BaseHoleList.cshtml" />
+    <Content Include="Views\Material\UpdateBaseHole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
