@@ -105,9 +105,9 @@ namespace Services
 
             var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, hole.HoleCount, profile.Discount);
 
-            //库存
+            //库存(是否有模具）
             var storages = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB).ToList();
-            var storage = storages.Sum(v=>v.Number);
+            var storage = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB&& v.Material1==model.Material1&& v.Material2==model.Material2&& v.Color == model.Color).ToList().Sum(v=>v.Number);
 
             var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
             var customerLevel = DbContext.DiscountSet.Where(v => v.Type == DisCountType.客户级别 && v.Name == model.CustomerLevel).FirstOrDefault();

@@ -98,7 +98,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="/Material/UpdateBaseHole/@item.Id">修改</a></li>
-                                    <li><a href="/Material/DeleteBaseHole/@item.Id">删除</a></li>
+                                    <li><a id="remove" class="rmMaterial" data-id="@item.Id">删除</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -127,6 +127,33 @@
 <script>
     $("#fileUpload").change(function () {
         $("#fileText").val($(this).val());
+    })
+
+    $('.rmMaterial').click(function () {
+        var row = $(this).parents('tr');
+        var id = $(this).data('id');
+        if (!id)
+            id = $(this).attr('data-id');
+        $.ajax({
+            url: '/Material/DeleteBaseHole/' + id,
+            type: 'POST', 
+            cache: false,
+            contentType: false,
+            processData: false,
+            crossDomain: true,
+            success: function (res) {
+                if (res.Success) {
+                    $(row).remove();
+                } else {
+                    util.message('删除失败，' + res.Msg);
+                }
+            }, error: function (event, request, settings) {
+                if (request == "parsererror")
+                    location.href = "/Home/Login";
+                else
+                    alert(event.responseText);
+            }
+        });
     })
     $('#btnImport').on('click', function () {
         var file = $('#fileUpload').prop('files')[0];

@@ -46,7 +46,7 @@
                             </button>
                             <div class="" id="warning" style="display:none"></div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="form-group">
                         <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传时间</label>
                         <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12">
@@ -70,6 +70,13 @@
             <thead>
                 <tr>
                     <th>序号</th>
+                    <th>材料</th>
+                    <th>内径</th>
+                    <th>线径</th>
+                    <td>材料物性</td>
+                    <td>表面物性</td>
+                    <td>颜色</td>
+                    <td>数量</td>
                     <th>上传时间</th>
                     <th>操作人</th>
                     <th>操作</th>
@@ -80,18 +87,25 @@
                 {
                     <tr>
                         <td>@(item.Id)</td>
-                     
+                        <td>@(item.MaterialCode + " " + item.Hardness)</td>
+                        <td>@item.SizeA</td>
+                        <td>@item.SizeB</td>
+                        <td>@item.Material1</td>
+                        <td>@item.Material2</td>
+                        <td>@item.Color</td>
+                        <td>@item.Number</td>
 
                         <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
                         <td>@item.UpdateUser </td>
                         <td>
-                            <div class="btn-group"> 
+                            @*<a href="/Storage/delete/@item.Id">删除</a>*@
+                            <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="/Storage/delete/@item.Id">删除</a></li>
+                                    <li></li>
                                 </ul>
                             </div>
                         </td>

@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "维护比重";
+    List<SelectListItem> nonList = new List<SelectListItem>();
 }
 
 <div class="row">
@@ -22,50 +23,71 @@
 
 
             @using (Html.BeginForm("UpdateMaterialGravity", "Material", FormMethod.Post, new { @class = "form-horizontal" }))
-            {
-                @Html.HiddenFor(model => model.Id)
-                <div class="form-group">
-                    @Html.LabelFor(model => model.MaterialCode, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.MaterialCode, new { @class = "form-control", style = "width: 280px" })
-                    </div>
-                </div>
+    {
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaterialCode, new { @class = "col-md-2 control-label" })
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Hardness, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Hardness, new { @class = "form-control", style = "width: 280px" })
-                    </div>
-                </div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.MaterialCode, nonList, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Hardness, new { @class = "col-md-2 control-label" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Hardness, nonList, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
 
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Color, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Color, new { @class = "form-control", style = "width: 280px" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Gravity, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextAreaFor(model => model.Gravity, new { @class = "form-control", style = "width: 280px" })
-                    </div>
-                </div>
-                 
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        @Html.ValidationSummary(false)
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
-                        <a href="/Material/MaterialGravityList" class="btn btn-default">取消</a>
-                    </div>
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Color, new { @class = "col-md-3 control-label" })
+            <div class="col-md-6">
+                @Html.DropDownListFor(model => model.Color, nonList, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gravity, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Gravity, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
 
-            }
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationSummary(false)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
+                <a href="/Material/MaterialGravityList" class="btn btn-default">取消</a>
+            </div>
+        </div>
+
+}
         </div>
     </div>
 </div>
+<script src="~/Scripts/material.js"></script>
+<script>
+
+
+    $(function () {
+        //初始化数据
+        loadMaterial(function () { 
+            changeMaterial(changeColor);
+            changeColor();
+        });
+        //绑定事件
+        $('#MaterialCode').change(function () {
+            changeMaterial(changeColor);
+            changeColor();
+        });
+        $('#Hardness').change(changeColor)
+
+    })
+</script>

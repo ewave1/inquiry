@@ -54,15 +54,37 @@ namespace SmartSSO.Controllers
             ViewBag.Factories = GetDiscountNames( DisCountType.FACTORY);
             //ViewBag.M1 = GetDiscountNames(DisCountType.材料物性);
             //ViewBag.M2 = GetDiscountNames(DisCountType.表面物性);
-            ViewBag.Materials = GetMaterials();
+            ViewBag.Materials = getMaterials();
             ViewBag.SealCodes = GetSealCodes();
              
             ViewBag.CustomerLevels = GetDiscountNames(DisCountType.客户级别);
             return View();
         }
 
-        
-          
+
+        /// <summary>
+        /// 获取 材质
+        /// </summary>
+        /// <returns></returns>
+        private List<SelectListItem> getMaterials()
+        {
+            var lst = _inquiryService.Materials().Select(v => v.MaterialCode).Distinct().ToList().Select(v => new SelectListItem
+            {
+                Text = v,
+                Value = v,
+
+            }).ToList()
+             ;
+            return lst;
+        }
+
+        public ActionResult GetMaterials()
+        {
+            var lst = getMaterials();
+
+            return Json(lst);
+        }
+
         /// <summary>
         /// 获取明细数据
         /// </summary>
@@ -76,7 +98,11 @@ namespace SmartSSO.Controllers
             return Json(lst);
         }
          
-
+        /// <summary>
+        /// 获取 折扣表的数据
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private List<SelectListItem> GetDiscountNames(DisCountType type)
         {
             var lst = _inquiryService.GetDiscountNames(type).Select(v => new SelectListItem
@@ -91,17 +117,6 @@ namespace SmartSSO.Controllers
             return lst;
         }
 
-        private List<SelectListItem> GetMaterials()
-        {
-            var lst = _inquiryService.Materials().Select(v=>v.MaterialCode).Distinct().ToList().Select(v => new SelectListItem
-            {
-                Text = v,
-                Value = v,
-
-            }).ToList()
-             ;
-            return lst;
-        }
 
         private List<SelectListItem> GetSealCodes()
         {

@@ -59,6 +59,7 @@ namespace Data.Entities
         [DataType(DataType.Text)]
         [Display(Name = "单价")]
         [ColumnMapping("单价")]
+        [Required]
         /// <summary>
         /// 特殊件折扣
         /// </summary>

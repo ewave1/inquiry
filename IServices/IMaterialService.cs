@@ -26,14 +26,14 @@ namespace IServices
 
         List<NameValueModel> GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type =  MATERIALMODELTYPE.Hardness);
 
-        bool DeleteMatial(int id);
+        RepResult<bool> DeleteMatial(int id);
 
         RepResult<Material> UploadMaterial(string User, HttpRequestBase Request);
 
         IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, MATERIALTYPE type, int page);
 
         RepResult<MaterialFeature> UploadMaterialFeature(string User, HttpRequestBase Request, MATERIALTYPE type = MATERIALTYPE.材料物性);
-        bool DeleteMatialFeature(int Id);
+        RepResult<bool> DeleteMatialFeature(int Id);
 
 
         RepResult<MaterialFeature> UpdateMaterialFeature(MaterialFeatureModel material, string User);
@@ -42,7 +42,7 @@ namespace IServices
 
         IPagedList<MaterialGravity> GetMaterialGravities(int? MaterialId, int page);
         RepResult<MaterialGravity> UploadMaterialGravity(string User, HttpRequestBase Request);
-        bool DeleteMatialGravity(int Id);
+        RepResult<bool> DeleteMatialGravity(int Id);
 
 
         RepResult<MaterialGravity> UpdateMaterialGravity(MaterialGravityModel material, string User);
@@ -51,7 +51,7 @@ namespace IServices
 
         IPagedList<MaterialHole> GetMaterialHoles(int? MaterialId, int page);
         RepResult<MaterialHole> UploadMaterialHole(string User, HttpRequestBase Request);
-        bool DeleteMatialHole(int Id);
+        RepResult<bool> DeleteMatialHole(int Id);
 
         RepResult<MaterialHole> UpdateMaterialHole(MaterialHoleModel material, string User);
 
@@ -61,7 +61,7 @@ namespace IServices
 
         IPagedList<BaseHole> GetBaseHoles(  int page);
         RepResult<BaseHole> UploadBaseHole(string User, HttpRequestBase Request);
-        bool DeleteBaseHole(int Id);
+        RepResult<bool> DeleteBaseHole(int Id);
 
         RepResult<BaseHole> UpdateBaseHole(BaseHoleModel material, string User);
 
@@ -71,7 +71,7 @@ namespace IServices
         IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page);
 
         RepResult<MaterialHour> UploadMaterialHour(string User, HttpRequestBase Request);
-        bool DeleteMatialHour(int Id);
+        RepResult<bool> DeleteMatialHour(int Id);
 
         RepResult<MaterialHour> UpdateMaterialHour(MaterialHourModel material, string User);
 
@@ -80,7 +80,7 @@ namespace IServices
         IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page);
 
         RepResult<MaterialRate> UploadMaterialRate(string User, HttpRequestBase Request);
-        bool DeleteMatialRate(int Id);
+        RepResult<bool> DeleteMatialRate(int Id);
 
         RepResult<MaterialRate> UpdateMaterialRate(MaterialRateModel material, string User);
 

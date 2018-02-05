@@ -74,7 +74,8 @@ namespace Services
                 UpdateTime = model.UpdateTime,
                 Id = model.Id,
                 UpdateUser = model.UpdateUser,
-                Hardness = model.Hardness
+                Hardness = model.Hardness,
+                Price = model.Price
             };
         }
 
@@ -101,15 +102,31 @@ namespace Services
         }
 
 
-        public bool DeleteMatial(int id)
+        public RepResult<bool> DeleteMatial(int id)
         { 
             var model = DbContext.Material.Find(id);
+            //判断是否已经使用
             if (model != null)
             {
+
+                if (DbContext.MaterialFeature.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).Count() > 0)
+                    return new RepResult<bool> {  Code = -1,Msg = "当前数据已经被引用"};
+                if (DbContext.MaterialGravity.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.MaterialHour.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.InquiryLog.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                
+
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -2, Msg = "数据不存在" };
         }
 
 
@@ -289,15 +306,29 @@ namespace Services
 
 
 
-        public bool DeleteMatialFeature(int Id)
+        public RepResult<bool> DeleteMatialFeature(int Id)
         {
             var model = DbContext.MaterialFeature.Find(Id);
             if (model != null)
             {
+                if (DbContext.InquiryLog.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness &&
+                (v.Material1==model.Name && model.Type== MATERIALTYPE.材料物性 
+                || v.Material2 == model.Name && model.Type == MATERIALTYPE.表面物性
+                || v.Color == model.Name && model.Type == MATERIALTYPE.颜色
+                )
+                ).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness &&
+                (v.Material1==model.Name && model.Type== MATERIALTYPE.材料物性 
+                || v.Material2 == model.Name && model.Type == MATERIALTYPE.表面物性
+                || v.Color == model.Name && model.Type == MATERIALTYPE.颜色
+                )
+                ).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" }; 
         }
 
 
@@ -436,15 +467,19 @@ namespace Services
             item.IsSuccess = SuccessENUM.导入成功;
             item.RelateID = gravity.Id;
         }
-        public bool DeleteMatialGravity(int Id)
+        public RepResult<bool> DeleteMatialGravity(int Id)
         {
             var model = DbContext.MaterialGravity.Find(Id);
             if (model != null)
             {
+                if (DbContext.InquiryLog.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Color== model.Color  ).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.Color == model.Color).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
         }
 
         public RepResult<MaterialGravity> UpdateMaterialGravity(MaterialGravityModel material, string User)
@@ -575,15 +610,17 @@ namespace Services
             item.RelateID = hole.Id;
         }
 
-        public bool DeleteBaseHole(int Id)
+        public RepResult<bool> DeleteBaseHole(int Id)
         {
             var model = DbContext.BaseHole.Find(Id);
             if (model != null)
             {
+                if (DbContext.MaterialHole.Where(v => v.SizeC == model.SizeC).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" }; 
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
         }
 
         public RepResult<BaseHole> UpdateBaseHole(BaseHoleModel Base, string User)
@@ -716,15 +753,19 @@ namespace Services
             item.RelateID = hole.Id;
         }
 
-        public bool DeleteMatialHole(int Id)
+        public RepResult<bool> DeleteMatialHole(int Id)
         {
             var model = DbContext.MaterialHole.Find(Id);
             if (model != null)
             {
+                if (DbContext.InquiryLog.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeA+ v.SizeB)== model.SizeC).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
+                if (DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeA + v.SizeB) == model.SizeC).Count() > 0)
+                    return new RepResult<bool> { Code = -1, Msg = "当前数据已经被引用" };
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
         }
 
         public RepResult<MaterialHole> UpdateMaterialHole(MaterialHoleModel material, string User)
@@ -862,15 +903,15 @@ namespace Services
             item.RelateID = hour.Id;
         }
 
-        public bool DeleteMatialHour(int Id)
+        public RepResult<bool> DeleteMatialHour(int Id)
         {
             var model = DbContext.MaterialHour.Find(Id);
             if (model != null)
             {
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
         }
         public RepResult<MaterialHour> UpdateMaterialHour(MaterialHourModel material, string User)
         {
@@ -1002,15 +1043,15 @@ namespace Services
             item.RelateID = rate.Id;
         }
 
-        public bool DeleteMatialRate(int Id)
+        public RepResult<bool> DeleteMatialRate(int Id)
         {
             var model = DbContext.MaterialRate.Find(Id);
             if (model != null)
             {
                 DbContext.Entry(model).State = EntityState.Deleted;
-                return DbContext.SaveChanges() > 0;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
             }
-            return false;
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
         }
 
         public RepResult<MaterialRate> UpdateMaterialRate(MaterialRateModel material, string User)

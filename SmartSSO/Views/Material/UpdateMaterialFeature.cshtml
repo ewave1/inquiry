@@ -1,7 +1,8 @@
 ﻿@model Data.Entities.MaterialFeatureModel
 
 @{
-   // ViewBag.Title = "维护特殊配方";
+    // ViewBag.Title = "维护特殊配方";
+    List<SelectListItem> nonList = new List<SelectListItem>();
 }
 
 <div class="row">
@@ -26,15 +27,16 @@
                 @Html.HiddenFor(model => model.Id)
                 <div class="form-group">
                     @Html.LabelFor(model => model.MaterialCode, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.MaterialCode, new { @class = "form-control", style = "width: 280px" })
+
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(model => model.MaterialCode, nonList, new { @class = "form-control", style = "width: 280px" })
                     </div>
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Hardness, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Hardness, new { @class = "form-control", style = "width: 280px" })
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(model => model.Hardness, nonList, new { @class = "form-control", style = "width: 280px" })
                     </div>
                 </div>
 
@@ -48,10 +50,10 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Discount, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.TextAreaFor(model => model.Discount , new { @class = "form-control", style = "width: 280px" })
+                        @Html.TextAreaFor(model => model.Discount, new { @class = "form-control", style = "width: 280px" })
                     </div>
                 </div>
-                 
+
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         @Html.ValidationSummary(false)
@@ -69,3 +71,16 @@
         </div>
     </div>
 </div>
+
+<script src="~/Scripts/material.js"></script>
+<script>
+
+
+    $(function () {
+        //初始化数据
+        loadMaterial(changeMaterial);
+        //绑定事件
+        $('#MaterialCode').change(changeMaterial);
+
+    })
+</script>

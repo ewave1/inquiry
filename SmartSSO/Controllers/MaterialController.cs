@@ -25,19 +25,74 @@ namespace InquiryDemo.Controllers
     {
 
         #region 私有字段
-         
+
 
         private readonly IMaterialService _iservice = UnityHelper.Instance.Unity.Resolve<IMaterialService>();
+
+        private readonly IInquiryService _inquiryService = UnityHelper.Instance.Unity.Resolve<IInquiryService>();
+
+        #endregion
+
+        #region 基本方法
+
+
+        /// <summary>
+        /// 获取 材质
+        /// </summary>
+        /// <returns></returns>
+        private List<SelectListItem> GetMaterials()
+        {
+            var lst = _inquiryService.Materials().Select(v => v.MaterialCode).Distinct().ToList().Select(v => new SelectListItem
+            {
+                Text = v,
+                Value = v,
+
+            }).ToList()
+             ;
+            return lst;
+        }
+
+        /// <summary>
+        /// 获取明细数据
+        /// </summary>
+        /// <param name="MaterialCode"></param>
+        /// <param name="Hardness"></param>
+        /// <param name="getType"></param>
+        /// <returns></returns>
+        public ActionResult GetMaterialData(string MaterialCode, int? Hardness, MATERIALMODELTYPE getType)
+        {
+            var lst = _iservice.GetMaterialDetailData(MaterialCode, Hardness, getType);
+            return Json(lst);
+        }
+
+        /// <summary>
+        /// 获取 折扣表的数据
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private List<SelectListItem> GetDiscountNames(DisCountType type)
+        {
+            var lst = _inquiryService.GetDiscountNames(type).Select(v => new SelectListItem
+            {
+                Text = v.Name,
+                Value = v.Name,
+
+            }).ToList()
+             ;
+            if (lst.Count > 0)
+                lst[0].Selected = true;
+            return lst;
+        }
 
         #endregion
 
         #region 基本资料
         // GET: Material
-        public ActionResult Index( int page = 1 )
-        {  
-            var result = _iservice.GetMaterialList( null,page );
+        public ActionResult Index(int page = 1)
+        {
+            var result = _iservice.GetMaterialList(null, page);
             if (result == null)
-                return RedirectToAction("Login", "Home"); 
+                return RedirectToAction("Login", "Home");
             return View(result);
         }
 
@@ -57,16 +112,17 @@ namespace InquiryDemo.Controllers
             if (result.Success)
                 return RedirectToAction("Index");
             ModelState.AddModelError("_error", result.Msg);
-             
+
             return View();
         }
 
 
         public ActionResult DeleteMaterial(int id)
         {
-            _iservice.DeleteMatial(id);
+            var result = _iservice.DeleteMatial(id);
 
-            return RedirectToAction("Index");
+
+            return Json(result);
 
         }
 
@@ -95,7 +151,7 @@ namespace InquiryDemo.Controllers
         // GET: Base
         public ActionResult BaseHoleList(int? BaseId, int page = 1)
         {
-            var result = _iservice.GetBaseHoles( page);
+            var result = _iservice.GetBaseHoles(page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -124,9 +180,9 @@ namespace InquiryDemo.Controllers
 
         public ActionResult DeleteBaseHole(int id)
         {
-            _iservice.DeleteMatialHole(id);
+            var result = _iservice.DeleteBaseHole(id);
 
-            return RedirectToAction("BaseHoleList");
+            return Json(result);
 
         }
 
@@ -153,9 +209,9 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Material
-        public ActionResult MaterialHoleList(int ?MaterialId,int page=1)
+        public ActionResult MaterialHoleList(int? MaterialId, int page = 1)
         {
-            var result = _iservice.GetMaterialHoles(MaterialId,page);
+            var result = _iservice.GetMaterialHoles(MaterialId, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -184,9 +240,9 @@ namespace InquiryDemo.Controllers
 
         public ActionResult DeleteMaterialHole(int id)
         {
-            _iservice.DeleteMatialHole(id);
+            var result = _iservice.DeleteMatialHole(id);
 
-            return RedirectToAction("MaterialHoleList");
+            return Json(result);
 
         }
 
@@ -215,7 +271,7 @@ namespace InquiryDemo.Controllers
         // GET: Material
         public ActionResult MaterialFeatureList(int? MaterialId, MATERIALTYPE type = MATERIALTYPE.材料物性, int page = 1)
         {
-            var result = _iservice.GetMaterialFeatures(MaterialId,type, page);
+            var result = _iservice.GetMaterialFeatures(MaterialId, type, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             ViewBag.Type = type.GetHashCode();
@@ -227,7 +283,7 @@ namespace InquiryDemo.Controllers
                 ViewBag.Title = "特殊处理外列表";
             }
             if (type == MATERIALTYPE.颜色)
-            { 
+            {
                 ViewBag.ColumnName = "颜色";
                 ViewBag.Title = "颜色列表";
             }
@@ -240,15 +296,15 @@ namespace InquiryDemo.Controllers
             if (model != null)
                 type = model.Type;
             ViewBag.Type = type.GetHashCode();
-            ViewBag.Title = "维护特殊配方内";
+            ViewBag.Title = "维护材料物性";
             ViewBag.ColumnName = "特性";
             if (type == MATERIALTYPE.表面物性)
             {
-                ViewBag.Title = "维护特殊处理外";
+                ViewBag.Title = "维护表面物性";
 
             }
             if (type == MATERIALTYPE.颜色)
-            { 
+            {
                 ViewBag.ColumnName = "颜色";
                 ViewBag.Title = "维护颜色数据";
             }
@@ -271,9 +327,10 @@ namespace InquiryDemo.Controllers
 
         public ActionResult DeleteMaterialFeature(int id, MATERIALTYPE type = MATERIALTYPE.材料物性)
         {
-            _iservice.DeleteMatialFeature(id);
+            var result = _iservice.DeleteMatialFeature(id);
 
-            return RedirectToAction("MaterialFeatureList",new { type = type });
+            return Json(result);
+            //     return RedirectToAction("MaterialFeatureList",new { type = type });
 
         }
 
@@ -287,7 +344,7 @@ namespace InquiryDemo.Controllers
         public ActionResult UploadMaterialFeature(MATERIALTYPE type = MATERIALTYPE.材料物性)
         {
             var user = GetCurrentUser();
-            var uploadFile = _iservice.UploadMaterialFeature(user?.UserName, Request,type);
+            var uploadFile = _iservice.UploadMaterialFeature(user?.UserName, Request, type);
 
             return Json(uploadFile);
 
@@ -330,9 +387,11 @@ namespace InquiryDemo.Controllers
 
         public ActionResult DeleteMaterialGravity(int id)
         {
-            _iservice.DeleteMatialGravity(id);
+            var result = _iservice.DeleteMatialGravity(id);
 
-            return RedirectToAction("MaterialGravityList");
+
+            return Json(result);
+            //  return RedirectToAction("MaterialGravityList");
 
         }
 
@@ -389,9 +448,10 @@ namespace InquiryDemo.Controllers
 
         public ActionResult DeleteMaterialHour(int id)
         {
-            _iservice.DeleteMatialHour(id);
+            var result = _iservice.DeleteMatialHour(id);
 
-            return RedirectToAction("MaterialHourList");
+
+            return Json(result);
 
         }
 
@@ -448,9 +508,9 @@ namespace InquiryDemo.Controllers
 
         public ActionResult DeleteMaterialRate(int id)
         {
-            _iservice.DeleteMatialRate(id);
+            var result = _iservice.DeleteMatialRate(id);
 
-            return RedirectToAction("MaterialHoleList");
+            return Json(result);
 
         }
 
