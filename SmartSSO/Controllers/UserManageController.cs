@@ -37,6 +37,14 @@ namespace SmartSSO.Controllers
 
         public ActionResult Create(string userName=null )
         {
+
+
+            var action = "维护";
+            if (string.IsNullOrEmpty(userName))
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = string.IsNullOrEmpty(userName) ? "修改" : "创建";
+
             if (!string.IsNullOrEmpty(userName))
             {
                 var user = _userManageService.Get(userName);

@@ -45,7 +45,7 @@ namespace Data.Entities
         [ColumnMapping("线径2")]
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "线径2")]
+        [Display(Name = "线径2")] 
         public decimal SizeB2 { get; set; }
 
         [ColumnMapping("每小时模数")]

@@ -92,3 +92,31 @@ function changeColor() {
     });
 
 } 
+
+
+function loadbaseHoles(fun) {
+    $.ajax({
+        url: "/material/LoadBaseHoles",
+        type: 'post',
+        dataType: 'json',
+        //data: { MaterialCode: $('#MaterialCode').val(), getType: 0 },
+        success: function (result) {
+            $('#SizeC').empty();
+            $.each(result, function (n, value) {
+                $('#SizeC').append('<option value=' + value.SizeC + ' holes=' + value.HoleCount+'>' + value.SizeC + '</option>');
+            })
+
+            if (fun)
+                fun();
+
+        }
+    });
+}
+
+function changeSize() { 
+    //改变size to change hole
+    var size = $('#SizeC').val();
+    var holes = $('#SizeC').find('option[value=' + size + ']').attr('holes');
+    var result = Number($('#Rate').val()) * Number(holes);
+    $('#HoleCount').val(Math.round( result)); 
+}

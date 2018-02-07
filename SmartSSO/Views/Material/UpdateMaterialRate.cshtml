@@ -1,7 +1,7 @@
 ﻿@model Data.Entities.MaterialRateModel
 
 @{
-    ViewBag.Title = "维护不良率";
+    ViewBag.Title = ViewBag.Action + "不良率";
     List<SelectListItem> nonList = new List<SelectListItem>();
 }
 
@@ -16,7 +16,7 @@
 
         <ol class="breadcrumb">
             <li><a href="/Material">材料管理</a></li>
-            <li class="active">维护不良率</li>
+            <li class="active">@ViewBag.Title</li>
         </ol>
 
         <div class="container">
@@ -60,7 +60,7 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
+                        <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
                         <a href="/Material/MaterialRateList" class="btn btn-default">取消</a>
                     </div>
                 </div>
@@ -69,3 +69,15 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/util.js"></script>
+<script>
+
+    $('#SizeB,#SizeB2').change(function () {
+        var s1 = $('#SizeB').val();
+        var s2 = $('#SizeB2').val();
+        if ($.isNumeric(s1) && $.isNumeric(s2) && Number(s1) >= Number(s2)) {
+            util.message("线径2必须大于线径1");
+            $('#SizeB2').val('');
+        }
+    })
+</script>

@@ -338,11 +338,18 @@ namespace Services
             var original = DbContext.MaterialFeature.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
             {
-                original = new MaterialFeature
+                //检查是否已经存在
+                original=DbContext.MaterialFeature.Where(v => v.MaterialCode == material.MaterialCode && v.Hardness == material.Hardness && v.Type == material.Type && v.Name == material.Name).FirstOrDefault();
+
+                if(original==null)
                 {
-                    MaterialId = material.MaterialId, 
-                };
-                DbContext.MaterialFeature.Add(original);
+
+                    original = new MaterialFeature
+                    {
+                        MaterialId = material.MaterialId,
+                    };
+                    DbContext.MaterialFeature.Add(original);
+                }
             }
             original.Name = material.Name;
             original.MaterialCode = material.MaterialCode;
@@ -360,7 +367,7 @@ namespace Services
         {
             var model = DbContext.MaterialFeature.Find(id);
             if (model == null)
-                return new MaterialFeatureModel { };
+                return null;
             return new MaterialFeatureModel
             {
                 MaterialCode = model.MaterialCode,
@@ -486,6 +493,10 @@ namespace Services
         {
 
             var original = DbContext.MaterialGravity.Where(v => v.Id == material.Id).FirstOrDefault();
+
+            if (original == null)
+                //检查是否已经存在
+                original = DbContext.MaterialGravity.Where(v => v.MaterialCode == material.MaterialCode && v.Hardness == material.Hardness && v.Color == material.Color).FirstOrDefault();
             if (original == null)
             {
                 original = new MaterialGravity
@@ -495,6 +506,7 @@ namespace Services
                 };
                 DbContext.MaterialGravity.Add(original);
             }
+            original.MaterialCode = material.MaterialCode;
             original.Color = material.Color;
             original.Hardness = material.Hardness;
             original.Gravity = material.Gravity;
@@ -529,8 +541,10 @@ namespace Services
 
         public IPagedList<BaseHole> GetBaseHoles(  int page)
         {
+            if (page == -1)
+                return DbContext.BaseHole.OrderBy(v=>v.SizeC).ToPagedList(1, 9999);
             return DbContext.BaseHole 
-                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
+                  .OrderByDescending(p => p.SizeC).ToPagedList(page, Const.PageSize);
         }
 
         /// <summary>
@@ -626,7 +640,10 @@ namespace Services
         public RepResult<BaseHole> UpdateBaseHole(BaseHoleModel Base, string User)
         {
             var original = DbContext.BaseHole.Where(v => v.Id == Base.Id).FirstOrDefault();
-            if (original == null)
+            if (original == null) 
+                //检查是否已经存在
+                original = DbContext.BaseHole.Where(v => v.SizeC == Base.SizeC).FirstOrDefault();
+                if (original == null)
             {
                 original = new BaseHole
                 { 
@@ -772,6 +789,9 @@ namespace Services
         {
             var original = DbContext.MaterialHole.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
+                //检查是否已经存在
+                original = DbContext.MaterialHole.Where(v => v.MaterialCode == material.MaterialCode && v.Hardness == material.Hardness && v.SizeC == material.SizeC).FirstOrDefault();
+            if (original == null)
             {
                 original = new MaterialHole
                 {
@@ -796,7 +816,7 @@ namespace Services
         {
             var model = DbContext.MaterialHole.Find(id);
             if (model == null)
-                return new MaterialHoleModel { };
+                return new MaterialHoleModel { Rate=1 };
             return new MaterialHoleModel
             {
                 MaterialCode = model.MaterialCode,
@@ -916,6 +936,9 @@ namespace Services
         public RepResult<MaterialHour> UpdateMaterialHour(MaterialHourModel material, string User)
         {
             var original = DbContext.MaterialHour.Where(v => v.Id == material.Id).FirstOrDefault();
+            if(original==null )
+                //检查是否已经存在
+                original = DbContext.MaterialHour.Where(v => v.MaterialCode == material.MaterialCode && v.Hardness == material.Hardness && v.SizeB == material.SizeB && v.SizeB2 == material.SizeB2).FirstOrDefault();
             if (original == null)
             {
                 original = new MaterialHour
@@ -1059,8 +1082,13 @@ namespace Services
             var original = DbContext.MaterialRate.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
             {
-                original = new MaterialRate();
-                DbContext.MaterialRate.Add(original);
+
+                original = DbContext.MaterialRate.Where(v => v.SizeB == material.SizeB && v.SizeB2 == material.SizeB2).FirstOrDefault();
+                if(original==null)
+                { 
+                    original = new MaterialRate();
+                    DbContext.MaterialRate.Add(original);
+                }
             }
             original.SizeB2 = material.SizeB2;
             original.SizeB = material.SizeB;

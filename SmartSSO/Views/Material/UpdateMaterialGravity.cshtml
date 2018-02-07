@@ -1,7 +1,7 @@
 ﻿@model Data.Entities.MaterialGravityModel
 
 @{
-    ViewBag.Title = "维护比重";
+    ViewBag.Title = ViewBag.Action+ "比重";
     List<SelectListItem> nonList = new List<SelectListItem>();
 }
 
@@ -16,7 +16,7 @@
 
         <ol class="breadcrumb">
             <li><a href="/Material">材料管理</a></li>
-            <li class="active">维护比重</li>
+            <li class="active">@ViewBag.Title</li>
         </ol>
 
         <div class="container">
@@ -43,7 +43,7 @@
 
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Color, new { @class = "col-md-3 control-label" })
+            @Html.LabelFor(model => model.Color, new { @class = "col-md-2 control-label" })
             <div class="col-md-6">
                 @Html.DropDownListFor(model => model.Color, nonList, new { @class = "form-control", style = "width: 280px" })
             </div>
@@ -63,7 +63,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
+                <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
                 <a href="/Material/MaterialGravityList" class="btn btn-default">取消</a>
             </div>
         </div>
@@ -82,6 +82,7 @@
             changeMaterial(changeColor);
             changeColor();
         });
+
         //绑定事件
         $('#MaterialCode').change(function () {
             changeMaterial(changeColor);

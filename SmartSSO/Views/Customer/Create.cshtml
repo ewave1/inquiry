@@ -1,9 +1,9 @@
 ﻿@model Data.Models.CustomerModel
 
 @{
-    ViewBag.Title = "维护客户";
+    ViewBag.Title = ViewBag.Action + "客户";
     List<SelectListItem> CustomerLevelLst = ViewBag.CustomerLevels;
-    
+
 }
 
 <div class="row">
@@ -17,7 +17,7 @@
 
         <ol class="breadcrumb"> 
             <li><a href="/UserManage">客户管理</a></li>
-            <li class="active">新建客户</li>
+            <li class="active">@ViewBag.Title</li>
         </ol>
 
         <div class="container">
@@ -71,7 +71,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
+                <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
                 <a href="/Customer" class="btn btn-default">取消</a>
             </div>
         </div>

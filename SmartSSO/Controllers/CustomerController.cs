@@ -53,6 +53,13 @@ namespace InquiryDemo.Controllers
         public ActionResult Create( int?id)
         {  
             var model = _iservice.Get(id);
+
+
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 

@@ -100,6 +100,11 @@ namespace InquiryDemo.Controllers
         {
             var model = _iservice.GetMaterial(id);
 
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 
@@ -112,6 +117,7 @@ namespace InquiryDemo.Controllers
             if (result.Success)
                 return RedirectToAction("Index");
             ModelState.AddModelError("_error", result.Msg);
+
 
             return View();
         }
@@ -157,10 +163,21 @@ namespace InquiryDemo.Controllers
             return View(result);
         }
 
+        public ActionResult LoadBaseHoles()
+        {
+            var lst = _iservice.GetBaseHoles(-1);
+
+            return Json(lst);
+        }
+
         public ActionResult UpdateBaseHole(int? id)
         {
             var model = _iservice.GetBaseHole(id);
-
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 
@@ -221,6 +238,11 @@ namespace InquiryDemo.Controllers
         {
             var model = _iservice.GetMaterialHole(id);
 
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 
@@ -290,24 +312,30 @@ namespace InquiryDemo.Controllers
             return View(result);
         }
 
-        public ActionResult UpdateMaterialFeature(int? id, MATERIALTYPE type = MATERIALTYPE.材料物性)
+        public ActionResult UpdateMaterialFeature(int? id, MATERIALTYPE type )
         {
             var model = _iservice.GetMaterialFeature(id);
             if (model != null)
-                type = model.Type;
+                type = model.Type ;
             ViewBag.Type = type.GetHashCode();
-            ViewBag.Title = "维护材料物性";
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Title = "材料物性";
             ViewBag.ColumnName = "特性";
-            if (type == MATERIALTYPE.表面物性)
+            if (type == MATERIALTYPE.表面物性 )
             {
-                ViewBag.Title = "维护表面物性";
-
+                ViewBag.Title = "表面物性"; 
             }
-            if (type == MATERIALTYPE.颜色)
+            if (type == MATERIALTYPE.颜色 )
             {
                 ViewBag.ColumnName = "颜色";
-                ViewBag.Title = "维护颜色数据";
+                ViewBag.Title = "颜色数据";
             }
+            ViewBag.Title = action + ViewBag.Title;
+            if (model == null)
+                model = new MaterialFeatureModel { Type=type,Discount = 1 };
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 
@@ -367,6 +395,12 @@ namespace InquiryDemo.Controllers
         public ActionResult UpdateMaterialGravity(int? id)
         {
             var model = _iservice.GetMaterialGravity(id);
+
+            var action = "维护";
+            if (id == 0)
+                action = "新增"; 
+            ViewBag.Action = action  ; 
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
 
             return View(model);
         }
@@ -429,6 +463,11 @@ namespace InquiryDemo.Controllers
         {
             var model = _iservice.GetMaterialHour(id);
 
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 
@@ -489,6 +528,11 @@ namespace InquiryDemo.Controllers
         {
             var model = _iservice.GetMaterialRate(id);
 
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);
         }
 

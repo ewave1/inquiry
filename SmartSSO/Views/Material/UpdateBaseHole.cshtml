@@ -1,7 +1,7 @@
 ﻿@model Data.Entities.BaseHoleModel
 
 @{
-    ViewBag.Title = "维护开模孔数";
+    ViewBag.Title = ViewBag.Action + "基础孔数";
 }
 
 <div class="row">
@@ -15,7 +15,7 @@
 
         <ol class="breadcrumb">
             <li><a href="/Base">材料管理</a></li>
-            <li class="active">维护基础孔数</li>
+            <li class="active">@ViewBag.Title</li>
         </ol>
 
         <div class="container">
@@ -46,7 +46,7 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
+                        <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
                         <a href="/Material/BaseHoleList" class="btn btn-default">取消</a>
                     </div>
                 </div>

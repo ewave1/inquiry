@@ -1,7 +1,7 @@
 ﻿@model Data.Entities.MaterialHourModel
 
 @{
-    ViewBag.Title = "维护生产效率";
+    ViewBag.Title = ViewBag.Action + "生产效率";
     List<SelectListItem> nonList = new List<SelectListItem>();
 }
 
@@ -16,7 +16,7 @@
 
         <ol class="breadcrumb">
             <li><a href="/Material">材料管理</a></li>
-            <li class="active">维护生产效率</li>
+            <li class="active">@ViewBag.Title</li>
         </ol>
 
         <div class="container">
@@ -68,7 +68,7 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">@(Model != null && Model.Id > 0 ? "修改" : "创建" )</button>
+                        <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
                         <a href="/Material/MaterialHourList" class="btn btn-default">取消</a>
                     </div>
                 </div>
@@ -77,6 +77,7 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/util.js"></script>
 <script src="~/Scripts/material.js"></script>
 <script>
 
@@ -86,6 +87,15 @@
         loadMaterial(changeMaterial);
         //绑定事件
         $('#MaterialCode').change(changeMaterial);
+
+        $('#SizeB,#SizeB2').change(function () {
+            var s1 = $('#SizeB').val();
+            var s2 = $('#SizeB2').val();
+            if ($.isNumeric(s1) && $.isNumeric(s2)&& Number(s1) >= Number(s2)) {
+                util.message("线径2必须大于线径1");
+                $('#SizeB2').val('');
+            }
+        })
 
     })
 </script>
