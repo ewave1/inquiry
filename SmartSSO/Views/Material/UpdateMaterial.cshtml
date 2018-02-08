@@ -21,8 +21,8 @@
         <div class="container">
 
 
-            @using (Html.BeginForm("UpdateMaterial", "Material", FormMethod.Post, new { @class = "form-horizontal" }))
-    {
+            @using (Html.BeginForm("UpdateMaterial", "Material", new { bag = Json.Encode(ViewBag) }, FormMethod.Post, new { @class = "form-horizontal" }))
+            {
         @Html.HiddenFor(model => model.Id)
         <div class="form-group">
             @Html.LabelFor(model => model.MaterialCode, new { @class = "col-md-2 control-label" })

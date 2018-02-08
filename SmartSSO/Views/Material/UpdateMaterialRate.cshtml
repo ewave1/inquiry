@@ -22,7 +22,7 @@
         <div class="container">
 
 
-            @using (Html.BeginForm("UpdateMaterialRate", "Material", FormMethod.Post, new { @class = "form-horizontal" }))
+            @using (Html.BeginForm("UpdateMaterialRate", "Material", new { bag = Json.Encode(ViewBag) }, FormMethod.Post, new { @class = "form-horizontal" }))
             {
                 @Html.HiddenFor(model => model.Id)
                 <div class="form-group">

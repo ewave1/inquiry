@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Newtonsoft.Json;
 using SmartSSO.Entities;
 using SmartSSO.Filters;
 using SmartSSO.Helpers;
@@ -6,6 +7,7 @@ using SmartSSO.Services;
 using SmartSSO.Services.Impl;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -23,10 +25,20 @@ namespace MyDemo.Controllers
             //{
             //    ViewData["user"] = User.Identity.Name;
             //}
+     
+            var bag = filterContext.HttpContext.Request.QueryString["bag"];
+            if (!string.IsNullOrEmpty(bag))
+            {
+                var bagDyn = JsonConvert.DeserializeObject<Dictionary< string, dynamic>>(bag);
+                foreach(var item in bagDyn)
+                {
+                    ViewData[item.Key] = item.Value;
+                }
+            }
 
             ViewBag.CurrentUser = GetCurrentUser();
             if (string.IsNullOrEmpty(UserName)&& ViewBag.CurrentUser!=null) 
-            {
+            { 
                 string returnUrl = HttpUtility.UrlEncode(filterContext.HttpContext.Request.Url.AbsolutePath);
                 filterContext.Result = Redirect("/Home/LoginOut?ReturnUrl=" + returnUrl);
             }

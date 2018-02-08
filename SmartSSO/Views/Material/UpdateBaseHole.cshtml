@@ -21,7 +21,7 @@
         <div class="container">
 
 
-            @using (Html.BeginForm("UpdateBaseHole", "Material", FormMethod.Post, new { @class = "form-horizontal" }))
+            @using (Html.BeginForm("UpdateBaseHole", "Material", new { bag = Json.Encode(ViewBag) }, FormMethod.Post, new { @class = "form-horizontal" }))
             {
                 @Html.HiddenFor(model => model.Id) 
 

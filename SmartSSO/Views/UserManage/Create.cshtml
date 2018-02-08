@@ -20,8 +20,8 @@
 
         <div class="container">
 
-            @using (Html.BeginForm("create", "UserManage", FormMethod.Post, new { @class = "form-horizontal" }))
-    {
+            @using (Html.BeginForm("create", "UserManage", new { bag = Json.Encode(ViewBag) }, FormMethod.Post, new { @class = "form-horizontal" }))
+            {
         @Html.HiddenFor(model => model.IsAdd )
         <div class="form-group">
             @Html.LabelFor(model => model.UserName, new { @class = "col-md-2 control-label" })
