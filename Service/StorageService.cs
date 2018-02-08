@@ -57,6 +57,7 @@ namespace Services
             var details = ImportHelper.AddToImport(typeof(StorageModel), importItem.Id, file.LocalPath);
             DbContext.PT_ImportHistoryDetail.AddRange(details);
 
+            DbContext.Database.ExecuteSqlCommand(" update Storages set Number =0 ");
             foreach (var item in details)
             {
                 //保存结果

@@ -1093,6 +1093,7 @@ namespace Services
             original.SizeB2 = material.SizeB2;
             original.SizeB = material.SizeB;
             original.UseRate = material.UseRate;
+            original.BadRate = material.BadRate;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
             DbContext.SaveChanges();
