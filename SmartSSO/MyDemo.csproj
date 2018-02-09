@@ -188,6 +188,7 @@
     <Compile Include="Controllers\UserManageController.cs" />
     <Compile Include="Extendsions\ControllerExtendsions.cs" />
     <Compile Include="Extendsions\PagingExtendsions.cs" />
+    <Compile Include="Filters\ExceptionLogAttribute.cs" />
     <Compile Include="Filters\UserAuthorizationAttribute.cs" />
     <Compile Include="Filters\ValidateModelStateAttribute.cs" />
     <Compile Include="Global.asax.cs">

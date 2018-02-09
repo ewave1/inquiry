@@ -32,6 +32,7 @@ namespace MyDemo.Controllers
                 var bagDyn = JsonConvert.DeserializeObject<Dictionary< string, dynamic>>(bag);
                 foreach(var item in bagDyn)
                 {
+                    if(!ViewData.ContainsKey(item.Key))
                     ViewData[item.Key] = item.Value;
                 }
             }

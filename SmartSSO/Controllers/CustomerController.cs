@@ -56,7 +56,7 @@ namespace InquiryDemo.Controllers
 
 
             var action = "维护";
-            if (id == 0)
+            if (id == 0|| id==null)
                 action = "新增";
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
@@ -88,7 +88,7 @@ namespace InquiryDemo.Controllers
                 return RedirectToAction("Index");
             ModelState.AddModelError("_error", result.Msg);
 
-            ViewData["CustomerLevels"] = GetDiscountNames(DisCountType.客户级别);
+            ViewData["CustomerLevels"] = GetDiscountNames(DisCountType.客户级别); 
             return View();
         } 
 

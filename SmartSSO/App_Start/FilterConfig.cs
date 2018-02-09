@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using InquiryDemo.Filters;
+using System.Web;
 using System.Web.Mvc;
 
 namespace WY.SSO
@@ -7,6 +8,7 @@ namespace WY.SSO
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
+            filters.Add(new ExceptionLogAttribute());
             filters.Add(new HandleErrorAttribute());
         }
     }
