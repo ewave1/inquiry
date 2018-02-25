@@ -297,18 +297,21 @@ namespace InquiryDemo.Controllers
             if (result == null)
                 return RedirectToAction("Login", "Home");
             ViewBag.Type = type.GetHashCode();
-            ViewBag.Title = "特殊配方内列表";
+            ViewBag.Title = "材料物性";
             ViewBag.ColumnName = "特性";
             if (type == MATERIALTYPE.表面物性)
             {
 
-                ViewBag.Title = "特殊处理外列表";
+                ViewBag.Title = "表面物性";
             }
             if (type == MATERIALTYPE.颜色)
             {
                 ViewBag.ColumnName = "颜色";
-                ViewBag.Title = "颜色列表";
+                ViewBag.Title = "颜色";
             }
+            ViewBag.ActionTitle = "新增" + ViewBag.Title;
+            ViewBag.Title = ViewBag.Title + "列表";
+
             return View(result);
         }
 

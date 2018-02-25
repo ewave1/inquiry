@@ -26,44 +26,52 @@
 
 
                 @using (Html.BeginForm("Index", "Material", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
-                {
+    {
 
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传文件</label>
-                        <div class="col-sm-3">
-                            <input type="file" name="files" id="fileUpload" tabindex="-1" style="position:absolute; clip:rect(0px 0px 0px 0xp);" />
-                            <div class="bootstrap-filestyle input-group">
-                                <input type="text" id="fileText" class="form-control " disabled="">
-                                <span class="group-span-filestyle input-group-btn" tabindex="0">
-                                    <label for="fileUpload" class="btn btn-default ">
-                                        <span class="glyphicon glyphicon-folder-open"></span> 选择文件
-                                    </label>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-xs-12">
-                            <button type="button" class="btn btn-default" id="btnImport">
-                                <i class="fa fa-sign-in"></i> 导入
-                            </button>
-                            <div class="" id="warning" style="display:none"></div>
-                        </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传文件</label>
+                <div class="col-sm-3">
+                    <input type="file" name="files" id="fileUpload" tabindex="-1" style="position:absolute; clip:rect(0px 0px 0px 0xp);" />
+                    <div class="bootstrap-filestyle input-group">
+                        <input type="text" id="fileText" class="form-control " disabled="">
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                            <label for="fileUpload" class="btn btn-default ">
+                                <span class="glyphicon glyphicon-folder-open"></span> 选择文件
+                            </label>
+                        </span>
                     </div>
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传时间</label>
-                        <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12">
-                            <input type="date" name="timeStart" value="@ViewBag.timeStart" />
-                            <label>至</label>
-                            <input type="date" name="timeEnd" value="@ViewBag.timeEnd" />
-                        </div>
-                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <button type="button" class="btn btn-default" id="btnImport">
+                        <i class="fa fa-sign-in"></i> 导入
+                    </button>
+                    <div class="" id="warning" style="display:none"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传时间</label>
+                <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12">
+                    <input type="date" name="timeStart" value="@ViewBag.timeStart" />
+                    <label>至</label>
+                    <input type="date" name="timeEnd" value="@ViewBag.timeEnd" />
+                </div>
+            </div>
 
-                    <div class="form-group">
-                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">查询</label>
-                        <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
-                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
-                        </div>
-                    </div>
-                }
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">新增</label>
+                <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                    <a href="/Material/UpdateMaterial?id=0" class="btn btn-default">
+                        新增材质基本资料
+                    </a> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">查询</label>
+                <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+}
             </div>
         </div>
         <table class="table table-hover table-striped">
