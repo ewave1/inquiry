@@ -70,13 +70,11 @@
             <thead>
                 <tr>
                     <th>序号</th>
-                    <th>材料</th>
-                    <th>内径</th>
-                    <th>线径</th>
-                    <td>材料物性</td>
-                    <td>表面物性</td>
-                    <td>颜色</td>
-                    <td>数量</td>
+                    <th>物料名称</th>
+                    <th>规格型号</th>
+                    <th>批号</th>
+                    <th>仓库代码</th> 
+                    <th>数量</th>
                     <th>上传时间</th>
                     <th>操作人</th>
                     <th>操作</th>
@@ -87,12 +85,10 @@
                 {
                     <tr>
                         <td>@(item.Id)</td>
-                        <td>@(item.MaterialCode + " " + item.Hardness)</td>
-                        <td>@item.SizeA</td>
-                        <td>@item.SizeB</td>
-                        <td>@item.Material1</td>
-                        <td>@item.Material2</td>
-                        <td>@item.Color</td>
+                        <td>@(item.Name)</td> 
+                        <td>@item.Spec</td>
+                        <td>@item.BatchNo</td>
+                        <td>@item.Location</td>
                         <td>@item.Number</td>
 
                         <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>

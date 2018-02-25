@@ -31,6 +31,8 @@ namespace Data.Entities
         /// </summary>
         public string MaterialCode { get; set; }
 
+        public string MaterialDisplay { get; set; }
+
         [Display(Name = "硬度")]
         public int Hardness { get; set; }
         public int MaterialId { get; set; }
@@ -47,6 +49,20 @@ namespace Data.Entities
         public string Color { get; set; }
 
 
+        [Display(Name = "物料名称")]
+        public string Name { get; set; }
+
+        [Display(Name = "规格型号")]
+        public string Spec { get; set; }
+
+        [Display(Name = "批号")]
+        public string BatchNo { get; set; }
+
+        [Display(Name = "仓库代码")]
+        public string Location { get; set; }
+
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
 
         /// <summary>
         /// 库存数

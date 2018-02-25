@@ -76,18 +76,66 @@ namespace Services
         public void SaveImportResult(PT_ImportHistoryDetail item,PT_ImportHistory importItem,string User  )
         { 
             var relateItem  = JsonConvert.DeserializeObject<StorageModel>( item.Json);
-            var storage = new Storage {
-                Color = relateItem.Color,
-                Hardness = relateItem.Hardness,
-                MaterialCode = relateItem.MaterialCode,
-                Material1 = relateItem.Material1,
-                Material2 = relateItem.Material2,
-                Number = relateItem.Number,
-                SizeA = relateItem.SizeA,
-                SizeB = relateItem.SizeB,
+            var storage = new Storage
+            {
+                Name = relateItem.Name,
+                Spec = relateItem.Spec,
+                BatchNo = relateItem.BatchNo,
+                Location = relateItem.Location,
+                Remark = relateItem.Remark,
+                //Color = relateItem.Color,
+                //Hardness = relateItem.Hardness,
+                //MaterialCode = relateItem.MaterialCode,
+                //Material1 = relateItem.Material1,
+                //Material2 = relateItem.Material2,
+                //Number = relateItem.Number,
+                //SizeA = relateItem.SizeA,
+                //SizeB = relateItem.SizeB,
                 UpdateTime = DateTime.Now,
                 UpdateUser = User
             };
+            #region 物料名称
+            var codes = relateItem.Name?.Split(new char[] {' ','\t' }, StringSplitOptions.RemoveEmptyEntries);
+            if(codes!=null && codes.Length == 4)
+            {
+                var material = codes[1];
+                storage.MaterialDisplay = material;
+                var m =  DbContext.Material.Where(v => v.Display == material).FirstOrDefault();
+                if(m==null )
+                {
+                    storage.MaterialCode = material;
+                }
+                else
+                {
+                    storage.MaterialCode = m.MaterialCode;
+                    storage.Hardness = m.Hardness;
+                }
+                storage.Color = codes[2];
+                if (codes[3] == "Normal"|| codes[3].Length!=4)
+                {
+                    storage.Material1 = "Normal";
+                    storage.Material2 = "Normal";
+                }
+                else 
+                {
+                    var m1 = codes[3].Substring(0, 2);
+                    var m2 = codes[3].Substring(2, 2);
+                    if (m1 != "00")
+                    {
+                        storage.Material1 = m1;
+                    }
+                    if (m2 != "00")
+                        storage.Material2 = m2;
+                }
+            }
+            #endregion
+            if(relateItem.Number!=null && relateItem.Number.EndsWith("PCS"))
+            {
+                var number = relateItem.Number.Substring(0, relateItem.Number.Length - 3);
+                int iNumber = 0;
+                if (int.TryParse(number, out iNumber))
+                    storage.Number = iNumber;
+            }
 
             DbContext.Storage.Add(storage);
             DbContext.SaveChanges();
