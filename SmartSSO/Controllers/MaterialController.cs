@@ -132,7 +132,14 @@ namespace InquiryDemo.Controllers
 
         }
 
+        public ActionResult DeleteMaterialAll( )
+        {
+            var result = _iservice.RemoveAllMatertail();
 
+
+            return Json(result);
+
+        }
         /// <summary>
         /// 上传基本数据
         /// </summary>
@@ -147,6 +154,8 @@ namespace InquiryDemo.Controllers
             return Json(uploadFile);
 
         }
+
+
 
         #endregion
 
@@ -203,6 +212,14 @@ namespace InquiryDemo.Controllers
 
         }
 
+        public ActionResult DeleteBaseHoleAll()
+        {
+            var result = _iservice.RemoveAllBaseHole();
+
+
+            return Json(result);
+
+        }
 
         /// <summary>
         /// 上传孔数的数据
@@ -268,6 +285,14 @@ namespace InquiryDemo.Controllers
 
         }
 
+        public ActionResult DeleteMaterialHoleAll()
+        {
+            var result = _iservice.RemoveAllMatertailHole();
+
+
+            return Json(result);
+
+        }
 
         /// <summary>
         /// 上传孔数的数据
@@ -366,6 +391,14 @@ namespace InquiryDemo.Controllers
         }
 
 
+        public ActionResult DeleteMaterialFeatureAll(MATERIALTYPE  type= MATERIALTYPE.材料物性 )
+        {
+            var result = _iservice.RemoveAllMatertailFeature(type);
+
+
+            return Json(result);
+
+        }
         /// <summary>
         /// 上传孔数的数据
         /// </summary>
@@ -433,6 +466,15 @@ namespace InquiryDemo.Controllers
         }
 
 
+
+        public ActionResult DeleteMaterialGravityAll()
+        {
+            var result = _iservice.RemoveAllMatertailGravity();
+
+
+            return Json(result);
+
+        }
         /// <summary>
         /// 上传孔数的数据
         /// </summary>
@@ -498,6 +540,15 @@ namespace InquiryDemo.Controllers
         }
 
 
+
+        public ActionResult DeleteMaterialHourAll()
+        {
+            var result = _iservice.RemoveAllMatertailHour();
+
+
+            return Json(result);
+
+        }
         /// <summary>
         /// 上传孔数的数据
         /// </summary>
@@ -561,6 +612,15 @@ namespace InquiryDemo.Controllers
 
         }
 
+
+        public ActionResult DeleteMaterialRateAll()
+        {
+            var result = _iservice.RemoveAllMatertailRate();
+
+
+            return Json(result);
+
+        }
 
         /// <summary>
         ///  

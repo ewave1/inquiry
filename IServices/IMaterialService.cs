@@ -28,6 +28,9 @@ namespace IServices
 
         RepResult<bool> DeleteMatial(int id);
 
+
+        RepResult<bool> RemoveAllMatertail();
+
         RepResult<Material> UploadMaterial(string User, HttpRequestBase Request);
 
         IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, MATERIALTYPE type, int page);
@@ -35,6 +38,7 @@ namespace IServices
         RepResult<MaterialFeature> UploadMaterialFeature(string User, HttpRequestBase Request, MATERIALTYPE type = MATERIALTYPE.材料物性);
         RepResult<bool> DeleteMatialFeature(int Id);
 
+        RepResult<bool> RemoveAllMatertailFeature(MATERIALTYPE? type);
 
         RepResult<MaterialFeature> UpdateMaterialFeature(MaterialFeatureModel material, string User);
 
@@ -48,6 +52,7 @@ namespace IServices
         RepResult<MaterialGravity> UpdateMaterialGravity(MaterialGravityModel material, string User);
 
         MaterialGravityModel GetMaterialGravity(int? id);
+        RepResult<bool> RemoveAllMatertailGravity();
 
         IPagedList<MaterialHole> GetMaterialHoles(int? MaterialId, int page);
         RepResult<MaterialHole> UploadMaterialHole(string User, HttpRequestBase Request);
@@ -58,6 +63,7 @@ namespace IServices
         MaterialHoleModel GetMaterialHole(int? id);
 
 
+        RepResult<bool> RemoveAllMatertailHole();
 
         IPagedList<BaseHole> GetBaseHoles(  int page);
         RepResult<BaseHole> UploadBaseHole(string User, HttpRequestBase Request);
@@ -66,6 +72,7 @@ namespace IServices
         RepResult<BaseHole> UpdateBaseHole(BaseHoleModel material, string User);
 
         BaseHoleModel GetBaseHole(int? id);
+        RepResult<bool> RemoveAllBaseHole();
 
 
         IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page);
@@ -76,6 +83,7 @@ namespace IServices
         RepResult<MaterialHour> UpdateMaterialHour(MaterialHourModel material, string User);
 
         MaterialHourModel GetMaterialHour(int? id);
+        RepResult<bool> RemoveAllMatertailHour();
 
         IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page);
 
@@ -86,6 +94,7 @@ namespace IServices
 
         MaterialRateModel GetMaterialRate(int? id);
 
+        RepResult<bool> RemoveAllMatertailRate();
 
     }
 }

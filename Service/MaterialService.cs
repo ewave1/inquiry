@@ -2,12 +2,13 @@
 using Data.Entities;
 using Data.Models;
 using IServices;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using PagedList;
 using SmartSSO.Services.Util;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Data.Entity; 
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1147,8 +1148,69 @@ namespace Services
                 UpdateUser = model.UpdateUser
             };
         }
+
+        public RepResult<bool> RemoveAllMatertail()
+        {
+            if (DbContext.MaterialFeature .Count() > 0)
+                return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
+            if (DbContext.MaterialGravity .Count() > 0)
+                return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
+            if (DbContext.MaterialHole .Count() > 0)
+                return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
+            if (DbContext.MaterialHour .Count() > 0)
+                return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
+            if (DbContext.Storage .Count() > 0)
+                return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
+            if (DbContext.InquiryLog .Count() > 0)
+                return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
+            DbContext.Database.ExecuteSqlCommand("delete from materials ");
+
+            return new RepResult<bool> { Data = true };
+        }
+
+        public RepResult<bool> RemoveAllMatertailFeature(MATERIALTYPE? type)
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialfeatures where type=@type  ", new MySqlParameter("@type",type));
+
+            return new RepResult<bool> { Data = true };
+        }
+
+        public RepResult<bool> RemoveAllMatertailGravity()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialgravitys ");
+
+            return new RepResult<bool> { Data = true };
+        }
+
+        public RepResult<bool> RemoveAllMatertailHole()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialholes ");
+
+            return new RepResult<bool> { Data = true };
+        }
+
+        public RepResult<bool> RemoveAllBaseHole()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from baseholes ");
+
+            return new RepResult<bool> { Data = true };
+        }
+
+        public RepResult<bool> RemoveAllMatertailHour()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialhours ");
+
+            return new RepResult<bool> { Data = true };
+        }
+
+        public RepResult<bool> RemoveAllMatertailRate()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialrates ");
+
+            return new RepResult<bool> { Data = true };
+        }
         #endregion
 
-         
+
     }
 }
