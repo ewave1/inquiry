@@ -23,17 +23,17 @@ namespace Data.Entities
         /// <summary>
         /// 外径=SizeA+SizeB
         /// </summary>
-        public decimal SizeC { get; set; }
+        public decimal SizeC { get; set; } = 0;
 
+
+        /// <summary>
+        /// 外径2
+        /// </summary>
+        public decimal? SizeC2 { get; set; }
         /// <summary>
         /// 比率:基础孔数* Rate=孔数
         /// </summary>
         public decimal Rate { get; set; }
-
-        /// <summary>
-        /// 孔数
-        /// </summary>
-        public int HoleCount { get; set; }
 
 
         public DateTime UpdateTime { get; set; }

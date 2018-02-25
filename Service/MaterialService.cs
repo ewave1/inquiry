@@ -32,24 +32,24 @@ namespace Services
             //获取硬度
             if (Type ==  MATERIALMODELTYPE.Hardness)
             {
-                var hardness =    DbContext.Material.Where(v => v.MaterialCode == MaterialCode).Select(v => new { v.Hardness ,v.IsDefault}).Distinct().ToList();
+                var hardness =    DbContext.Material.Where(v => v.MaterialCode == MaterialCode).Select(v => new { v.Hardness ,v.IsDefault}).Distinct().OrderBy(v=>v.Hardness).ToList();
                 return hardness.Select(v => new NameValueModel {Name = v.Hardness.ToString(), IsDefault=v.IsDefault,Value = v.Hardness.ToString () }).ToList();
             }
             if(Type== MATERIALMODELTYPE.Material1)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode&& v.Hardness== Hardness && v.Type== MATERIALTYPE.材料物性 ).Select(v => v.Name).Distinct().ToList();
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode&& v.Hardness== Hardness && v.Type== MATERIALTYPE.材料物性 ).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
                 hardness.Insert(0, Const.MaterialNormal);
                 return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
             }
             if (Type == MATERIALMODELTYPE.Material2)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.表面物性).Select(v => v.Name).Distinct().ToList();
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.表面物性).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
                 hardness.Insert(0, Const.MaterialNormal);
                 return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
             }
             if (Type == MATERIALMODELTYPE.Color)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v =>new { v.Name, v.IsDefault }).Distinct().ToList();
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v =>new { v.Name, v.IsDefault }).Distinct().OrderBy(v => v.Name).ToList();
                 return hardness.Select(v => new NameValueModel { Name = v.Name.ToString(),IsDefault = v.IsDefault, Value = v.Name.ToString() }).ToList();
             }
 
@@ -58,7 +58,9 @@ namespace Services
         }
         public IPagedList<Material> GetMaterialList(int? MaterialId, int page)
         {
-            return DbContext.Material.OrderByDescending(v => v.UpdateTime).ToPagedList(page, Const.PageSize);
+            return DbContext.Material.OrderBy(v => v.MaterialCode)
+                .ThenBy(v=>v.Hardness)
+                .ToPagedList(page, Const.PageSize);
         }
 
         public   MaterialModel GetMaterial(int? id)
@@ -229,7 +231,10 @@ namespace Services
         {
             return DbContext.MaterialFeature
                 .Where(v => (v.MaterialId == MaterialId || MaterialId == null) && v.Type==type)
-                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
+                .OrderBy(v=>v.MaterialCode).ThenBy(v=>v.Hardness)
+                .ThenBy(v=>v.Name)
+                
+                  .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
         /// <summary>
@@ -412,7 +417,10 @@ namespace Services
         { 
             return DbContext.MaterialGravity
                 .Where(v=>v.MaterialId == MaterialId || MaterialId==null)
-                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page,Const.PageSize);
+                .OrderBy(v => v.MaterialCode).ThenBy(v => v.Hardness)
+                .ThenBy(v=>v.Color)
+                .ThenBy(v=>v.Gravity)
+                  .ThenByDescending(p => p.UpdateTime).ToPagedList(page,Const.PageSize);
         }
 
 
@@ -702,7 +710,9 @@ namespace Services
         {
             return DbContext.MaterialHole
                 .Where(v => v.MaterialId == MaterialId || MaterialId == null)
-                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
+                .OrderBy(v => v.MaterialCode).ThenBy(v => v.Hardness)
+                .ThenBy(v=>v.SizeC)
+                  .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
          
         /// <summary>
@@ -757,8 +767,7 @@ namespace Services
             var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
 
             var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness && v.SizeC == relateItem.SizeC).FirstOrDefault();
-
-            var baseHole = DbContext.BaseHole.Where(v => v.SizeC == relateItem.SizeC).FirstOrDefault();
+             
 
             if(hole==null)
             {
@@ -767,7 +776,7 @@ namespace Services
                     UpdateTime = DateTime.Now,
                     UpdateUser = User,
                     Hardness = relateItem.Hardness,
-                    HoleCount = relateItem.HoleCount,
+                    SizeC2 = relateItem.SizeC2,
                     MaterialCode = relateItem.MaterialCode,
                     Rate = relateItem.Rate,
                     SizeC = relateItem.SizeC,
@@ -781,12 +790,10 @@ namespace Services
             {
                 hole.UpdateTime = DateTime.Now;
                 hole.UpdateUser = User;
-                hole.HoleCount = relateItem.HoleCount;
+                hole.SizeC2 = relateItem.SizeC2;
                 hole.Rate = relateItem.Rate;
 
-            }
-            if (baseHole != null && relateItem.HoleCount == 0)
-                hole.HoleCount =Convert.ToInt32( baseHole.HoleCount * hole.Rate);
+            } 
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
             item.RelateID = hole.Id;
@@ -825,7 +832,7 @@ namespace Services
             original.MaterialCode = material.MaterialCode;
             original.Hardness = material.Hardness;
             original.Rate = material.Rate; 
-            original.HoleCount = material.HoleCount;
+            original.SizeC2 = material.SizeC2;
             original.MaterialId = material.MaterialId;
             original.SizeC = material.SizeC;
             original.UpdateTime = DateTime.Now;
@@ -845,7 +852,7 @@ namespace Services
                 Hardness = model.Hardness,
                 Rate = model.Rate,
                 MaterialId = model.MaterialId,
-                HoleCount = model.HoleCount,
+                SizeC2 = model.SizeC2,
                 SizeC = model.SizeC,
                 UpdateTime = model.UpdateTime,
                 Id = model.Id,
@@ -860,7 +867,9 @@ namespace Services
         {
             return DbContext.MaterialHour
                 .Where(v => v.MaterialId == MaterialId || MaterialId == null)
-                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
+                .OrderBy(v => v.MaterialCode).ThenBy(v => v.Hardness)
+                .ThenBy(v=>v.MosInHour)
+                  .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
         /// <summary>
@@ -1005,8 +1014,8 @@ namespace Services
 
         public IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page)
         {
-            return DbContext.MaterialRate 
-                  .OrderByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
+            return DbContext.MaterialRate  
+                  .OrderBy(p => p.SizeB).ToPagedList(page, Const.PageSize);
         }
 
         /// <summary>

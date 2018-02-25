@@ -30,6 +30,8 @@ function changeMaterial(fun) {
             $('#Hardness').empty();
             $.each(result, function (n, value) {
                 $('#Hardness').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+                if (value.IsDefault)
+                    $('#Hardness option[value="' + value.Value + '"]').attr('selected', true);
             })
 
             if (fun)
@@ -87,6 +89,10 @@ function changeColor() {
             $('#Color').empty();
             $.each(result, function (n, value) {
                 $('#Color').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+
+
+                if (value.IsDefault)
+                    $('#Color option[value="' + value.Value + '"]').attr('selected', true);
             })
         }
     });

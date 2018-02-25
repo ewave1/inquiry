@@ -35,31 +35,33 @@ namespace Data.Entities
         [Display(Name = "硬度")]
         public int Hardness { get; set; }
 
-        [ColumnMapping("外径", ColumnType = ReflectionColumnType.PrimaryKey)]
+        [ColumnMapping("外径1", ColumnType = ReflectionColumnType.PrimaryKey)]
 
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "外径")]
+        [Display(Name = "外径1(>=)")]
         /// <summary>
         /// 外径=SizeA+SizeB
         /// </summary>
-        public decimal SizeC { get; set; }
+        public decimal SizeC { get; set; } = 0;
 
+
+        [ColumnMapping("外径2" )]
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "外径2(<)")]
+        /// <summary>
+        /// 外径=SizeA+SizeB
+        /// </summary>
+        public decimal? SizeC2 { get; set; }
         [ColumnMapping("系数")]
 
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "系数")]
         public decimal Rate { get; set; }
-
-        [ColumnMapping("孔数")]
-
-        [DataType(DataType.Text)]
-        [Display(Name = "孔数")]
-        /// <summary>
-        /// 孔数
-        /// </summary>
-        public int HoleCount { get; set; }
+ 
 
 
         public DateTime UpdateTime { get; set; }

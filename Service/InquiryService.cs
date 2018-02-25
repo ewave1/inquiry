@@ -94,16 +94,23 @@ namespace Services
 
             if (hour == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "生产效率数据找不到，请先导入生产效率数据" };
-
-            var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeC == (model.SizeA + model.SizeB)).FirstOrDefault();
+            //开模孔数
+            var sizeC = model.SizeA + model.SizeB;
+            var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeC <= sizeC && (v.SizeC2>sizeC ||v.SizeC2 ==null) )).FirstOrDefault();
 
             if (hole == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "开模孔数数据找不到，请先导入开模孔数数据" };
+            //基础孔数
+            var baseHole = DbContext.BaseHole.Where(v => v.SizeC == (model.SizeA + model.SizeB)).FirstOrDefault();
+            if(baseHole==null)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "基础孔数数据找不到，请先导入基础孔数数据" };
+
+            int holeCnt = (int)Math.Round(baseHole.HoleCount * (hole != null ? hole.Rate : 1));
             //profile 
             var profile = DbContext.DiscountSet.Where(v => v.Type == DisCountType.利润率).FirstOrDefault();
             var costByHour = DbContext.DiscountSet.Where(v => v.Type == DisCountType.每小时成本).FirstOrDefault();
 
-            var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, hole.HoleCount, profile.Discount);
+            var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, holeCnt, profile.Discount);
 
             //库存(是否有模具）
             var storages = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB).ToList();
@@ -182,13 +189,13 @@ namespace Services
         /// <summary>
         /// 材料
         /// </summary>
-        public List<Material> Materials() => DbContext.Material.ToList();
+        public List<Material> Materials() => DbContext.Material.OrderBy(v=>v.Display).ToList();
 
         /// <summary>
         /// 编码
         /// </summary>
         /// <returns></returns>
-        public List<SealCode> SealCodes() => DbContext.SealCode.ToList();
+        public List<SealCode> SealCodes() => DbContext.SealCode.OrderBy(v=>v.Code).ToList();
 
         public SealCode GetSealCode(string Code, decimal? SizeA, decimal? SizeB)
         {
