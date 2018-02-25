@@ -93,7 +93,7 @@ namespace Services
                 original.Remark = material.Remark;
             original.Hardness = material.Hardness;
             original.MaterialCode = material.MaterialCode;
-          
+            original.Price = material.Price;
             original.SpecialDiscount = material.SpecialDiscount;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
