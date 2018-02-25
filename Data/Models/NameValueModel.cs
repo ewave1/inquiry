@@ -12,7 +12,7 @@ namespace Data.Models
 
         public string Value { get; set; }
 
-
+        public bool IsDefault { get; set; }
     }
 
     public enum MATERIALMODELTYPE

@@ -32,8 +32,8 @@ namespace Services
             //获取硬度
             if (Type ==  MATERIALMODELTYPE.Hardness)
             {
-                var hardness =    DbContext.Material.Where(v => v.MaterialCode == MaterialCode).Select(v => v.Hardness).Distinct().ToList();
-                return hardness.Select(v => new NameValueModel {Name = v.ToString(),Value = v.ToString () }).ToList();
+                var hardness =    DbContext.Material.Where(v => v.MaterialCode == MaterialCode).Select(v => new { v.Hardness ,v.IsDefault}).Distinct().ToList();
+                return hardness.Select(v => new NameValueModel {Name = v.Hardness.ToString(), IsDefault=v.IsDefault,Value = v.Hardness.ToString () }).ToList();
             }
             if(Type== MATERIALMODELTYPE.Material1)
             {
@@ -49,8 +49,8 @@ namespace Services
             }
             if (Type == MATERIALMODELTYPE.Color)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v => v.Name).Distinct().ToList();
-                return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v =>new { v.Name, v.IsDefault }).Distinct().ToList();
+                return hardness.Select(v => new NameValueModel { Name = v.Name.ToString(),IsDefault = v.IsDefault, Value = v.Name.ToString() }).ToList();
             }
 
             throw new NotImplementedException();
@@ -75,12 +75,18 @@ namespace Services
                 Id = model.Id,
                 UpdateUser = model.UpdateUser,
                 Hardness = model.Hardness,
-                Price = model.Price
+                Price = model.Price,
+                IsDefault = model.IsDefault 
             };
         }
 
         public RepResult<Material> UpdateMaterial(MaterialModel material, string User)
         {
+
+            if (material.IsDefault)
+            {
+                DbContext.Database.ExecuteSqlCommand(" update Materials set IsDefault=0 where MaterialCode=@MaterialCode", new MySql.Data.MySqlClient.MySqlParameter("@MaterialCode", material.MaterialCode));
+            }
             var original = DbContext.Material.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
             {
@@ -95,9 +101,13 @@ namespace Services
             original.MaterialCode = material.MaterialCode;
             original.Price = material.Price;
             original.SpecialDiscount = material.SpecialDiscount;
+            original.IsDefault = material.IsDefault ;
+
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
             DbContext.SaveChanges();
+
+
             return new RepResult<Material> { Data = original} ;
         }
 
@@ -198,6 +208,9 @@ namespace Services
             if (relateItem.SpecialDiscount > 0)
                 material.SpecialDiscount = relateItem.SpecialDiscount;
 
+            if (!string.IsNullOrEmpty(relateItem.Display))
+                material.Display = relateItem.Display;
+            material.IsDefault = relateItem.IsDefault  ;
              
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
@@ -288,6 +301,8 @@ namespace Services
                     MaterialId = material == null ? 0 : material.Id,
                     Discount = relateItem.Discount,
                     Name = relateItem.Name,
+                    IsDefault = relateItem.IsDefault ,
+                    
                     Type = type
                 };
                 DbContext.MaterialFeature.Add(feature);
@@ -297,6 +312,7 @@ namespace Services
                 feature.Discount = relateItem.Discount;
                 feature.UpdateTime = DateTime.Now;
                 feature.UpdateUser = User;
+                feature.IsDefault = relateItem.IsDefault  ;
             }
 
             DbContext.SaveChanges();
@@ -335,6 +351,10 @@ namespace Services
         public RepResult<MaterialFeature> UpdateMaterialFeature(MaterialFeatureModel material, string User)
         {
 
+            if (material.IsDefault)
+            {
+                DbContext.Database.ExecuteSqlCommand(" update MaterialFeatures set IsDefault=0 where MaterialCode=@MaterialCode and Type = @Type", new MySql.Data.MySqlClient.MySqlParameter("@MaterialCode", material.MaterialCode), new MySql.Data.MySqlClient.MySqlParameter("@Type", material.Type));
+            }
             var original = DbContext.MaterialFeature.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
             {
@@ -357,6 +377,7 @@ namespace Services
             original.Hardness = material.Hardness;
             original.MaterialId = material.MaterialId; 
             original.Type = material.Type;
+            original.IsDefault = material.IsDefault ;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
             DbContext.SaveChanges();
@@ -378,6 +399,7 @@ namespace Services
                 Type = model.Type,
                 UpdateTime = model.UpdateTime,
                 Id = model.Id,
+                IsDefault = model.IsDefault  ,
                 UpdateUser = model.UpdateUser
             };
         }

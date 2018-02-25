@@ -48,6 +48,9 @@ namespace Data.Entities
         [Display(Name = "系数")]
         public decimal Discount { get; set; }
 
+        [ColumnMapping("是否默认")]
+        [Display(Name = "是否默认")]
+        public bool IsDefault { get; set; }
         public DateTime UpdateTime { get; set; }
 
         public string UpdateUser { get; set; }

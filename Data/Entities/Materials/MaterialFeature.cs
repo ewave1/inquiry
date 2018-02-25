@@ -32,6 +32,13 @@ namespace Data.Entities
 
         public string UpdateUser { get; set; }
 
+
+        /// <summary>
+        /// 每个材质是有默认的颜色 
+        /// 默认的物性是Normal
+        /// </summary>
+        public bool IsDefault { get; set; } = false;
+
         /// <summary>
         /// 材料物性= 0 
         /// 表面物性 = 1

@@ -230,6 +230,7 @@
     <Content Include="Content\Template\颜色模板.xlsx" />
     <Content Include="Content\Template\基础孔数模板.xlsx" />
     <Content Include="Content\Template\模板.xls" />
+    <Content Include="Content\Template\库存模板2.xls" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />

@@ -33,6 +33,8 @@ namespace Services
         public RepResult<UploadFile> UploadFile(string User, HttpRequestBase Request,FILETYPE filetype= FILETYPE.其它)
         {
             HttpPostedFileBase Upfile = Request.Files["file"];
+            if (Upfile == null)
+                return new RepResult<Data.Entities.UploadFile> { Msg ="请先选择上传的文件",Code = -2};
             string filename = Path.GetFileName(Upfile.FileName);
             string fileExtension = Path.GetExtension(filename);//文件扩展名
             string NotExtension = Path.GetFileNameWithoutExtension(filename);//获取无扩展名

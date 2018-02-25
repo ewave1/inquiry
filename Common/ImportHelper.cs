@@ -78,6 +78,13 @@ namespace Common
             Type vType = p.PropertyType;
             object targetValue = null;
 
+            if (vType == typeof(Enum))
+            {
+                int v = 0;
+                int.TryParse(sourceValue + string.Empty, out v);
+                targetValue = v;
+            }
+            else
             if (vType == typeof(int))
             {
                 int v = 0;
@@ -106,8 +113,10 @@ namespace Common
                 else
                 {
                     bool v = false;
-                    bool.TryParse(sourceValue + string.Empty, out v);
-                    targetValue = v;
+                    if (bool.TryParse(sourceValue + string.Empty, out v))
+                        targetValue = v;
+                    else if (string.Equals(sourceValue,"是"))
+                        targetValue = true;
                 }
             }
             else if (vType == typeof(bool?))
@@ -123,6 +132,8 @@ namespace Common
                         bool v = false;
                         if (bool.TryParse(sourceValue + string.Empty, out v))
                             targetValue = v;
+                        else if (string.Equals(sourceValue, "是"))
+                            targetValue = true;
                     }
                 }
             }

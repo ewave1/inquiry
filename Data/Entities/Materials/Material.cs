@@ -35,6 +35,13 @@ namespace Data.Entities
         /// </summary>
         public decimal SpecialDiscount { get; set; }
 
+
+        /// <summary>
+        /// 每个材质有一个默认的硬度
+        /// 
+        /// </summary>
+        public bool IsDefault { get; set; } = false;
+
         public string Remark { get; set; }
 
         public decimal Price { get; set; }

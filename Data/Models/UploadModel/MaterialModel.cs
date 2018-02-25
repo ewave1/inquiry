@@ -69,6 +69,11 @@ namespace Data.Entities
         public string Remark { get; set; }
 
 
+        [ColumnMapping("是否默认")]
+        [Display(Name = "是否默认")]
+        public bool IsDefault { get; set; }
+
+
         public DateTime UpdateTime { get; set; }
 
         public string UpdateUser { get; set; }
