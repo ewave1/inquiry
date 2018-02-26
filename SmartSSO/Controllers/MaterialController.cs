@@ -88,9 +88,11 @@ namespace InquiryDemo.Controllers
 
         #region 基本资料
         // GET: Material
-        public ActionResult Index(int page = 1)
+        public ActionResult Index(string timeStart, string timeEnd, int page = 1)
         {
-            var result = _iservice.GetMaterialList(null, page);
+
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialList(timeRange.TimeStart, timeRange.TimeEnd, null, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -164,9 +166,10 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Base
-        public ActionResult BaseHoleList(int? BaseId, int page = 1)
+        public ActionResult BaseHoleList(string timeStart, string timeEnd, int? BaseId, int page = 1)
         {
-            var result = _iservice.GetBaseHoles(page);
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetBaseHoles(timeRange.TimeStart, timeRange.TimeEnd, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -174,7 +177,7 @@ namespace InquiryDemo.Controllers
 
         public ActionResult LoadBaseHoles()
         {
-            var lst = _iservice.GetBaseHoles(-1);
+            var lst = _iservice.GetBaseHoles(null,null,-1);
 
             return Json(lst);
         }
@@ -243,9 +246,10 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Material
-        public ActionResult MaterialHoleList(int? MaterialId, int page = 1)
+        public ActionResult MaterialHoleList(string timeStart, string timeEnd, int? MaterialId, int page = 1)
         {
-            var result = _iservice.GetMaterialHoles(MaterialId, page);
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialHoles(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -316,9 +320,10 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Material
-        public ActionResult MaterialFeatureList(int? MaterialId, MATERIALTYPE type = MATERIALTYPE.材料物性, int page = 1)
+        public ActionResult MaterialFeatureList(string timeStart, string timeEnd, int? MaterialId, MATERIALTYPE type = MATERIALTYPE.材料物性, int page = 1)
         {
-            var result = _iservice.GetMaterialFeatures(MaterialId, type, page);
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialFeatures(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, type, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             ViewBag.Type = type.GetHashCode();
@@ -420,9 +425,10 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Material
-        public ActionResult MaterialGravityList(int? MaterialId, int page = 1)
+        public ActionResult MaterialGravityList(string timeStart, string timeEnd, int? MaterialId, int page = 1)
         {
-            var result = _iservice.GetMaterialGravities(MaterialId, page);
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialGravities(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -496,9 +502,10 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Material
-        public ActionResult MaterialHourList(int? MaterialId, int page = 1)
+        public ActionResult MaterialHourList(string timeStart, string timeEnd, int? MaterialId, int page = 1)
         {
-            var result = _iservice.GetMaterialHours(MaterialId, page);
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialHours(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);
@@ -570,9 +577,10 @@ namespace InquiryDemo.Controllers
 
 
         // GET: Material
-        public ActionResult MaterialRateList(int? MaterialId, int page = 1)
+        public ActionResult MaterialRateList(string timeStart, string timeEnd, int? MaterialId, int page = 1)
         {
-            var result = _iservice.GetMaterialRates(MaterialId, page);
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialRates(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
             return View(result);

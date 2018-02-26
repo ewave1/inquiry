@@ -37,5 +37,12 @@ namespace Data.Entities
         利润率 =6,
         每小时成本 = 7
     }
+
+    public enum StorageType
+    {
+        无模具,
+        无库存,
+        有库存,
+    }
      
 }

@@ -53,10 +53,10 @@ namespace Services
             //if (sc == null)
             //    return new RepResult<InquiryLog> { Code = -1, Msg = "请选择编码或者输入尺寸" };
           
-            if (model.SizeA < 1M || model.SizeB < 1M)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "内径或线径小于 1，请重新输入！" };
-            if (model.SizeA > 200M || model.SizeB > 8M)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "内径大于200或线径大于8，请重新输入！" };
+            if (model.SizeA < 1M || model.SizeA > 570M)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "内径必须在1-570范围内！" };
+            if (model.SizeB < 1M || model.SizeB > 10M)
+                return new RepResult<InquiryLog> { Code = -1, Msg = "线径必须在1-10范围内，请重新输入！" };
             //SizeA
             //SizeB
             //Gravity
@@ -98,14 +98,16 @@ namespace Services
             var sizeC = model.SizeA + model.SizeB;
             var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeC <= sizeC && (v.SizeC2>sizeC ||v.SizeC2 ==null) )).FirstOrDefault();
 
-            if (hole == null)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "开模孔数数据找不到，请先导入开模孔数数据" };
+            //if (hole == null)
+            //    return new RepResult<InquiryLog> { Code = -1, Msg = "开模孔数数据找不到，请先导入开模孔数数据" };
             //基础孔数
-            var baseHole = DbContext.BaseHole.Where(v => v.SizeC == (model.SizeA + model.SizeB)).FirstOrDefault();
+            //外径向上取整，查询基础孔数的数据
+            var iSizeC = (int)Math.Ceiling(sizeC);
+            var baseHole = DbContext.BaseHole.Where(v => v.SizeC == iSizeC).FirstOrDefault();
             if(baseHole==null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "基础孔数数据找不到，请先导入基础孔数数据" };
-
-            int holeCnt = (int)Math.Round(baseHole.HoleCount * (hole != null ? hole.Rate : 1));
+            //查孔数时，向下取整
+            int holeCnt = (int)Math.Floor(baseHole.HoleCount * (hole != null ? hole.Rate : 1));
             //profile 
             var profile = DbContext.DiscountSet.Where(v => v.Type == DisCountType.利润率).FirstOrDefault();
             var costByHour = DbContext.DiscountSet.Where(v => v.Type == DisCountType.每小时成本).FirstOrDefault();
@@ -123,7 +125,19 @@ namespace Services
              
             //判断是否特殊件
             var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
-        
+
+            //库存的折扣
+            var storageType = StorageType.无库存;
+            if (storage > 0)
+                storageType = StorageType.有库存;
+            else if (storages.Count == 0)
+                storageType = StorageType.无模具;
+            var storageDiscount = DbContext.DiscountSet.Where(v => v.Type == DisCountType.库存级别&&v.Name==storageType.ToString()).FirstOrDefault();
+            if(storageDiscount==null ) 
+                return new RepResult<InquiryLog> { Code = -1, Msg = "库存折扣数据找不到，请联系维护人员" };
+            discount = discount * storageDiscount.Discount;
+
+
             discount = Math.Round(discount, 2);
 
             price = Math.Round(price, 4);

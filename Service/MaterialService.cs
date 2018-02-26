@@ -57,10 +57,12 @@ namespace Services
             throw new NotImplementedException();
 
         }
-        public IPagedList<Material> GetMaterialList(int? MaterialId, int page)
+        public IPagedList<Material> GetMaterialList(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
         {
-            return DbContext.Material.OrderBy(v => v.MaterialCode)
-                .ThenBy(v=>v.Hardness)
+            return DbContext.Material
+                .Where(v=>v.UpdateTime>=dateStart&&v.UpdateTime<=dateEnd)
+                .OrderBy(v => v.MaterialCode)
+                .ThenBy(v=>v.Hardness) 
                 .ToPagedList(page, Const.PageSize);
         }
 
@@ -228,10 +230,10 @@ namespace Services
         #region 特性
 
 
-        public IPagedList<MaterialFeature> GetMaterialFeatures(int? MaterialId, MATERIALTYPE type, int page)
+        public IPagedList<MaterialFeature> GetMaterialFeatures(DateTime dateStart, DateTime dateEnd, int? MaterialId, MATERIALTYPE type, int page)
         {
-            return DbContext.MaterialFeature
-                .Where(v => (v.MaterialId == MaterialId || MaterialId == null) && v.Type==type)
+            return DbContext.MaterialFeature 
+                .Where(v =>  v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd&&(v.MaterialId == MaterialId || MaterialId == null) && v.Type==type)
                 .OrderBy(v=>v.MaterialCode).ThenBy(v=>v.Hardness)
                 .ThenBy(v=>v.Name)
                 
@@ -414,10 +416,10 @@ namespace Services
 
         #region 比重
 
-        public IPagedList<MaterialGravity> GetMaterialGravities( int? MaterialId,int page)
+        public IPagedList<MaterialGravity> GetMaterialGravities(DateTime dateStart, DateTime dateEnd, int? MaterialId,int page)
         { 
             return DbContext.MaterialGravity
-                .Where(v=>v.MaterialId == MaterialId || MaterialId==null)
+                .Where(v=> v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd && (v.MaterialId == MaterialId || MaterialId==null))
                 .OrderBy(v => v.MaterialCode).ThenBy(v => v.Hardness)
                 .ThenBy(v=>v.Color)
                 .ThenBy(v=>v.Gravity)
@@ -570,11 +572,12 @@ namespace Services
 
         #region 基础孔数
 
-        public IPagedList<BaseHole> GetBaseHoles(  int page)
+        public IPagedList<BaseHole> GetBaseHoles(DateTime? dateStart, DateTime? dateEnd, int page)
         {
             if (page == -1)
-                return DbContext.BaseHole.OrderBy(v=>v.SizeC).ToPagedList(1, 9999);
-            return DbContext.BaseHole 
+                return DbContext.BaseHole .OrderBy(v=>v.SizeC).ToPagedList(1, 9999);
+            return DbContext.BaseHole
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd)
                   .OrderByDescending(p => p.SizeC).ToPagedList(page, Const.PageSize);
         }
 
@@ -707,10 +710,10 @@ namespace Services
 
         #region 孔数
 
-        public IPagedList<MaterialHole> GetMaterialHoles(int? MaterialId, int page)
+        public IPagedList<MaterialHole> GetMaterialHoles(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
         {
             return DbContext.MaterialHole
-                .Where(v => v.MaterialId == MaterialId || MaterialId == null)
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd && (v.MaterialId == MaterialId || MaterialId == null))
                 .OrderBy(v => v.MaterialCode).ThenBy(v => v.Hardness)
                 .ThenBy(v=>v.SizeC)
                   .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
@@ -864,10 +867,10 @@ namespace Services
         
         #region 模数 生产效率
 
-        public IPagedList<MaterialHour> GetMaterialHours(int? MaterialId, int page)
+        public IPagedList<MaterialHour> GetMaterialHours(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
         {
             return DbContext.MaterialHour
-                .Where(v => v.MaterialId == MaterialId || MaterialId == null)
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd && (v.MaterialId == MaterialId || MaterialId == null))
                 .OrderBy(v => v.MaterialCode).ThenBy(v => v.Hardness)
                 .ThenBy(v=>v.MosInHour)
                   .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
@@ -1013,9 +1016,10 @@ namespace Services
 
         #region 不良率
 
-        public IPagedList<MaterialRate> GetMaterialRates(int? MaterialId, int page)
+        public IPagedList<MaterialRate> GetMaterialRates(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
         {
-            return DbContext.MaterialRate  
+            return DbContext.MaterialRate
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd)
                   .OrderBy(p => p.SizeB).ToPagedList(page, Const.PageSize);
         }
 
@@ -1177,7 +1181,7 @@ namespace Services
 
         public RepResult<bool> RemoveAllMatertailGravity()
         {
-            DbContext.Database.ExecuteSqlCommand("delete from materialgravitys ");
+            DbContext.Database.ExecuteSqlCommand("delete from  materialgravities ");
 
             return new RepResult<bool> { Data = true };
         }
