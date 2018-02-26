@@ -1,0 +1,232 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model IPagedList<Data.Entities.MaterialStartAmount>
+@{
+    ViewBag.Title = "起订金额";
+}
+<script src="~/Scripts/util.js"></script>
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/Material">材料管理</a></li>
+            <li class="active">起订金额列表</li>
+        </ol>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">筛选</div>
+            <div class="panel-body">
+
+
+                @using (Html.BeginForm("MaterialStartAmountList", "Material", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
+    {
+
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传文件</label>
+                <div class="col-sm-3">
+                    <input type="file" name="files" id="fileUpload" tabindex="-1" style="position:absolute; clip:rect(0px 0px 0px 0xp);" />
+                    <div class="bootstrap-filestyle input-group">
+                        <input type="text" id="fileText" class="form-control " disabled="">
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                            <label for="fileUpload" class="btn btn-default ">
+                                <span class="glyphicon glyphicon-folder-open"></span> 选择文件
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <button type="button" class="btn btn-default" id="btnImport">
+                        <i class="fa fa-sign-in"></i> 导入
+                    </button>
+                    <div class="" id="warning" style="display:none"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">上传时间</label>
+                <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12">
+                    <input type="date" name="timeStart" value="@ViewBag.timeStart" />
+                    <label>至</label>
+                    <input type="date" name="timeEnd" value="@ViewBag.timeEnd" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">操作功能</label>
+                <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                    <a href="/Material/UpdateMaterialStartAmount?id=0" class="btn btn-default">
+                        新增起订金额
+                    </a>
+                </div>
+                <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                    <button type="button"  class="btn btn-danger" id="delAll">一键清空</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">查询</label>
+                <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+}
+            </div>
+        </div>
+
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    @*<th>序号</th>*@
+
+                    <th>类型</th>
+
+                    <th>外径1</th>
+                    <th>外径2</th>
+                    <th>起订金额</th>
+                    <th>上传时间</th>
+                    <th>操作人</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @*<td>@(item.Id)</td>*@
+                        <td>@item.StorageType</td>
+                        <td>@item.SizeC</td>
+                        <td>@item.SizeC2</td>
+                        <td>@item.StartAmount</td> 
+
+                        <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
+                        <td>@item.UpdateUser </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="/Material/UpdateMaterialStartAmount/@item.Id">修改</a></li>
+                                    <li><a id="remove" class="rmMaterial" data-id="@item.Id">删除</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.PagedListPager(Model, page => Url.Action("MaterialStartAmountList", new
+        {
+            CreateUser = ViewBag.CreateUser,
+            timeStart = ViewBag.timeStart,
+            timeEnd = ViewBag.timeEnd,
+            page
+        }))
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                <strong>提示</strong> 没有查询到记录。
+            </div>
+        }
+
+    </div>
+</div>
+<script>
+    $("#fileUpload").change(function () {
+        $("#fileText").val($(this).val());
+    })
+
+    $('.rmMaterial').click(function () {
+        var row = $(this).parents('tr');
+        var id = $(this).data('id');
+        if (!id)
+            id = $(this).attr('data-id');
+        $.ajax({
+            url: '/Material/DeleteMaterialStartAmount/' + id,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            crossDomain: true,
+            success: function (res) {
+                if (res.Success) {
+                    $(row).remove();
+                } else {
+                    util.message('删除失败，' + res.Msg);
+                }
+            }, error: function (event, request, settings) {
+                if (request == "parsererror")
+                    location.href = "/Home/Login";
+                else
+                    alert(event.responseText);
+            }
+        });
+    })
+    $('#btnImport').on('click', function () {
+        var file = $('#fileUpload').prop('files')[0];
+        var data = new FormData();
+        data.append("file", file); 
+        $.ajax({
+            url: '/Material/UploadMaterialStartAmount',
+            type: 'POST',
+            //dataType: 'JSON',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            crossDomain: true,
+            beforeSend: function () {
+                $('#warning').show();
+                $('#warning').text('正在导入，请稍后...');
+            },
+            success: function (res) {
+
+                if (res.Success) {
+                    util.message('导入成功 ', '/Material/MaterialStartAmountList', 'success');
+                } else {
+                    util.message('导入失败，' + res.Msg, '/Material/MaterialStartAmountList', 'error');
+                }
+            }, error: function (event, request, settings) {
+                if (request == "parsererror")
+                    location.href = "/Home/Login";
+                else
+                    alert(event.responseText);
+            }
+        });
+        return false;
+    })
+
+
+    $('#delAll').on('click', function () {
+        util.confirm('警告', '请确认是否删除全部数据！', function () {
+            $.ajax({
+                url: '/Material/DeleteMaterialStartAmountAll',
+                type: 'POST',
+                //dataType: 'JSON', 
+                cache: false,
+                contentType: false,
+                processData: false,
+                crossDomain: true,
+                success: function (res) {
+                    if (res.Success) {
+                        util.message('删除成功 ', '/Material/MaterialStartAmountList', 'success');
+                    } else {
+                        util.message('删除失败，' + res.Msg, '/Material/MaterialStartAmountList', 'error');
+                    }
+                }, error: function (event, request, settings) {
+                    if (request == "parsererror")
+                        location.href = "/Home/Login";
+                    else
+                        alert(event.responseText);
+                }
+            });
+        });
+    })
+</script>

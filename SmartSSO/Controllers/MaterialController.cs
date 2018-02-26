@@ -648,5 +648,80 @@ namespace InquiryDemo.Controllers
         #endregion
 
 
+        #region 起订金额
+
+
+        // GET: Material
+        public ActionResult MaterialStartAmountList(string timeStart, string timeEnd, int? MaterialId, int page = 1)
+        {
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialStartAmount(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
+
+        public ActionResult UpdateMaterialStartAmount(int? id)
+        {
+            var model = _iservice.GetMaterialStartAmount(id);
+
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateMaterialStartAmount(MaterialStartAmountModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateMaterialStartAmount(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("MaterialStartAmountList");
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteMaterialStartAmount(int id)
+        {
+            var result = _iservice.DeleteMatialRate(id);
+
+            return Json(result);
+
+        }
+
+
+        public ActionResult DeleteMaterialStartAmountAll()
+        {
+            var result = _iservice.RemoveAllMatertailStartAmount();
+
+
+            return Json(result);
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary> 
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadMaterialStartAmount()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadMaterialStartAmount(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
+
+
+        #endregion
+
+
     }
 }

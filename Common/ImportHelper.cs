@@ -78,11 +78,25 @@ namespace Common
             Type vType = p.PropertyType;
             object targetValue = null;
 
-            if (vType == typeof(Enum))
+            if (vType == typeof(Enum)|| vType.BaseType==typeof(Enum))
             {
+                var sSourceValue = sourceValue + string.Empty;
                 int v = 0;
-                int.TryParse(sourceValue + string.Empty, out v);
+                if(int.TryParse(sSourceValue, out v))
                 targetValue = v;
+                else
+                { 
+                    var names = Enum.GetNames(vType);
+                    var vvs = Enum.GetValues(vType);
+                    if (names.Contains(sSourceValue))
+                    {
+                        foreach(var vv in vvs)
+                        {
+                            if (vv.ToString() == sSourceValue)
+                                targetValue = vv;
+                        }
+                    }
+                }
             }
             else
             if (vType == typeof(int))

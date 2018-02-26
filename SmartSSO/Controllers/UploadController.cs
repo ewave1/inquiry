@@ -90,6 +90,7 @@ namespace InquiryDemo.Controllers
             lst.Add(new TemplateModel { Id = id++, FileName = "特殊处理外模板", Url = "/Content/Template/特殊处理外模板.xlsx" });
             lst.Add(new TemplateModel { Id = id++, FileName = "颜色模板", Url = "/Content/Template/颜色模板.xlsx" });
             lst.Add(new TemplateModel { Id = id++, FileName = "原料模板", Url = "/Content/Template/原料模板.xlsx" });
+            lst.Add(new TemplateModel { Id = id++, FileName = "起订金额模板", Url = "/Content/Template/起订金额模板.xlsx" });
             return View(lst);
         }
     }

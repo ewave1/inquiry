@@ -127,11 +127,11 @@ namespace Services
             var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
 
             //库存的折扣
-            var storageType = StorageType.无库存;
+            var storageType = StorageTypeEnum.无库存;
             if (storage > 0)
-                storageType = StorageType.有库存;
+                storageType = StorageTypeEnum.有库存;
             else if (storages.Count == 0)
-                storageType = StorageType.无模具;
+                storageType = StorageTypeEnum.无模具;
             var storageDiscount = DbContext.DiscountSet.Where(v => v.Type == DisCountType.库存级别&&v.Name==storageType.ToString()).FirstOrDefault();
             if(storageDiscount==null ) 
                 return new RepResult<InquiryLog> { Code = -1, Msg = "库存折扣数据找不到，请联系维护人员" };

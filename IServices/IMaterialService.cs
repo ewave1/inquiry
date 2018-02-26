@@ -96,5 +96,17 @@ namespace IServices
 
         RepResult<bool> RemoveAllMatertailRate();
 
+
+        IPagedList<MaterialStartAmount> GetMaterialStartAmount(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page);
+
+        RepResult<MaterialStartAmount> UploadMaterialStartAmount(string User, HttpRequestBase Request);
+        RepResult<bool> DeleteMatialStartAmount(int Id);
+
+        RepResult<MaterialStartAmount> UpdateMaterialStartAmount(MaterialStartAmountModel material, string User);
+
+        MaterialStartAmountModel GetMaterialStartAmount(int? id);
+
+        RepResult<bool> RemoveAllMatertailStartAmount();
+
     }
 }

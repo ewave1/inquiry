@@ -1153,19 +1153,164 @@ namespace Services
             };
         }
 
+        #endregion
+
+        #region 起订金额
+
+        public IPagedList<MaterialStartAmount> GetMaterialStartAmount(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
+        {
+            return DbContext.MaterialStartAmount
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd)
+                .OrderBy(p=>p.StorageType)
+                  .ThenBy(p => p.SizeC).ToPagedList(page, Const.PageSize);
+        }
+
+        public RepResult<MaterialStartAmount> UploadMaterialStartAmount(string User, HttpRequestBase Request)
+        {
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.起订金额);
+            if (!result.Success)//导入失败
+                return new RepResult<MaterialStartAmount> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.起订金额,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(MaterialStartAmountModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportMaterailStartAmountResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<MaterialStartAmount> { Code = 0 };
+        }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportMaterailStartAmountResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<MaterialStartAmountModel>(item.Json);
+
+            var rate = DbContext.MaterialStartAmount.Where(v =>v.StorageType==relateItem.StorageType&& v.SizeC == relateItem.SizeC && v.SizeC2 == relateItem.SizeC2).FirstOrDefault();
+            if (rate == null)
+            {
+                rate = new MaterialStartAmount
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    SizeC = relateItem.SizeC,
+                    SizeC2 = relateItem.SizeC2,
+                    StorageType = relateItem.StorageType,
+                    StartAmount = relateItem.StartAmount,
+
+                };
+
+
+                DbContext.MaterialStartAmount.Add(rate);
+            }
+            else
+            {
+                rate.StartAmount = relateItem.StartAmount;
+                rate.StorageType = relateItem.StorageType;
+                rate.UpdateTime = DateTime.Now;
+                rate.UpdateUser = User;
+            }
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = rate.Id;
+        }
+
+        public RepResult<bool> DeleteMatialStartAmount(int Id)
+        {
+            var model = DbContext.MaterialStartAmount.Find(Id);
+            if (model != null)
+            {
+                DbContext.Entry(model).State = EntityState.Deleted;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
+            }
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
+        }
+
+        public RepResult<MaterialStartAmount> UpdateMaterialStartAmount(MaterialStartAmountModel material, string User)
+        {
+            var original = DbContext.MaterialStartAmount.Where(v => v.Id == material.Id).FirstOrDefault();
+            if (original == null)
+            {
+
+                original = DbContext.MaterialStartAmount.Where(v => v.StorageType == material.StorageType && v.SizeC == material.SizeC && v.SizeC2 == material.SizeC2).FirstOrDefault();
+                if (original == null)
+                {
+                    original = new MaterialStartAmount();
+                    DbContext.MaterialStartAmount.Add(original);
+                }
+            }
+            original.StorageType = material.StorageType;
+            original.SizeC2 = material.SizeC2;
+            original.SizeC = material.SizeC;
+            original.StartAmount = material.StartAmount;
+            original.UpdateTime = DateTime.Now;
+            original.UpdateUser = User;
+            DbContext.SaveChanges();
+            return new RepResult<MaterialStartAmount> { Data = original };
+        }
+
+        public MaterialStartAmountModel GetMaterialStartAmount(int? id)
+        {
+            var model = DbContext.MaterialStartAmount.Find(id);
+            if (model == null)
+                return new MaterialStartAmountModel { };
+            return new MaterialStartAmountModel
+            {
+                SizeC = model.SizeC,
+                SizeC2 = model.SizeC2,
+                StartAmount = model.StartAmount,
+                StorageType = model.StorageType,
+                UpdateTime = model.UpdateTime,
+                Id = model.Id,
+                UpdateUser = model.UpdateUser
+            };
+        }
+
+        public RepResult<bool> RemoveAllMatertailStartAmount()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialStartamounts ");
+
+            return new RepResult<bool> { Data = true };
+        }
+        #endregion
+         
+
+        #region 删除所有
         public RepResult<bool> RemoveAllMatertail()
         {
-            if (DbContext.MaterialFeature .Count() > 0)
+            if (DbContext.MaterialFeature.Count() > 0)
                 return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
-            if (DbContext.MaterialGravity .Count() > 0)
+            if (DbContext.MaterialGravity.Count() > 0)
                 return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
-            if (DbContext.MaterialHole .Count() > 0)
+            if (DbContext.MaterialHole.Count() > 0)
                 return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
-            if (DbContext.MaterialHour .Count() > 0)
+            if (DbContext.MaterialHour.Count() > 0)
                 return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
-            if (DbContext.Storage .Count() > 0)
+            if (DbContext.Storage.Count() > 0)
                 return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
-            if (DbContext.InquiryLog .Count() > 0)
+            if (DbContext.InquiryLog.Count() > 0)
                 return new RepResult<bool> { Code = -1, Msg = "请先清除其它基础数据" };
             DbContext.Database.ExecuteSqlCommand("delete from materials ");
 
@@ -1174,7 +1319,7 @@ namespace Services
 
         public RepResult<bool> RemoveAllMatertailFeature(MATERIALTYPE? type)
         {
-            DbContext.Database.ExecuteSqlCommand("delete from materialfeatures where type=@type  ", new MySqlParameter("@type",type));
+            DbContext.Database.ExecuteSqlCommand("delete from materialfeatures where type=@type  ", new MySqlParameter("@type", type));
 
             return new RepResult<bool> { Data = true };
         }
@@ -1214,7 +1359,5 @@ namespace Services
             return new RepResult<bool> { Data = true };
         }
         #endregion
-
-
     }
 }

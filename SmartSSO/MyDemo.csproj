@@ -231,6 +231,7 @@
     <Content Include="Content\Template\基础孔数模板.xlsx" />
     <Content Include="Content\Template\模板.xls" />
     <Content Include="Content\Template\库存模板2.xls" />
+    <Content Include="Content\Template\起订金额模板.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -306,6 +307,8 @@
     <Content Include="Views\Upload\TemplateList.cshtml" />
     <Content Include="Views\Material\BaseHoleList.cshtml" />
     <Content Include="Views\Material\UpdateBaseHole.cshtml" />
+    <Content Include="Views\Material\MaterialStartAmountList.cshtml" />
+    <Content Include="Views\Material\UpdateMaterialStartAmount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

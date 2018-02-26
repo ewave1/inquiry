@@ -95,6 +95,8 @@ namespace SmartSSO.Entities
         /// </summary>
         public DbSet<MaterialRate> MaterialRate { get; set; } 
 
+        public DbSet<MaterialStartAmount> MaterialStartAmount { get; set; }
+
 
         public DbSet<PT_ImportHistory> PT_ImportHistory { get; set; }
 

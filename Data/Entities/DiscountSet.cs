@@ -38,11 +38,12 @@ namespace Data.Entities
         每小时成本 = 7
     }
 
-    public enum StorageType
+    public enum StorageTypeEnum
     {
-        无模具,
-        无库存,
-        有库存,
+        所有产品=0,
+        无模具=1,
+        无库存=2,
+        有库存=3,
     }
      
 }

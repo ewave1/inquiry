@@ -44,6 +44,6 @@ namespace Data.Entities
         不良率=8,
         原料=9,
         材料物性 = 10,
-
+        起订金额=11,
     }
 }
