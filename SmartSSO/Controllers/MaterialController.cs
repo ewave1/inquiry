@@ -36,21 +36,7 @@ namespace InquiryDemo.Controllers
         #region 基本方法
 
 
-        /// <summary>
-        /// 获取 材质
-        /// </summary>
-        /// <returns></returns>
-        private List<SelectListItem> GetMaterials()
-        {
-            var lst = _inquiryService.Materials().Select(v => v.MaterialCode).Distinct().ToList().Select(v => new SelectListItem
-            {
-                Text = v,
-                Value = v,
-
-            }).ToList()
-             ;
-            return lst;
-        }
+   
 
         /// <summary>
         /// 获取明细数据
@@ -65,24 +51,7 @@ namespace InquiryDemo.Controllers
             return Json(lst);
         }
 
-        /// <summary>
-        /// 获取 折扣表的数据
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private List<SelectListItem> GetDiscountNames(DisCountType type)
-        {
-            var lst = _inquiryService.GetDiscountNames(type).Select(v => new SelectListItem
-            {
-                Text = v.Name,
-                Value = v.Name,
-
-            }).ToList()
-             ;
-            if (lst.Count > 0)
-                lst[0].Selected = true;
-            return lst;
-        }
+    
 
         #endregion
 
@@ -661,6 +630,20 @@ namespace InquiryDemo.Controllers
             return View(result);
         }
 
+        private List<SelectListItem> GetStartAmountStorageTypes()
+        {
+            return new List<SelectListItem> {
+            new SelectListItem{ Text = "所有产品", Value ="0" },
+            new SelectListItem{ Text = "无模具", Value ="1" },
+            new SelectListItem{ Text = "无库存", Value ="2" },
+            new SelectListItem{ Text = "有库存", Value ="3" }, 
+            };
+        }
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            ViewBag.StorageTypes = GetStartAmountStorageTypes();
+            base.OnActionExecuting(filterContext);
+        }
         public ActionResult UpdateMaterialStartAmount(int? id)
         {
             var model = _iservice.GetMaterialStartAmount(id);
@@ -668,6 +651,8 @@ namespace InquiryDemo.Controllers
             var action = "维护";
             if (id == 0)
                 action = "新增";
+
+            ViewBag.StorageTypes = GetStartAmountStorageTypes();
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
             return View(model);

@@ -132,6 +132,15 @@ namespace Services
                 storageType = StorageTypeEnum.有库存;
             else if (storages.Count == 0)
                 storageType = StorageTypeEnum.无模具;
+
+            //起订金额
+            var startAmount =   DbContext.MaterialStartAmount.Where(v => v.StorageType == storageType && v.SizeC <= sizeC && v.SizeC2 > sizeC).FirstOrDefault();
+            if(startAmount==null)
+            {
+                startAmount = DbContext.MaterialStartAmount.Where(v => v.StorageType ==  StorageTypeEnum.所有产品 && v.SizeC <= sizeC && v.SizeC2 > sizeC).FirstOrDefault();
+            }
+
+
             var storageDiscount = DbContext.DiscountSet.Where(v => v.Type == DisCountType.库存级别&&v.Name==storageType.ToString()).FirstOrDefault();
             if(storageDiscount==null ) 
                 return new RepResult<InquiryLog> { Code = -1, Msg = "库存折扣数据找不到，请联系维护人员" };
@@ -143,6 +152,12 @@ namespace Services
             price = Math.Round(price, 4);
             
             var totalprice = Math.Round(price * discount * model.Number, 2);
+            var startAmountText = "";
+            if (startAmount!=null && totalprice < startAmount.StartAmount)
+            {
+                startAmountText = "，起订金额：" + startAmount.StartAmount;
+                totalprice = startAmount.StartAmount;
+            }
             var log = new InquiryLog
             {
                 CreateTime = DateTime.Now,
@@ -174,7 +189,7 @@ namespace Services
             else 
                 storageText = storage.ToString();
 
-            var info = string.Format("单价：{0}，总价：{1}，库存：{2}",   price, price * model.Number, storageText);
+            var info = string.Format("单价：{0}，总价：{1}，库存：{2} {3}",   price, totalprice, storageText,startAmountText);
 
             return new RepResult<InquiryLog> { Data = log, Msg = info };
         }
