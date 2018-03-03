@@ -16,6 +16,10 @@ namespace Data.Entities
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// 编码
+        /// </summary>
+        public string Code { get; set; }
         public int MaterialId { get; set; }
 
         public string MaterialCode { get; set; }

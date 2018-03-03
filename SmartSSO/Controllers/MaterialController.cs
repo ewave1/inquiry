@@ -708,5 +708,79 @@ namespace InquiryDemo.Controllers
         #endregion
 
 
+        #region 起订金额
+
+
+        // GET: Material
+        public ActionResult MaterialStorageList(string timeStart, string timeEnd, int? MaterialId, int page = 1)
+        {
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetMaterialStorage(timeRange.TimeStart, timeRange.TimeEnd, MaterialId, page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
+          
+        public ActionResult UpdateMaterialStorage(int? id)
+        {
+            var model = _iservice.GetMaterialStorage(id);
+
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+             
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateMaterialStorage(MaterialStorageModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateMaterialStorage(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("MaterialStorageList");
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteMaterialStorage(int id)
+        {
+            var result = _iservice.DeleteMatialRate(id);
+
+            return Json(result);
+
+        }
+
+
+        public ActionResult DeleteMaterialStorageAll()
+        {
+            var result = _iservice.RemoveAllMatertailStorage();
+
+
+            return Json(result);
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary> 
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadMaterialStorage()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadMaterialStorage(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
+
+
+        #endregion
     }
 }

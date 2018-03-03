@@ -1,0 +1,84 @@
+﻿@model Data.Models.MaterialStorageModel
+
+@{
+    ViewBag.Title = ViewBag.Action + "模具";
+    List<SelectListItem> nonList = new List<SelectListItem>(); 
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/Material">材料管理</a></li>
+            <li class="active">@ViewBag.Title</li>
+        </ol>
+
+        <div class="container">
+
+
+            @using (Html.BeginForm("UpdateMaterialStorage", "Material", new { bag = Json.Encode(ViewBag) }, FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Location, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Location, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.BatchNo, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.BatchNo, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Spec2, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Spec2, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Spec, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Spec, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationSummary(false)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
+                <a href="/Material/MaterialStorageList" class="btn btn-default">取消</a>
+            </div>
+        </div>
+
+}
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/util.js"></script>
+<script>
+
+    //$('#SizeC,#SizeC2').change(function () {
+    //    var s1 = $('#SizeC').val();
+    //    var s2 = $('#SizeC2').val();
+    //    if ($.isNumeric(s1) && $.isNumeric(s2) && Number(s1) >= Number(s2)) {
+    //        util.message("外径2必须大于外径1");
+    //        $('#SizeC2').val('');
+    //    }
+    //})
+</script>

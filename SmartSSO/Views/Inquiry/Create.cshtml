@@ -4,10 +4,11 @@
     ViewBag.Title = "新建报价";
     List<SelectListItem> FactoryLst = ViewBag.Factories;
     List<SelectListItem> MaterialLst = ViewBag.Materials;
- 
+
     List<SelectListItem> SealCodeLst = ViewBag.SealCodes;
     List<SelectListItem> CustomerLevels = ViewBag.CustomerLevels;
     List<SelectListItem> nonList = new List<SelectListItem>();
+    //Data.Models.InquiryModelRequest oldModel = ViewBag.InquiryLog as Data.Models.InquiryModelRequest;
 }
 
 <div class="row">
@@ -281,7 +282,7 @@
         }
 
         $(function () {
-
+            //var log = JSON.stringify(oldModel); 
             //绑定事件
             $('#MaterialCode').change(changeMaterial);
 
@@ -290,8 +291,8 @@
             $('#inquiry').click(submitInquiry);
 
             //初始化数据
-            changeMaterial();
-            changeHardness();
+            changeMaterial( );
+            changeHardness( );
         })
 
     </script>

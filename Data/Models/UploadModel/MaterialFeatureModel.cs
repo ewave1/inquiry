@@ -18,6 +18,13 @@ namespace Data.Entities
         //[ColumnMapping("序号", ColumnType = ReflectionColumnType.PrimaryKey)]
         public int Id { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "Code")]
+        [ColumnMapping("Code" )]
+        /// <summary>
+        /// 编码
+        /// </summary>
+        public string Code { get; set; }
         [ColumnMapping("材质", ColumnType =ReflectionColumnType.PrimaryKey)]
         [MinLength(2)]
         [MaxLength(12)]

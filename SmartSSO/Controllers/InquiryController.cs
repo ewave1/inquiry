@@ -49,7 +49,7 @@ namespace SmartSSO.Controllers
 
             return View(result);
         }
-        public ActionResult Create( )
+        public ActionResult Create(int?id )
         {
             ViewBag.Factories = GetDiscountNames( DisCountType.FACTORY);
             //ViewBag.M1 = GetDiscountNames(DisCountType.材料物性);
@@ -58,6 +58,11 @@ namespace SmartSSO.Controllers
             ViewBag.SealCodes = GetSealCodes();
              
             ViewBag.CustomerLevels = GetDiscountNames(DisCountType.客户级别);
+            if (id > 0)
+            {
+                var log =   _inquiryService.Get(id);
+
+            }
             return View();
         }
 

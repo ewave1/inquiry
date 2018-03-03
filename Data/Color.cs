@@ -9,8 +9,6 @@ namespace Data
     public  enum Color
     {
         黑色 = 0,
-        白色 = 1 ,
-
-
+        白色 = 1 , 
     }
 }

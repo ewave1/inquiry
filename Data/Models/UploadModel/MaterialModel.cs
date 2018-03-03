@@ -15,6 +15,13 @@ namespace Data.Entities
     { 
         public int Id { get; set; }
 
+        [DataType(DataType.Text)]
+        [Display(Name = "Code")]
+        [ColumnMapping("Code" )]
+        /// <summary>
+        /// 编码
+        /// </summary>
+        public string Code { get; set; }
         /// <summary>
         /// 如EP
         /// </summary>

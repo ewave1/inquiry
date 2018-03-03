@@ -76,6 +76,17 @@ namespace Services
         public void SaveImportResult(PT_ImportHistoryDetail item,PT_ImportHistory importItem,string User  )
         { 
             var relateItem  = JsonConvert.DeserializeObject<StorageModel>( item.Json);
+            #region 规格数据
+            var dsizeA = 0M;
+            var dsizeB = 0M;
+            var errorInfo = CommonHelper.GetSizeAB(relateItem.Spec, out dsizeA, out dsizeB);
+            if (!string.IsNullOrEmpty(errorInfo))
+            {
+                item.ErrorInfo = "规格数据异常";
+                item.IsSuccess = SuccessENUM.导入失败;
+                return;
+            }
+            #endregion
             var storage = new Storage
             {
                 Name = relateItem.Name,
@@ -83,6 +94,8 @@ namespace Services
                 BatchNo = relateItem.BatchNo,
                 Location = relateItem.Location,
                 Remark = relateItem.Remark,
+                SizeA = dsizeA,
+                SizeB = dsizeB,
                 //Color = relateItem.Color,
                 //Hardness = relateItem.Hardness,
                 //MaterialCode = relateItem.MaterialCode,

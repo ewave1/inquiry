@@ -13,6 +13,8 @@ namespace IServices
 {
     public  interface IInquiryService
     {
+        InquiryModelRequest Get(int ?id);
+
         IPagedList<InquiryLog> GetAll(ManageUser user,string CreateUser,DateTime timeStart,DateTime timeEnd,int pageIndex);
 
         RepResult<InquiryLog> Create(InquiryModelRequest model,string User);

@@ -18,6 +18,28 @@ namespace Services
 
     public sealed class InquiryService : ServiceContext, IInquiryService
     {
+
+        public  InquiryModelRequest Get(int? id)
+        {
+            var log =  DbContext.InquiryLog.Where(v => v.Id == id).FirstOrDefault();
+            if (log == null)
+                return null;
+            return new InquiryModelRequest
+            {
+                Code = log.Code,
+                Color = log.Color,
+                CustomerLevel = log.CustomerLevel,
+                MaterialCode = log.MaterialCode,
+                Factory = log.Factory,
+                Hardness = log.Hardness,
+                Material1 = log.Material1,
+                Material2 = log.Material2,
+                MaterialId =log.MaterialId,
+                Number = log.Number,
+                SizeA = log.SizeA,
+                SizeB = log.SizeB
+            };
+        }
         public IPagedList<InquiryLog> GetAll(ManageUser user, string CreateUser, DateTime timeStart, DateTime timeEnd, int pageIndex)
         {
             if (user == null)
@@ -115,7 +137,7 @@ namespace Services
             var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, holeCnt, profile.Discount);
 
             //库存(是否有模具）
-            var storages = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB).ToList();
+            var storagesCnt = DbContext.MaterialStorage.Where(v =>v.SizeA==model.SizeA&&v.SizeB==model.SizeB).Count();
             var storage = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB&& v.Material1==model.Material1&& v.Material2==model.Material2&& v.Color == model.Color).ToList().Sum(v=>v.Number);
 
             var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
@@ -127,10 +149,10 @@ namespace Services
             var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
 
             //库存的折扣
-            var storageType = StorageTypeEnum.无库存;
+            var storageType = StorageTypeEnum.无库存;//有模具无库存
             if (storage > 0)
                 storageType = StorageTypeEnum.有库存;
-            else if (storages.Count == 0)
+            else if (storagesCnt == 0)
                 storageType = StorageTypeEnum.无模具;
 
             //起订金额
@@ -149,14 +171,16 @@ namespace Services
 
             discount = Math.Round(discount, 2);
 
+            price = price * discount;
             price = Math.Round(price, 4);
             
-            var totalprice = Math.Round(price * discount * model.Number, 2);
+            var totalprice = Math.Round(price  * model.Number, 2);
             var startAmountText = "";
             if (startAmount!=null && totalprice < startAmount.StartAmount)
             {
                 startAmountText = "，起订金额：" + startAmount.StartAmount;
                 totalprice = startAmount.StartAmount;
+                price = Math.Round(totalprice / model.Number,4);
             }
             var log = new InquiryLog
             {
@@ -184,7 +208,7 @@ namespace Services
 
             DbContext.SaveChanges();
             var storageText = "";
-            if (storages.Count == 0)
+            if (storagesCnt == 0)
                 storageText = "无模具";
             else 
                 storageText = storage.ToString();

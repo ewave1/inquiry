@@ -81,7 +81,8 @@ namespace Services
                 UpdateUser = model.UpdateUser,
                 Hardness = model.Hardness,
                 Price = model.Price,
-                IsDefault = model.IsDefault 
+                IsDefault = model.IsDefault ,
+                Code = model.Code,
             };
         }
 
@@ -107,7 +108,7 @@ namespace Services
             original.Price = material.Price;
             original.SpecialDiscount = material.SpecialDiscount;
             original.IsDefault = material.IsDefault ;
-
+            original.Code = material.Code;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
             DbContext.SaveChanges();
@@ -216,6 +217,8 @@ namespace Services
             if (!string.IsNullOrEmpty(relateItem.Display))
                 material.Display = relateItem.Display;
             material.IsDefault = relateItem.IsDefault  ;
+
+            material.Code = relateItem.Code;
              
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
@@ -235,8 +238,7 @@ namespace Services
             return DbContext.MaterialFeature 
                 .Where(v =>  v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd&&(v.MaterialId == MaterialId || MaterialId == null) && v.Type==type)
                 .OrderBy(v=>v.MaterialCode).ThenBy(v=>v.Hardness)
-                .ThenBy(v=>v.Name)
-                
+                .ThenBy(v=>v.Name) 
                   .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
         }
 
@@ -310,7 +312,7 @@ namespace Services
                     Discount = relateItem.Discount,
                     Name = relateItem.Name,
                     IsDefault = relateItem.IsDefault ,
-                    
+                    Code = relateItem.Code,
                     Type = type
                 };
                 DbContext.MaterialFeature.Add(feature);
@@ -321,6 +323,7 @@ namespace Services
                 feature.UpdateTime = DateTime.Now;
                 feature.UpdateUser = User;
                 feature.IsDefault = relateItem.IsDefault  ;
+                feature.Code = relateItem.Code;
             }
 
             DbContext.SaveChanges();
@@ -386,6 +389,7 @@ namespace Services
             original.MaterialId = material.MaterialId; 
             original.Type = material.Type;
             original.IsDefault = material.IsDefault ;
+            original.Code = material.Code;
             original.UpdateTime = DateTime.Now;
             original.UpdateUser = User;
             DbContext.SaveChanges();
@@ -408,7 +412,8 @@ namespace Services
                 UpdateTime = model.UpdateTime,
                 Id = model.Id,
                 IsDefault = model.IsDefault  ,
-                UpdateUser = model.UpdateUser
+                UpdateUser = model.UpdateUser,
+                Code = model.Code,
             };
         }
        
@@ -1294,8 +1299,179 @@ namespace Services
 
             return new RepResult<bool> { Data = true };
         }
-        #endregion
+        #endregion 
+
+        #region 模具
+
+        public IPagedList<MaterialStorage> GetMaterialStorage(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
+        {
+            return DbContext.MaterialStorage
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd) 
+                  .OrderBy(p => p.Spec).ToPagedList(page, Const.PageSize);
+        }
+
+        public RepResult<MaterialStorage> UploadMaterialStorage(string User, HttpRequestBase Request)
+        {
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.模具);
+            if (!result.Success)//导入失败
+                return new RepResult<MaterialStorage> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.模具,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(MaterialStorageModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportMaterailStorageResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<MaterialStorage> { Code = 0 };
+        }
          
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportMaterailStorageResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<MaterialStorageModel>(item.Json);
+
+            var rate = DbContext.MaterialStorage.Where(v => v.BatchNo == relateItem.BatchNo).FirstOrDefault();
+            #region 规格数据
+            var dsizeA = 0M;
+            var dsizeB = 0M;
+            var errorInfo = CommonHelper. GetSizeAB(relateItem.Spec, out dsizeA, out dsizeB);
+            if (!string.IsNullOrEmpty(errorInfo))
+            {
+                item.ErrorInfo = "规格数据异常";
+                item.IsSuccess = SuccessENUM.导入失败;
+                return;
+            } 
+            #endregion
+            if (rate == null)
+            {
+                rate = new MaterialStorage
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    BatchNo = relateItem.BatchNo, 
+                    Location = relateItem.Location,
+                    Spec = relateItem.Spec,
+                    Spec2= relateItem.Spec2,
+                    SizeA = dsizeA,
+                    SizeB = dsizeB,
+                    Remark = relateItem.Remark, 
+                };
+
+
+                DbContext.MaterialStorage.Add(rate);
+            }
+            else
+            {
+                rate.BatchNo = relateItem.BatchNo;
+                rate.Location = relateItem.Location;
+                rate.SizeA = dsizeA;
+                rate.SizeB = dsizeB;
+                rate.Remark = relateItem.Remark;
+                rate.Spec = rate.Spec;
+                rate.Spec2 = rate.Spec2;
+                rate.UpdateTime = DateTime.Now;
+                rate.UpdateUser = User;
+            }
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = rate.Id;
+        }
+
+        public RepResult<bool> DeleteMatialStorage(int Id)
+        {
+            var model = DbContext.MaterialStorage.Find(Id);
+            if (model != null)
+            {
+                DbContext.Entry(model).State = EntityState.Deleted;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
+            }
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
+        }
+
+        public RepResult<MaterialStorage> UpdateMaterialStorage(MaterialStorageModel material, string User)
+        {
+            var original = DbContext.MaterialStorage.Where(v => v.Id == material.Id).FirstOrDefault();
+            #region 规格数据
+            var dsizeA = 0M;
+            var dsizeB = 0M;
+            var errorInfo = CommonHelper.GetSizeAB(material.Spec, out dsizeA, out dsizeB);
+            if (!string.IsNullOrEmpty(errorInfo))
+            {
+                return new RepResult<MaterialStorage> {  Code  =-2,Msg = errorInfo};
+            }
+            #endregion
+            if (original == null)
+            {
+
+                original = DbContext.MaterialStorage.Where(v => v.BatchNo == material.BatchNo).FirstOrDefault();
+                if (original == null)
+                {
+                    original = new MaterialStorage();
+                    DbContext.MaterialStorage.Add(original);
+                }
+            }
+            original.BatchNo = material.BatchNo;
+            original.Spec = material.Spec;
+            original.Spec2 = material.Spec2;
+            original.SizeA = dsizeA;
+            original.SizeB = dsizeB;
+            original.Remark = material.Remark;
+
+            original.UpdateTime = DateTime.Now;
+            original.UpdateUser = User;
+            DbContext.SaveChanges();
+            return new RepResult<MaterialStorage> { Data = original };
+        }
+
+        public MaterialStorageModel GetMaterialStorage(int? id)
+        {
+            var model = DbContext.MaterialStorage.Find(id);
+            if (model == null)
+                return new MaterialStorageModel { };
+            return new MaterialStorageModel
+            {
+                Spec = model.Spec,
+                Spec2 = model.Spec2,
+                BatchNo = model.BatchNo,
+                Location = model.Location,
+                Remark = model.Remark ,
+                UpdateTime = model.UpdateTime,
+                Id = model.Id,
+                UpdateUser = model.UpdateUser
+            };
+        }
+
+        public RepResult<bool> RemoveAllMatertailStorage()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from materialStorages ");
+
+            return new RepResult<bool> { Data = true };
+        }
+        #endregion
 
         #region 删除所有
         public RepResult<bool> RemoveAllMatertail()

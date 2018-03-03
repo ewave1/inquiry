@@ -10,7 +10,7 @@ namespace Data.Entities
     /// <summary>
     /// 材质
     /// </summary>
-    public  class Material
+    public class Material
     {
         [Key]
         public int Id { get; set; }
@@ -20,6 +20,10 @@ namespace Data.Entities
         /// </summary>
         public string MaterialCode { get; set; }
 
+        /// <summary>
+        /// 编码
+        /// </summary>
+        public string Code { get; set; }
         /// <summary>
         /// 如70 
         /// </summary>

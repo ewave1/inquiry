@@ -45,5 +45,6 @@ namespace Data.Entities
         原料=9,
         材料物性 = 10,
         起订金额=11,
+        模具 =12,
     }
 }
