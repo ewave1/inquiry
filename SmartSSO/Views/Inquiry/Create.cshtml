@@ -2,8 +2,7 @@
 
 @{
     ViewBag.Title = "新建报价";
-    List<SelectListItem> FactoryLst = ViewBag.Factories;
-    List<SelectListItem> MaterialLst = ViewBag.Materials;
+    List<SelectListItem> FactoryLst = ViewBag.Factories; 
 
     List<SelectListItem> SealCodeLst = ViewBag.SealCodes;
     List<SelectListItem> CustomerLevels = ViewBag.CustomerLevels;
@@ -45,7 +44,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.MaterialCode, new { @class = "col-md-3 control-label" })
                         <div class="col-md-6">
-                            @Html.DropDownListFor(model => model.MaterialCode, MaterialLst, new { @class = "form-control", style = "width: 280px" })
+                            @Html.DropDownListFor(model => model.MaterialCode, nonList, new { @class = "form-control", style = "width: 280px" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -132,118 +131,83 @@
 
         </div>
     </div>
+    <script src="~/Scripts/material.js"></script>
     <script>
 
-        //编码（取消）
-        //$('#Code').change(function() {   
+        //function changeMaterial() {
+        //    //硬度
         //    $.ajax({
-        //        url: "/Inquiry/GetSealCode",
+        //        url: "/Inquiry/GetMaterialData",
         //        type: 'post',
         //        dataType: 'json',
-        //        data:   { Code: $('#Code').val() },
+        //        data: { MaterialCode: $('#MaterialCode').val(), getType: 0 },
         //        success: function (result) {
-        //            if (result.Success) {
-        //                $('#SizeA').val(result.Data.SizeA);
-        //                $('#SizeB').val(result.Data.SizeB);
-        //            } else { 
-        //                $('#SizeA').val('');
-        //                $('#SizeB').val('');
-        //            }
-        //            event.stopPropagation();
-        //        }
-        //    }); 
-        //});
+        //            $('#Hardness').empty();
+        //            $.each(result, function (n, value) {
+        //                $('#Hardness').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+        //                if (value.IsDefault)
+        //                    $('#Hardness option[value="' + value.Value + '"]').attr('selected', true);
+        //            })
 
-        //$('#SizeA,#SizeB').change(function () {
+
+        //            changeHardness();
+        //        }
+        //    });
+        //}
+
+        //function changeHardness() {
+        //    //材料物性
         //    $.ajax({
-        //        url: "/Inquiry/GetSealCode",
+        //        url: "/Inquiry/GetMaterialData",
         //        type: 'post',
         //        dataType: 'json',
-        //        data: { SizeA: $('#SizeA').val(), SizeB:$('#SizeB').val() },
+        //        data: {
+        //            MaterialCode: $('#MaterialCode').val(), Hardness: $('#Hardness').val(), getType: 1
+        //        },
         //        success: function (result) {
-        //            if (result.Success) {
-        //                $('#Code').val(result.Data.Code); 
-        //            } else {
-        //                $('#Code').val(''); 
-        //            }
-        //            event.stopPropagation();
+        //            $('#Material1').empty();
+        //            $.each(result, function (n, value) {
+        //                $('#Material1').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+        //            })
         //        }
-        //    }); 
-        //});
-        function changeMaterial() {
-            //硬度
-            $.ajax({
-                url: "/Inquiry/GetMaterialData",
-                type: 'post',
-                dataType: 'json',
-                data: { MaterialCode: $('#MaterialCode').val(), getType: 0 },
-                success: function (result) {
-                    $('#Hardness').empty();
-                    $.each(result, function (n, value) {
-                        $('#Hardness').append('<option value=' + value.Value + '>' + value.Name + '</option>');
-                        if (value.IsDefault)
-                            $('#Hardness option[value="' + value.Value + '"]').attr('selected', true);
-                    })
+        //    });
+
+        //    //材料物性
+        //    $.ajax({
+        //        url: "/Inquiry/GetMaterialData",
+        //        type: 'post',
+        //        dataType: 'json',
+        //        data: {
+        //            MaterialCode: $('#MaterialCode').val(), Hardness: $('#Hardness').val(), getType: 2
+        //        },
+        //        success: function (result) {
+        //            $('#Material2').empty();
+        //            $.each(result, function (n, value) {
+        //                $('#Material2').append('<option value=' + value.Value + '>' + value.Name + '</option>');
+        //            })
+        //        }
+        //    });
 
 
-                    changeHardness();
-                }
-            });
-        }
+        //    //颜色
+        //    $.ajax({
+        //        url: "/Inquiry/GetMaterialData",
+        //        type: 'post',
+        //        dataType: 'json',
+        //        data: {
+        //            MaterialCode: $('#MaterialCode').val(), Hardness: $('#Hardness').val(), getType: 3
+        //        },
+        //        success: function (result) {
+        //            $('#Color').empty();
+        //            $.each(result, function (n, value) {
+        //                $('#Color').append('<option value=' + value.Value + '>' + value.Name + '</option>');
 
-        function changeHardness() {
-            //材料物性
-            $.ajax({
-                url: "/Inquiry/GetMaterialData",
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    MaterialCode: $('#MaterialCode').val(), Hardness: $('#Hardness').val(), getType: 1
-                },
-                success: function (result) {
-                    $('#Material1').empty();
-                    $.each(result, function (n, value) {
-                        $('#Material1').append('<option value=' + value.Value + '>' + value.Name + '</option>');
-                    })
-                }
-            });
-
-            //材料物性
-            $.ajax({
-                url: "/Inquiry/GetMaterialData",
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    MaterialCode: $('#MaterialCode').val(), Hardness: $('#Hardness').val(), getType: 2
-                },
-                success: function (result) {
-                    $('#Material2').empty();
-                    $.each(result, function (n, value) {
-                        $('#Material2').append('<option value=' + value.Value + '>' + value.Name + '</option>');
-                    })
-                }
-            });
-
-
-            //颜色
-            $.ajax({
-                url: "/Inquiry/GetMaterialData",
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    MaterialCode: $('#MaterialCode').val(), Hardness: $('#Hardness').val(), getType: 3
-                },
-                success: function (result) {
-                    $('#Color').empty();
-                    $.each(result, function (n, value) {
-                        $('#Color').append('<option value=' + value.Value + '>' + value.Name + '</option>');
-
-                        if (value.IsDefault)
-                            $('#Color option[value="' + value.Value + '"]').attr('selected', true);
-                    })
-                }
-            });
-        }
+        //                if (value.IsDefault)
+        //                    $('#Color option[value="' + value.Value + '"]').attr('selected', true);
+        //            })
+        //        }
+        //    });
+        //}
 
         function submitInquiry() {
 
@@ -283,17 +247,28 @@
         }
 
         $(function () {
-            //var log = JSON.stringify(oldModel); 
+
+            var model = @Html.Raw( ViewBag.model);
+            //初始化数据
+            loadMaterial(function (a, model) {
+                //
+                changeMaterial(function (model) {
+                    changeHardness(model); 
+                }, model); 
+            }, model);
+
             //绑定事件
-            $('#MaterialCode').change(changeMaterial);
+            $('#MaterialCode').change(function () {
+                changeMaterial(changeColor); 
+            });   
 
             $('#Hardness').change(changeHardness)
 
             $('#inquiry').click(submitInquiry);
 
-            //初始化数据
-            changeMaterial( );
-            changeHardness( );
+            ////初始化数据
+            //changeMaterial( );
+            //changeHardness( );
         })
 
     </script>

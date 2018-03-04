@@ -15,6 +15,7 @@ using SmartSSO.Models;
 using SmartSSO.Services;
 using SmartSSO.Services.Impl;
 using Data.Models;
+using Newtonsoft.Json;
 
 namespace InquiryDemo.Controllers
 {
@@ -45,9 +46,9 @@ namespace InquiryDemo.Controllers
         /// <param name="Hardness"></param>
         /// <param name="getType"></param>
         /// <returns></returns>
-        public ActionResult GetMaterialData(string MaterialCode, int? Hardness, MATERIALMODELTYPE getType)
+        public ActionResult GetMaterialData(string MaterialCode, int? Hardness, MATERIALMODELTYPE getType,string selData)
         {
-            var lst = _iservice.GetMaterialDetailData(MaterialCode, Hardness, getType);
+            var lst = _iservice.GetMaterialDetailData(MaterialCode, Hardness, getType,selData);
             return Json(lst);
         }
 
@@ -76,6 +77,8 @@ namespace InquiryDemo.Controllers
                 action = "新增";
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -159,6 +162,8 @@ namespace InquiryDemo.Controllers
                 action = "新增";
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -233,6 +238,8 @@ namespace InquiryDemo.Controllers
                 action = "新增";
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -338,6 +345,7 @@ namespace InquiryDemo.Controllers
             if (model == null)
                 model = new MaterialFeatureModel { Type=type,Discount = 1 };
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+            ViewBag.model = Newtonsoft.Json.JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -413,6 +421,7 @@ namespace InquiryDemo.Controllers
             ViewBag.Action = action  ; 
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
 
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -489,6 +498,8 @@ namespace InquiryDemo.Controllers
                 action = "新增";
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -564,6 +575,8 @@ namespace InquiryDemo.Controllers
                 action = "新增";
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -655,6 +668,8 @@ namespace InquiryDemo.Controllers
             ViewBag.StorageTypes = GetStartAmountStorageTypes();
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 
@@ -708,7 +723,7 @@ namespace InquiryDemo.Controllers
         #endregion
 
 
-        #region 起订金额
+        #region 模具
 
 
         // GET: Material
@@ -731,6 +746,8 @@ namespace InquiryDemo.Controllers
              
             ViewBag.Action = action;
             ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
             return View(model);
         }
 

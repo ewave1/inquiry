@@ -3,6 +3,7 @@
 @{
     // ViewBag.Title = "维护特殊配方";
     List<SelectListItem> nonList = new List<SelectListItem>();
+   
 }
 
 <div class="row">
@@ -93,8 +94,9 @@ if (ViewBag.Type == 2)
 
 
     $(function () {
+        var model = @Html.Raw( ViewBag.model);
         //初始化数据
-        loadMaterial(changeMaterial);
+        loadMaterial(changeMaterial, model);
         //绑定事件
         $('#MaterialCode').change(changeMaterial);
 

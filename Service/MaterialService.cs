@@ -28,30 +28,63 @@ namespace Services
         /// <param name="Hardness"></param>
         /// <param name="Type"></param>
         /// <returns></returns>
-        public  List<NameValueModel >GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type = MATERIALMODELTYPE.Hardness)
+        public  List<NameValueModel >GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type = MATERIALMODELTYPE.Hardness,string selData = null)
         {
             //获取硬度
             if (Type ==  MATERIALMODELTYPE.Hardness)
             {
                 var hardness =    DbContext.Material.Where(v => v.MaterialCode == MaterialCode).Select(v => new { v.Hardness ,v.IsDefault}).Distinct().OrderBy(v=>v.Hardness).ToList();
-                return hardness.Select(v => new NameValueModel {Name = v.Hardness.ToString(), IsDefault=v.IsDefault,Value = v.Hardness.ToString () }).ToList();
+                var lst =  hardness.Select(v => new NameValueModel {Name = v.Hardness.ToString(), IsDefault=v.IsDefault,Value = v.Hardness.ToString () }).ToList();
+
+                var oldItem = lst.Where(v => v.IsDefault == true).FirstOrDefault();
+                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
+                if(selItem!=null)
+                {
+                    if(oldItem!=null)
+                    oldItem.IsDefault = false;
+                    selItem.IsDefault = true;
+                }
+
+                return lst;
             }
             if(Type== MATERIALMODELTYPE.Material1)
             {
                 var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode&& v.Hardness== Hardness && v.Type== MATERIALTYPE.材料物性 ).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
                 hardness.Insert(0, Const.MaterialNormal);
-                return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+                var lst = hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
+                if (selItem != null)
+                { 
+                    selItem.IsDefault = true;
+                }
+                return lst;
             }
             if (Type == MATERIALMODELTYPE.Material2)
             {
                 var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.表面物性).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
                 hardness.Insert(0, Const.MaterialNormal);
-                return hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+                var lst =  hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
+                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
+                if (selItem != null)
+                {
+                    selItem.IsDefault = true;
+                }
+                return lst;
             }
             if (Type == MATERIALMODELTYPE.Color)
             {
                 var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v =>new { v.Name, v.IsDefault }).Distinct().OrderBy(v => v.Name).ToList();
-                return hardness.Select(v => new NameValueModel { Name = v.Name.ToString(),IsDefault = v.IsDefault, Value = v.Name.ToString() }).ToList();
+                var lst =  hardness.Select(v => new NameValueModel { Name = v.Name.ToString(),IsDefault = v.IsDefault, Value = v.Name.ToString() }).ToList();
+
+                var oldItem = lst.Where(v => v.IsDefault == true).FirstOrDefault();
+                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
+                if (selItem != null)
+                {
+                    if (oldItem != null)
+                        oldItem.IsDefault = false;
+                    selItem.IsDefault = true;
+                }
+                return lst;
             }
 
             throw new NotImplementedException();

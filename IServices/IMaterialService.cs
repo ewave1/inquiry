@@ -24,7 +24,7 @@ namespace IServices
         MaterialModel GetMaterial(int? id);
 
 
-        List<NameValueModel> GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type =  MATERIALMODELTYPE.Hardness);
+        List<NameValueModel> GetMaterialDetailData(string MaterialCode, int? Hardness, MATERIALMODELTYPE Type =  MATERIALMODELTYPE.Hardness,string selData = null);
 
         RepResult<bool> DeleteMatial(int id);
 

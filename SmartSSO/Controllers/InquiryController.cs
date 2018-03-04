@@ -58,13 +58,15 @@ namespace SmartSSO.Controllers
             ViewBag.SealCodes = GetSealCodes();
              
             ViewBag.CustomerLevels = GetDiscountNames(DisCountType.客户级别);
+            var model = new InquiryModelRequest { MaterialCode = "NBR" };
             if (id > 0)
             {
-                var log =   _inquiryService.Get(id);
-
+                model =   _inquiryService.Get(id);
+                 
             }
+            ViewBag.model =Newtonsoft.Json. JsonConvert.SerializeObject(model);
 
-            return View(new InquiryModelRequest { MaterialCode ="NBR" });
+            return View(model);
         }
 
         public ActionResult RemoveInquiryData(DateTime start, DateTime end)
@@ -78,21 +80,33 @@ namespace SmartSSO.Controllers
         /// 获取 材质
         /// </summary>
         /// <returns></returns>
-        private List<SelectListItem> getMaterials()
+        private List<NameValueModel> getMaterials(string selVal=null)
         {
-            var lst = _inquiryService.Materials().Select(v => v.MaterialCode).Distinct().ToList().Select(v => new SelectListItem
+            var lst = _inquiryService.Materials().Select(v => v.MaterialCode).Distinct().ToList().Select(v => new NameValueModel
             {
-                Text = v,
+                 Name = v,
                 Value = v,
 
             }).ToList()
              ;
+            var selItem = lst.Where(v => v.Name == selVal).FirstOrDefault();
+            if (selItem != null)
+            {
+                selItem.IsDefault = true;
+            }
+            else
+            {
+                selItem = lst.Where(v => v.Name == "NBR").FirstOrDefault();
+                if (selItem != null)
+                    selItem.IsDefault = true;
+            }
+                
             return lst;
         }
 
-        public ActionResult GetMaterials()
+        public ActionResult GetMaterials(string selData)
         {
-            var lst = getMaterials();
+            var lst = getMaterials(selData);
 
             return Json(lst);
         }
@@ -104,9 +118,9 @@ namespace SmartSSO.Controllers
         /// <param name="Hardness"></param>
         /// <param name="getType"></param>
         /// <returns></returns>
-        public ActionResult GetMaterialData(string MaterialCode,int? Hardness,MATERIALMODELTYPE getType )
+        public ActionResult GetMaterialData(string MaterialCode,int? Hardness,MATERIALMODELTYPE getType ,string selData)
         {
-            var lst = _iService.GetMaterialDetailData(MaterialCode, Hardness, getType);
+            var lst = _iService.GetMaterialDetailData(MaterialCode, Hardness, getType,selData);
             return Json(lst);
         }
          

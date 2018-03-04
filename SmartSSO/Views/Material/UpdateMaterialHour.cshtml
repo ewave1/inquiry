@@ -83,8 +83,10 @@
 
 
     $(function () {
+
+        var model = @Html.Raw( ViewBag.model);
         //初始化数据
-        loadMaterial(changeMaterial);
+        loadMaterial(changeMaterial,model);
         //绑定事件
         $('#MaterialCode').change(changeMaterial);
 

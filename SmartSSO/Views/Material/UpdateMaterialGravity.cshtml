@@ -77,11 +77,12 @@
 
 
     $(function () {
+        var model = @Html.Raw( ViewBag.model);
         //初始化数据
-        loadMaterial(function () { 
-            changeMaterial(changeColor);
-            changeColor();
-        });
+        loadMaterial(function (a,model) {
+            changeMaterial(changeColor, model);
+            //changeColor(model);
+        }, model);
 
         //绑定事件
         $('#MaterialCode').change(function () {
