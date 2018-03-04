@@ -56,8 +56,8 @@ namespace Data.Entities
         public string Display { get; set; }
           
         [DataType(DataType.Text)]
-        [Display(Name = "特殊件折扣")]
-        [ColumnMapping("特殊件折扣")]
+        [Display(Name = "系数")]
+        [ColumnMapping("系数")]
         /// <summary>
         /// 特殊件折扣
         /// </summary>

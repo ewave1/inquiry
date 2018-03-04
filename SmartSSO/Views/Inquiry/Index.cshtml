@@ -23,30 +23,38 @@
             <div class="panel-heading">筛选</div>
             <div class="panel-body">
                 @using (Html.BeginForm("Index", "Inquiry", FormMethod.Get, new { @class = "form-horizontal ng-pristine ng-valid" }))
-            {
-                @*<div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">报价人</label>
-                    <div class="col-sm-6 col-lg-8 col-xs-12">
-                        <input type="text" name="CreateUser" class="form-control" value="@ViewBag.CreateUser" placeholder="输入报价人">
-                    </div>
-                </div>*@
+                {
+                    @*<div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">报价人</label>
+                            <div class="col-sm-6 col-lg-8 col-xs-12">
+                                <input type="text" name="CreateUser" class="form-control" value="@ViewBag.CreateUser" placeholder="输入报价人">
+                            </div>
+                        </div>*@
 
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">报价时间</label>
-                    <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12"> 
-                        <input type="date" name="timeStart" value="@ViewBag.timeStart" />
-                        <label>至</label>
-                        <input type="date" name="timeEnd" value="@ViewBag.timeEnd" /> 
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">报价时间</label>
+                        <div class="col-sm-9 col-md-8 col-lg-8 col-xs-12">
+                            <input type="date" id="timeStart" name="timeStart" value="@ViewBag.timeStart" />
+                            <label>至</label>
+                            <input type="date" id="timeEnd" name="timeEnd" value="@ViewBag.timeEnd" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">查询</label>
-                    <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">查询</label>
+                        <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                        @if (ViewBag.IsAdmin == true)
+    {
+                    <div>
+
+                        <button type="button" class="btn btn-warning" id="removeData">清空选择的报价 </button>
                     </div>
-                </div>
-        }
+}
+
+                    </div>
+                }
             </div>
         </div>
 
@@ -68,47 +76,68 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@(item.Id)</td>
-                    <td>@item.SizeA </td>
-                    <td>@item.SizeB </td>
+                {
+                    <tr>
+                        <td>@(item.Id)</td>
+                        <td>@item.SizeA </td>
+                        <td>@item.SizeB </td>
 
-                    <td>@item.Factory </td>
-                    <td>@item.Number </td>
-                    <td>@(item.MaterialCode +" "+item.Hardness) </td>
-                    <td>@item.User </td>
-                    <td>@item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
-                    <td>@item.Price </td>
-                    <td>@item.TotalPrice </td>
-                    <td>
-                        <div class="btn-group"> 
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
-                                <span class="sr-only"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                @*<li><a href="/Inquiry/Create?id=@item.Id">重新报价</a></li>*@
-                                <li><a href="/Inquiry/delete?id=@item.Id">删除</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-        }
+                        <td>@item.Factory </td>
+                        <td>@item.Number </td>
+                        <td>@(item.MaterialCode + " " + item.Hardness) </td>
+                        <td>@item.User </td>
+                        <td>@item.CreateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
+                        <td>@item.Price </td>
+                        <td>@item.TotalPrice </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    @*<li><a href="/Inquiry/Create?id=@item.Id">重新报价</a></li>*@
+                                    <li><a href="/Inquiry/delete?id=@item.Id">删除</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
-        @Html.PagedListPager(Model, page => Url.Action("Index", new {
-               CreateUser  =ViewBag.CreateUser, timeStart = ViewBag.timeStart,
-               timeEnd = ViewBag.timeEnd,
-                page }))
-        
+        @Html.PagedListPager(Model, page => Url.Action("Index", new
+        {
+            CreateUser = ViewBag.CreateUser,
+            timeStart = ViewBag.timeStart,
+            timeEnd = ViewBag.timeEnd,
+            page
+        }))
+
         @if (!Model.Any())
-    {
-        <div class="alert alert-info">
-            <strong>提示</strong> 没有查询到记录。
-        </div>
-}
+        {
+            <div class="alert alert-info">
+                <strong>提示</strong> 没有查询到记录。
+            </div>
+        }
 
     </div>
 </div>
+<script src="~/Scripts/util.js"></script>
+<script>
+    //
+    $('#removeData').on('click', function () {
+        var start = $('#timeStart').val() ;
+        var end = $('#timeEnd').val();
+        util.confirm('警告', '请确认是否删除选择时间范围内的数据！', function () {
+
+            $.post("/Inquiry/RemoveInquiryData", { start: start, end: end }, function (res) {
+                if (res.Success) {
+                    util.message('删除成功 ', '/Inquiry/Index', 'success');
+                } else {
+                    util.message('删除失败，' + res.Msg, '/Inquiry/Index', 'error');
+                }
+            }); 
+        });
+    })
+</script>

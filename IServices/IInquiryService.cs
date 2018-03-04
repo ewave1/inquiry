@@ -21,6 +21,8 @@ namespace IServices
 
         bool Delete(int id);
 
+        RepResult<bool> RemoveData(DateTime start, DateTime end);
+
         /// <summary>
         /// 工厂
         /// </summary>

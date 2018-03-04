@@ -82,7 +82,7 @@
             <thead>
                 <tr>
                     @*<th>序号</th>*@
-                     
+                     <th>Code</th>
                     <th>材质</th>
                     <th>硬度</th>
                     <th>@ViewBag.ColumnName</th> 
@@ -98,6 +98,7 @@
                 {
                     <tr>
                         @*<td>@(item.Id)</td>*@
+                        <td>@item.Code</td>
                         <td>@item.MaterialCode</td>
                         <td>@item.Hardness</td>
                         <td>@item.Name</td> 
@@ -222,9 +223,9 @@
                 success: function (res) {
 
                 if (res.Success) {
-                    util.message('导入成功 ', '/Material/MaterialFeatureList?type=@ViewBag.Type', 'success');
+                    util.message('删除成功 ', '/Material/MaterialFeatureList?type=@ViewBag.Type', 'success');
                 } else {
-                    util.message('导入失败，' + res.Msg, '/Material/MaterialFeatureList?type=@ViewBag.Type', 'error');
+                    util.message('删除失败，' + res.Msg, '/Material/MaterialFeatureList?type=@ViewBag.Type', 'error');
                 }
                 }, error: function (event, request, settings) {
                     if (request == "parsererror")

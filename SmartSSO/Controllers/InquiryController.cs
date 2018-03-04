@@ -44,7 +44,7 @@ namespace SmartSSO.Controllers
             var result = _inquiryService.GetAll(user, CreateUser, timeRange.TimeStart, timeRange.TimeEnd, page);
             if (result == null)
                 return    RedirectToAction("Login", "Home");
-             
+            ViewBag.IsAdmin = user.IsAdmin;
 
 
             return View(result);
@@ -63,7 +63,14 @@ namespace SmartSSO.Controllers
                 var log =   _inquiryService.Get(id);
 
             }
-            return View();
+
+            return View(new InquiryModelRequest { MaterialCode ="NBR" });
+        }
+
+        public ActionResult RemoveInquiryData(DateTime start, DateTime end)
+        {
+            var result = _inquiryService.RemoveData(start, end);
+            return Json(result); 
         }
 
 

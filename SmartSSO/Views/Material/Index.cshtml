@@ -82,11 +82,12 @@
             <thead>
                 <tr>
                     @*<th>序号</th>*@
+                    <td>Code</td>
                     <th>材质</th>
                     <td>硬度</td>
                     <th>编码</th>
                     <th>单价</th>
-                    <th>特殊件折扣</th>
+                    <th>系数</th>
                     <th>备注</th>
                     <th>修改人</th>
                     <th>修改时间</th>
@@ -96,29 +97,30 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        @*<td>@(item.Id)</td>*@
-                        <td>@item.MaterialCode </td>
-                        <td>@item.Hardness</td>
-                        <td>@item.Display </td>
-                        <td>@item.Price</td>
-                        <td>@item.SpecialDiscount </td>
-                        <td>@item.Remark </td>
-                        <td>@item.UpdateUser </td>
-                        <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                    <span class="sr-only"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="/Material/UpdateMaterial/@item.Id">修改</a></li>
-                                    <li><a id="remove" class="rmMaterial" data-id="@item.Id"  >删除</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                <tr>
+                    @*<td>@(item.Id)</td>*@
+                    <td>@item.Code</td>
+                    <td>@item.MaterialCode </td>
+                    <td>@item.Hardness</td>
+                    <td>@item.Display </td>
+                    <td>@item.Price</td>
+                    <td>@item.SpecialDiscount </td>
+                    <td>@item.Remark </td>
+                    <td>@item.UpdateUser </td>
+                    <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/Material/UpdateMaterial/@item.Id">修改</a></li>
+                                <li><a id="remove" class="rmMaterial" data-id="@item.Id">删除</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

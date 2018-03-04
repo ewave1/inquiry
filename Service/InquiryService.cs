@@ -146,7 +146,7 @@ namespace Services
             var discount = factory.Discount * user.Discount* (customerLevel==null ?1:customerLevel.Discount);
              
             //判断是否特殊件
-            var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other).FirstOrDefault();
+            var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other&&v.Name== "特殊件").FirstOrDefault();
 
             //库存的折扣
             var storageType = StorageTypeEnum.无库存;//有模具无库存
@@ -172,15 +172,27 @@ namespace Services
             discount = Math.Round(discount, 2);
 
             price = price * discount;
-            price = Math.Round(price, 4);
-            
+            price = Math.Round(price, 3);
+            //最低单价
+            var minPrice = DbContext.DiscountSet.Where(v => v.Type == DisCountType.Other && v.Name == "最低单价").FirstOrDefault();
+            if(minPrice==null)
+            {
+                minPrice = new DiscountSet {
+                Type = DisCountType.Other,
+                Name = "最低单价",
+                Discount =  0.018M, 
+                };
+               // DbContext.DiscountSet.Add(minPrice); 
+            }
+            if (price < minPrice.Discount)
+                price = minPrice.Discount;
             var totalprice = Math.Round(price  * model.Number, 2);
             var startAmountText = "";
             if (startAmount!=null && totalprice < startAmount.StartAmount)
             {
                 startAmountText = "，起订金额：" + startAmount.StartAmount;
                 totalprice = startAmount.StartAmount;
-                price = Math.Round(totalprice / model.Number,4);
+                price = Math.Round(totalprice / model.Number,3);
             }
             var log = new InquiryLog
             {
@@ -226,6 +238,7 @@ namespace Services
         public bool Delete(int id)
         {
             var model = DbContext.InquiryLog.Find(id);
+             
             if (model != null)
             {
                 DbContext.Entry(model).State = EntityState.Deleted;
@@ -234,6 +247,13 @@ namespace Services
             return false;
         }
 
+        public RepResult<bool> RemoveData(DateTime start, DateTime end)
+        {
+            DbContext.Database.ExecuteSqlCommand(" delete from InquiryLogs where CreateTime>=@start and CreateTime <@end ", new MySql
+                .Data.MySqlClient.MySqlParameter("@start", start), new MySql
+                .Data.MySqlClient.MySqlParameter("@end", end)); 
+            return new RepResult<bool> { Data =true };
+        }
         /// <summary>
         /// 
         /// </summary>
