@@ -252,7 +252,8 @@ namespace Services
             material.IsDefault = relateItem.IsDefault  ;
 
             material.Code = relateItem.Code;
-             
+            material.UpdateTime = DateTime.Now;
+            material.UpdateUser = User;
             DbContext.SaveChanges();
             item.IsSuccess = SuccessENUM.导入成功;
             item.RelateID = material.Id;

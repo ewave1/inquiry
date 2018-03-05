@@ -35,7 +35,7 @@ namespace Data.Entities
         public string Display { get; set; }
 
         /// <summary>
-        /// 特殊件折扣
+        /// 特殊件折扣 
         /// </summary>
         public decimal SpecialDiscount { get; set; }
 

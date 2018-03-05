@@ -134,7 +134,7 @@ namespace Services
             var profile = DbContext.DiscountSet.Where(v => v.Type == DisCountType.利润率).FirstOrDefault();
             var costByHour = DbContext.DiscountSet.Where(v => v.Type == DisCountType.每小时成本).FirstOrDefault();
 
-            var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price, costByHour.Discount, hour.MosInHour, holeCnt, profile.Discount);
+            var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price*material.SpecialDiscount, costByHour.Discount, hour.MosInHour, holeCnt, profile.Discount);
 
             //库存(是否有模具）
             var storagesCnt = DbContext.MaterialStorage.Where(v =>v.SizeA==model.SizeA&&v.SizeB==model.SizeB).Count();
