@@ -356,7 +356,7 @@ namespace InquiryDemo.Controllers
             var user = GetCurrentUser();
             var result = _iservice.UpdateMaterialFeature(model, user?.UserName);
             if (result.Success)
-                return RedirectToAction("MaterialFeatureList", new { type = result.Data?.Type });
+                return RedirectToAction("MaterialFeatureList", new { type = result.Data?.Type.GetHashCode() });
             ModelState.AddModelError("_error", result.Msg);
 
             return View();

@@ -73,7 +73,7 @@ namespace MyDemo.Controllers
             }
             else
             {
-                _timeEnd = DateTime.Now;
+                _timeEnd = DateTime.Today.AddDays(1).AddSeconds(-1);
                 _timeStart = _timeEnd.AddDays(-30);
                 ViewBag.timeStart = string.Format("{0:yyyy-MM-dd}", _timeStart);
                 ViewBag.timeEnd = string.Format("{0:yyyy-MM-dd}", _timeEnd);

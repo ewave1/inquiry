@@ -50,7 +50,7 @@ namespace Services
             if(Type== MATERIALMODELTYPE.Material1)
             {
                 var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode&& v.Hardness== Hardness && v.Type== MATERIALTYPE.材料物性 ).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
-                hardness.Insert(0, Const.MaterialNormal);
+                //hardness.Insert(0, Const.MaterialNormal);
                 var lst = hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
                 var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
                 if (selItem != null)
@@ -62,7 +62,7 @@ namespace Services
             if (Type == MATERIALMODELTYPE.Material2)
             {
                 var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.表面物性).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
-                hardness.Insert(0, Const.MaterialNormal);
+                //hardness.Insert(0, Const.MaterialNormal);
                 var lst =  hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
                 var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
                 if (selItem != null)

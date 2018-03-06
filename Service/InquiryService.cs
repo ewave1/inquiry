@@ -156,10 +156,10 @@ namespace Services
                 storageType = StorageTypeEnum.无模具;
 
             //起订金额
-            var startAmount =   DbContext.MaterialStartAmount.Where(v => v.StorageType == storageType && v.SizeC <= sizeC && v.SizeC2 > sizeC).FirstOrDefault();
+            var startAmount =   DbContext.MaterialStartAmount.Where(v => v.StorageType == storageType && v.SizeC <= sizeC &&( v.SizeC2 > sizeC||v.SizeC2==null)).FirstOrDefault();
             if(startAmount==null)
             {
-                startAmount = DbContext.MaterialStartAmount.Where(v => v.StorageType ==  StorageTypeEnum.所有产品 && v.SizeC <= sizeC && v.SizeC2 > sizeC).FirstOrDefault();
+                startAmount = DbContext.MaterialStartAmount.Where(v => v.StorageType ==  StorageTypeEnum.所有产品 && v.SizeC <= sizeC &&( v.SizeC2 > sizeC|| v.SizeC2==null)).FirstOrDefault();
             }
 
 
