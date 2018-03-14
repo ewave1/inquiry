@@ -225,14 +225,14 @@
     <Content Include="Content\Template\比重模板.xlsx" />
     <Content Include="Content\Template\生产效率模板.xlsx" />
     <Content Include="Content\Template\原料模板.xlsx" />
-    <Content Include="Content\Template\特殊处理外模板.xlsx" />
-    <Content Include="Content\Template\特殊配方模板.xlsx" />
     <Content Include="Content\Template\颜色模板.xlsx" />
     <Content Include="Content\Template\基础孔数模板.xlsx" />
     <Content Include="Content\Template\模板.xls" />
     <Content Include="Content\Template\库存模板2.xls" />
     <Content Include="Content\Template\起订金额模板.xlsx" />
     <Content Include="Content\Template\模具模板.xls" />
+    <Content Include="Content\Template\材料物性模板.xlsx" />
+    <Content Include="Content\Template\表面物性模板.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
