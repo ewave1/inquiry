@@ -49,47 +49,43 @@ namespace Services
             }
             if(Type== MATERIALMODELTYPE.Material1)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode&& v.Hardness== Hardness && v.Type== MATERIALTYPE.材料物性 ).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
-                //hardness.Insert(0, Const.MaterialNormal);
-                var lst = hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
-                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
-                if (selItem != null)
-                { 
-                    selItem.IsDefault = true;
-                }
+
+                List<NameValueModel> lst = GetMaterialFeatureDetailData(MaterialCode, Hardness, selData, MATERIALTYPE.材料物性);
                 return lst;
             }
             if (Type == MATERIALMODELTYPE.Material2)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.表面物性).Select(v => v.Name).Distinct().OrderBy(v => v).ToList();
-                //hardness.Insert(0, Const.MaterialNormal);
-                var lst =  hardness.Select(v => new NameValueModel { Name = v.ToString(), Value = v.ToString() }).ToList();
-                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
-                if (selItem != null)
-                {
-                    selItem.IsDefault = true;
-                }
+
+                List<NameValueModel> lst = GetMaterialFeatureDetailData(MaterialCode, Hardness, selData, MATERIALTYPE.表面物性);
                 return lst;
             }
             if (Type == MATERIALMODELTYPE.Color)
             {
-                var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == MATERIALTYPE.颜色).Select(v =>new { v.Name, v.IsDefault }).Distinct().OrderBy(v => v.Name).ToList();
-                var lst =  hardness.Select(v => new NameValueModel { Name = v.Name.ToString(),IsDefault = v.IsDefault, Value = v.Name.ToString() }).ToList();
-
-                var oldItem = lst.Where(v => v.IsDefault == true).FirstOrDefault();
-                var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
-                if (selItem != null)
-                {
-                    if (oldItem != null)
-                        oldItem.IsDefault = false;
-                    selItem.IsDefault = true;
-                }
+                List<NameValueModel> lst = GetMaterialFeatureDetailData(MaterialCode, Hardness, selData, MATERIALTYPE.颜色);
                 return lst;
             }
 
             throw new NotImplementedException();
 
         }
+
+        private List<NameValueModel> GetMaterialFeatureDetailData(string MaterialCode, int? Hardness, string selData, MATERIALTYPE type)
+        {
+            var hardness = DbContext.MaterialFeature.Where(v => v.MaterialCode == MaterialCode && v.Hardness == Hardness && v.Type == type).Select(v => new { v.Name, v.IsDefault }).Distinct().OrderBy(v => v.Name).ToList();
+            var lst = hardness.Select(v => new NameValueModel { Name = v.Name.ToString(), IsDefault = v.IsDefault, Value = v.Name.ToString() }).ToList();
+
+            var oldItem = lst.Where(v => v.IsDefault == true).FirstOrDefault();
+            var selItem = lst.Where(v => v.Name == selData).FirstOrDefault();
+            if (selItem != null)
+            {
+                if (oldItem != null)
+                    oldItem.IsDefault = false;
+                selItem.IsDefault = true;
+            }
+
+            return lst;
+        }
+
         public IPagedList<Material> GetMaterialList(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page)
         {
             return DbContext.Material

@@ -75,10 +75,10 @@ namespace Services
             //if (sc == null)
             //    return new RepResult<InquiryLog> { Code = -1, Msg = "请选择编码或者输入尺寸" };
           
-            if (model.SizeA < 1M || model.SizeA > 570M)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "内径必须在1-570范围内！" };
-            if (model.SizeB < 1M || model.SizeB > 10M)
-                return new RepResult<InquiryLog> { Code = -1, Msg = "线径必须在1-10范围内，请重新输入！" };
+            //if (model.SizeA < 1M || model.SizeA > 570M)
+            //    return new RepResult<InquiryLog> { Code = -1, Msg = "内径必须在1-570范围内！" };
+            //if (model.SizeB < 1M || model.SizeB > 10M)
+            //    return new RepResult<InquiryLog> { Code = -1, Msg = "线径必须在1-10范围内，请重新输入！" };
             //SizeA
             //SizeB
             //Gravity
@@ -87,7 +87,7 @@ namespace Services
                 return new RepResult<InquiryLog> { Code = -1, Msg = "比重数据找不到，请先导入比重数据" };
             //userate,badrate
 
-            var materialRate = DbContext.MaterialRate.Where(v => v.SizeB <= model.SizeB && v.SizeB2 > model.SizeB).FirstOrDefault();
+            var materialRate = DbContext.MaterialRate.Where(v => v.SizeB <  model.SizeB && v.SizeB2 >= model.SizeB).FirstOrDefault();
             if (materialRate == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "不良率数据找不到，请先导入不良率数据" };
 
@@ -112,13 +112,13 @@ namespace Services
                 return new RepResult<InquiryLog> { Code = -1, Msg = "颜色数据找不到，请先导入颜色数据" };
 
             //hour
-            var hour = DbContext.MaterialHour.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeB <= model.SizeB && v.SizeB2 > model.SizeB).FirstOrDefault();
+            var hour = DbContext.MaterialHour.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeB <  model.SizeB && v.SizeB2 >= model.SizeB).FirstOrDefault();
 
             if (hour == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "生产效率数据找不到，请先导入生产效率数据" };
             //开模孔数
             var sizeC = model.SizeA + model.SizeB;
-            var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeC <= sizeC && (v.SizeC2>sizeC ||v.SizeC2 ==null) )).FirstOrDefault();
+            var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeC <  sizeC && (v.SizeC2>=sizeC ||v.SizeC2 ==null) )).FirstOrDefault();
 
             //if (hole == null)
             //    return new RepResult<InquiryLog> { Code = -1, Msg = "开模孔数数据找不到，请先导入开模孔数数据" };
@@ -156,7 +156,7 @@ namespace Services
                 storageType = StorageTypeEnum.无模具;
 
             //起订金额
-            var startAmount =   DbContext.MaterialStartAmount.Where(v => v.StorageType == storageType && v.SizeC <= sizeC &&( v.SizeC2 > sizeC||v.SizeC2==null)).FirstOrDefault();
+            var startAmount =   DbContext.MaterialStartAmount.Where(v => v.StorageType == storageType && v.SizeC <  sizeC &&( v.SizeC2 >= sizeC||v.SizeC2==null)).FirstOrDefault();
             if(startAmount==null)
             {
                 startAmount = DbContext.MaterialStartAmount.Where(v => v.StorageType ==  StorageTypeEnum.所有产品 && v.SizeC <= sizeC &&( v.SizeC2 > sizeC|| v.SizeC2==null)).FirstOrDefault();
