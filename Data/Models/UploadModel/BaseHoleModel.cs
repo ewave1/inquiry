@@ -29,7 +29,7 @@ namespace Data.Entities
         /// <summary>
         /// 基础的孔数
         /// </summary>
-        public int HoleCount { get; set; }
+        public decimal HoleCount { get; set; }
 
         public DateTime UpdateTime { get; set; }
 

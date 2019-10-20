@@ -75,6 +75,18 @@ namespace IServices
         RepResult<bool> RemoveAllBaseHole();
 
 
+        IPagedList<StandardSize> GetStandardSizes(DateTime? dateStart, DateTime? dateEnd, int page);
+        RepResult<StandardSize> UploadStandardSize(string User, HttpRequestBase Request);
+        RepResult<bool> DeleteStandardSize(int Id);
+
+        RepResult<StandardSize> UpdateStandardSize(StandardSizeModel material, string User);
+
+        StandardSizeModel GetStandardSize(int? id);
+        RepResult<bool> RemoveAllStandardSize();
+
+
+
+
         IPagedList<MaterialHour> GetMaterialHours(DateTime dateStart, DateTime dateEnd, int? MaterialId, int page);
 
         RepResult<MaterialHour> UploadMaterialHour(string User, HttpRequestBase Request);

@@ -265,8 +265,9 @@ namespace Services
 
         public IPagedList<MaterialFeature> GetMaterialFeatures(DateTime dateStart, DateTime dateEnd, int? MaterialId, MATERIALTYPE type, int page)
         {
+            //&&(v.MaterialId == MaterialId || MaterialId == null)
             return DbContext.MaterialFeature 
-                .Where(v =>  v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd&&(v.MaterialId == MaterialId || MaterialId == null) && v.Type==type)
+                .Where(v =>  v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd && v.Type==type)
                 .OrderBy(v=>v.MaterialCode).ThenBy(v=>v.Hardness)
                 .ThenBy(v=>v.Name) 
                   .ThenByDescending(p => p.UpdateTime).ToPagedList(page, Const.PageSize);
@@ -328,7 +329,14 @@ namespace Services
             var relateItem = JsonConvert.DeserializeObject<MaterialFeatureModel>(item.Json);
 
             var material = DbContext.Material.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness).FirstOrDefault();
+            if (relateItem.IsDefault == true)
+            {
 
+                DbContext.Database.ExecuteSqlCommand(" update MaterialFeatures set IsDefault=0 where MaterialCode=@MaterialCode and Hardness=@Hardness and Type = @Type",
+                    new MySql.Data.MySqlClient.MySqlParameter("@MaterialCode", relateItem.MaterialCode),
+                      new MySql.Data.MySqlClient.MySqlParameter("@Hardness", relateItem.Hardness),
+                    new MySql.Data.MySqlClient.MySqlParameter("@Type", type));
+            }
             var feature = DbContext.MaterialFeature.Where(v => v.MaterialCode == relateItem.MaterialCode && v.Hardness == relateItem.Hardness && v.Type == type && v.Name == relateItem.Name).FirstOrDefault();
             if(feature==null)
             {
@@ -357,6 +365,7 @@ namespace Services
             }
 
             DbContext.SaveChanges();
+        
             item.IsSuccess = SuccessENUM.导入成功;
             item.RelateID = feature.Id;
         }
@@ -394,7 +403,10 @@ namespace Services
 
             if (material.IsDefault)
             {
-                DbContext.Database.ExecuteSqlCommand(" update MaterialFeatures set IsDefault=0 where MaterialCode=@MaterialCode and Type = @Type", new MySql.Data.MySqlClient.MySqlParameter("@MaterialCode", material.MaterialCode), new MySql.Data.MySqlClient.MySqlParameter("@Type", material.Type));
+                DbContext.Database.ExecuteSqlCommand(" update MaterialFeatures set IsDefault=0 where MaterialCode=@MaterialCode and Hardness=@Hardness and Type = @Type", 
+                    new MySql.Data.MySqlClient.MySqlParameter("@MaterialCode", material.MaterialCode),
+                      new MySql.Data.MySqlClient.MySqlParameter("@Hardness", material.Hardness),
+                    new MySql.Data.MySqlClient.MySqlParameter("@Type", material.Type));
             }
             var original = DbContext.MaterialFeature.Where(v => v.Id == material.Id).FirstOrDefault();
             if (original == null)
@@ -736,6 +748,145 @@ namespace Services
             { 
                 HoleCount = model.HoleCount,
                 SizeC = model.SizeC,
+                UpdateTime = model.UpdateTime,
+                Id = model.Id,
+                UpdateUser = model.UpdateUser
+            };
+        }
+        #endregion
+
+
+        #region 标准件
+
+        public IPagedList<StandardSize> GetStandardSizes(DateTime? dateStart, DateTime? dateEnd, int page)
+        {
+            if (page == -1)
+                return DbContext.StandardSize.OrderBy(v => v.SizeA).ToPagedList(1, 9999);
+            return DbContext.StandardSize
+                .Where(v => v.UpdateTime >= dateStart && v.UpdateTime <= dateEnd)
+                  .OrderByDescending(p => p.SizeA).ToPagedList(page, Const.PageSize);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
+        /// <param name="Request"></param>
+        /// <returns></returns>
+        public RepResult<StandardSize> UploadStandardSize(string User, HttpRequestBase Request)
+        {
+
+            UploadService service = new UploadService();
+            var result = service.UploadFile(User, Request, FILETYPE.标准件);
+            if (!result.Success)//导入失败
+                return new RepResult<StandardSize> { Msg = result.Msg, Code = result.Code };
+            var file = result.Data;
+
+
+            //将数据保存到数据库
+            var importItem = new PT_ImportHistory
+            {
+                User = User,
+                ImportTime = DateTime.Now,
+                ImportType = FILETYPE.标准件,
+                ImportFile = file.LocalPath,
+                ImportFileName = file.FileName,
+
+            };
+            DbContext.PT_ImportHistory.Add(importItem);
+            DbContext.SaveChanges();
+            var details = ImportHelper.AddToImport(typeof(StandardSizeModel), importItem.Id, file.LocalPath);
+            DbContext.PT_ImportHistoryDetail.AddRange(details);
+
+            foreach (var item in details)
+            {
+                //保存结果
+                SaveImportStandardResult(item, importItem, User);
+            }
+            DbContext.SaveChanges();
+            return new RepResult<StandardSize> { Code = 0 };
+        }
+
+        /// <summary>
+        /// 保存单笔结果 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="importItem"></param>
+        /// <param name="User"></param>
+        public void SaveImportStandardResult(PT_ImportHistoryDetail item, PT_ImportHistory importItem, string User)
+        {
+            var relateItem = JsonConvert.DeserializeObject<StandardSizeModel>(item.Json);
+            var hole = DbContext.StandardSize.Where(v => v.SizeA == relateItem.SizeA && v.SizeB==relateItem.SizeB&&v.Code==relateItem.Code).FirstOrDefault();
+            if (hole == null)
+            {
+
+                hole = new StandardSize
+                {
+                    UpdateTime = DateTime.Now,
+                    UpdateUser = User,
+                    SizeB = relateItem.SizeB,
+                    SizeA = relateItem.SizeA,
+                    Code = relateItem.Code
+                };
+
+                DbContext.StandardSize.Add(hole);
+            }
+            else
+            { 
+                hole.UpdateTime = DateTime.Now;
+                hole.UpdateUser = User;
+
+            }
+
+
+            DbContext.SaveChanges();
+            item.IsSuccess = SuccessENUM.导入成功;
+            item.RelateID = hole.Id;
+        }
+
+        public RepResult<bool> DeleteStandardSize(int Id)
+        {
+            var model = DbContext.StandardSize.Find(Id);
+            if (model != null)
+            { 
+                DbContext.Entry(model).State = EntityState.Deleted;
+                return new RepResult<bool> { Data = DbContext.SaveChanges() > 0 };
+            }
+            return new RepResult<bool> { Code = -1, Msg = "找不到数据" };
+        }
+
+        public RepResult<StandardSize> UpdateStandardSize(StandardSizeModel Base, string User)
+        {
+            var original = DbContext.StandardSize.Where(v => v.Id == Base.Id).FirstOrDefault();
+            if (original == null)
+                //检查是否已经存在
+                return new RepResult<StandardSize> { Data = original };
+            if (original == null)
+            {
+                original = new StandardSize
+                {
+                };
+                DbContext.StandardSize.Add(original);
+            }
+            original.SizeA = Base.SizeA;
+            original.SizeB = Base.SizeB;
+            original.Code = Base.Code;
+            original.UpdateTime = DateTime.Now;
+            original.UpdateUser = User;
+            DbContext.SaveChanges();
+            return new RepResult<StandardSize> { Data = original };
+        }
+
+        public StandardSizeModel GetStandardSize(int? id)
+        {
+            var model = DbContext.StandardSize.Find(id);
+            if (model == null)
+                return new StandardSizeModel { };
+            return new StandardSizeModel
+            {
+                Code = model.Code,
+                SizeA = model.SizeA,
+                SizeB = model.SizeB,
                 UpdateTime = model.UpdateTime,
                 Id = model.Id,
                 UpdateUser = model.UpdateUser
@@ -1551,6 +1702,13 @@ namespace Services
             return new RepResult<bool> { Data = true };
         }
 
+
+        public RepResult<bool> RemoveAllStandardSize()
+        {
+            DbContext.Database.ExecuteSqlCommand("delete from StandardSizes ");
+
+            return new RepResult<bool> { Data = true };
+        }
         public RepResult<bool> RemoveAllMatertailHour()
         {
             DbContext.Database.ExecuteSqlCommand("delete from materialhours ");

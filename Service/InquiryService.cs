@@ -59,10 +59,13 @@ namespace Services
 
         public RepResult<InquiryLog> Create(InquiryModelRequest model, string User)
         {
+            string RetInfo = "";
             var user = DbContext.ManageUser.Find(User);
             if (user == null)
                 return new RepResult<InquiryLog> { Code = -2, Msg = "请重新登陆" };
+            
             if (string.IsNullOrEmpty( model.MaterialCode ))
+
                 return new RepResult<InquiryLog> { Code = -1, Msg = "材料不能为空" };
 
             var material = DbContext.Material.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness).FirstOrDefault();
@@ -91,6 +94,9 @@ namespace Services
             if (materialRate == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "不良率数据找不到，请先导入不良率数据" };
 
+            //标准件
+            var isStandard = DbContext.StandardSize.Where(v => v.SizeA == model.SizeA && v.SizeB == model.SizeB && v.Code == model.Code).Count();
+
             //特殊材料
             MaterialFeature material1;
             if (model.Material1 == "Normal")
@@ -117,7 +123,7 @@ namespace Services
             if (hour == null)
                 return new RepResult<InquiryLog> { Code = -1, Msg = "生产效率数据找不到，请先导入生产效率数据" };
             //开模孔数
-            var sizeC = model.SizeA + model.SizeB;
+            var sizeC = model.SizeA + model.SizeB*2;
             var hole = DbContext.MaterialHole.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && (v.SizeC <  sizeC && (v.SizeC2>=sizeC ||v.SizeC2 ==null) )).FirstOrDefault();
 
             //if (hole == null)
@@ -135,7 +141,11 @@ namespace Services
             var costByHour = DbContext.DiscountSet.Where(v => v.Type == DisCountType.每小时成本).FirstOrDefault();
 
             var price = CalUnitPrice(model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount, material.Price*material.SpecialDiscount, costByHour.Discount, hour.MosInHour, holeCnt, profile.Discount);
-
+            RetInfo = string.Format(@"(((( 内径：{0} + 线径：{1}) * 3.14159 * (3.14159 * 线径：{1}/ 2 * 线径：{1} / 2)) / 1000 * 
+                比重：{2} * 利用率：{3}*不良率：{4}  / 1000) * 表面物性：{5} * 颜色：{7} * 原料价格：{8} + (效率：{9} / 每小时模数：{10} / 孔数{11}) * 特殊物性：{6}) * 利润率：{12}"
+                , model.SizeA, model.SizeB, gravity.Gravity, materialRate.UseRate, materialRate.BadRate, material1.Discount, material2.Discount, color.Discount,
+                material.Price * material.SpecialDiscount, costByHour.Discount, hour.MosInHour, holeCnt, profile.Discount);
+            RetInfo += string.Format("=公式单价：{0}",price);
             //库存(是否有模具）
             var storagesCnt = DbContext.MaterialStorage.Where(v =>v.SizeA==model.SizeA&&v.SizeB==model.SizeB).Count();
             var storage = DbContext.Storage.Where(v => v.MaterialCode == model.MaterialCode && v.Hardness == model.Hardness && v.SizeA == model.SizeA && v.SizeB == model.SizeB&& v.Material1==model.Material1&& v.Material2==model.Material2&& v.Color == model.Color).ToList().Sum(v=>v.Number);
@@ -143,20 +153,33 @@ namespace Services
             var factory = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.FACTORY&&v.Name== model.Factory).FirstOrDefault();
             var customerLevel = DbContext.DiscountSet.Where(v => v.Type == DisCountType.客户级别 && v.Name == model.CustomerLevel).FirstOrDefault();
             //折扣
+            if (user.Discount == 0)
+                user.Discount = 1;
             var discount = factory.Discount * user.Discount* (customerLevel==null ?1:customerLevel.Discount);
              
             //判断是否特殊件
             var special = DbContext.DiscountSet.Where(v=>v.Type== DisCountType.Other&&v.Name== "特殊件").FirstOrDefault();
 
             //库存的折扣
-            var storageType = StorageTypeEnum.无库存;//有模具无库存
+            var storageType = StorageTypeEnum.标准件无库存;//有模具无库存
             if (storage > 0)
-                storageType = StorageTypeEnum.有库存;
+                storageType = StorageTypeEnum.标准件有库存;
             else if (storagesCnt == 0)
-                storageType = StorageTypeEnum.无模具;
-
+                storageType = StorageTypeEnum.标准件无模具;
+            if (isStandard == 0)
+            {
+                storageType = StorageTypeEnum.非标件无库存;
+                if (storage > 0)
+                    storageType = StorageTypeEnum.非标件有库存;
+                else if (storagesCnt == 0)
+                    storageType = StorageTypeEnum.非标件无模具;
+            }
+            var startAmounts = DbContext.MaterialStartAmount.Where(v => ( v.StorageType == StorageTypeEnum.所有产品) && v.SizeC < sizeC && (v.SizeC2 >= sizeC ))
+.ToList();
+            Console.Write(startAmounts);
             //起订金额
-            var startAmount =   DbContext.MaterialStartAmount.Where(v => v.StorageType == storageType && v.SizeC <  sizeC &&( v.SizeC2 >= sizeC||v.SizeC2==null)).FirstOrDefault();
+            var startAmount =   DbContext.MaterialStartAmount.Where(v => (v.StorageType == storageType || v.StorageType == StorageTypeEnum.所有产品) && v.SizeC <  sizeC &&( v.SizeC2 >= sizeC||v.SizeC2==null))
+                .OrderByDescending(v=>v.StartAmount).FirstOrDefault();
             if(startAmount==null)
             {
                 startAmount = DbContext.MaterialStartAmount.Where(v => v.StorageType ==  StorageTypeEnum.所有产品 && v.SizeC <= sizeC &&( v.SizeC2 > sizeC|| v.SizeC2==null)).FirstOrDefault();
@@ -166,13 +189,19 @@ namespace Services
             var storageDiscount = DbContext.DiscountSet.Where(v => v.Type == DisCountType.库存级别&&v.Name==storageType.ToString()).FirstOrDefault();
             if(storageDiscount==null ) 
                 return new RepResult<InquiryLog> { Code = -1, Msg = "库存折扣数据找不到，请联系维护人员" };
+            if (discount == 0)
+                discount = 1;
+            if (storageDiscount.Discount == 0)
+                storageDiscount.Discount = 1;
             discount = discount * storageDiscount.Discount;
-
+          
 
             discount = Math.Round(discount, 2);
 
             price = price * discount;
+
             price = Math.Round(price, 3);
+            RetInfo += string.Format("<br/> 计算折扣：{0}，单价计算为：{1}" ,discount, price);
             //最低单价
             var minPrice = DbContext.DiscountSet.Where(v => v.Type == DisCountType.Other && v.Name == "最低单价").FirstOrDefault();
             if(minPrice==null)
@@ -185,14 +214,21 @@ namespace Services
                // DbContext.DiscountSet.Add(minPrice); 
             }
             if (price < minPrice.Discount)
+            {
+
                 price = minPrice.Discount;
+                RetInfo += "<br/> 最低单价："+price;
+            }
             var totalprice = Math.Round(price  * model.Number, 2);
             var startAmountText = "";
             if (startAmount!=null && totalprice < startAmount.StartAmount)
             {
                 startAmountText = "，起订金额：" + startAmount.StartAmount;
                 totalprice = startAmount.StartAmount;
+                if(model.Number>0)
                 price = Math.Round(totalprice / model.Number,3);
+
+                RetInfo += string.Format("<br/> 因为起订金额：{0},单价计算为：{1}", startAmount.StartAmount, price);
             }
             var log = new InquiryLog
             {
@@ -220,19 +256,28 @@ namespace Services
 
             DbContext.SaveChanges();
             var storageText = "";
-            if (storagesCnt == 0)
-                storageText = "无模具";
+            if (storagesCnt == 0&& storage==0)
+                storageText = storageType.ToString();
             else 
                 storageText = storage.ToString();
 
             var info = string.Format("单价：{0}，总价：{1}，库存：{2} {3}",   price, totalprice, storageText,startAmountText);
-
-            return new RepResult<InquiryLog> { Data = log, Msg = info };
+            if (user.IsAdmin)
+            {
+                info = info + "<br/>计算公式：<br/>" + RetInfo;
+               
+            }
+            
+            return new RepResult<InquiryLog> { Data = log, Msg = info  };
         }
 
 
         private static decimal CalUnitPrice(decimal SizeA,decimal SizeB,decimal Gravity,decimal UseRate,decimal BadRate,decimal Material1,decimal Material2,decimal Color,decimal MaterilaPrice,decimal CostByHour,int MosInHour,int HoleCount,decimal Rate)
         {
+            if (MosInHour == 0)
+                throw new Exception("模数为0");
+            if (HoleCount == 0)
+                throw new Exception("孔数为0");
             return   ((((SizeA + SizeB) * 3.14159M * (3.14159M * SizeB / 2 * SizeB / 2)) / 1000 * Gravity * UseRate * BadRate / 1000) * Material1 * Color * MaterilaPrice + (CostByHour / MosInHour / HoleCount) * Material2) * Rate; 
         }
         public bool Delete(int id)

@@ -15,7 +15,7 @@
     <div class="col-md-9 ">
 
         <ol class="breadcrumb">
-            <li><a href="/Material">材料管理</a></li>
+            <li><a href="/Material">参数设定</a></li>
             <li class="active">@ViewBag.Title</li>
         </ol>
 
@@ -63,7 +63,7 @@
                         @ViewBag.ActionTitle
                     </a>
                 </div>
-
+                <input hidden name="type" value="@ViewBag.Type"/>
                 <div class="pull-left col-xs-12 col-sm-3 col-lg-2">
                     <button type="button"  class="btn btn-danger" id="delAll">一键清空</button>
                 </div>

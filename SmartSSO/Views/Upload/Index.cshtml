@@ -84,29 +84,30 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@(item.Id)</td>
-                        <td>@item.FileType </td>
-                        <td>@item.FileName </td>
+                @*@foreach (var item in Model)*@
+                @for (int i = 0; i < Model.Count; i++)
+    {
+                <tr>
+                    <td>@((ViewBag.Page) * 10 + i + 1)</td>
+                    <td>@Model[i].FileType </td>
+                    <td>@Model[i].FileName </td>
 
-                        <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
-                        <td>@item.UpdateUser </td>
-                        <td>
-                            <div class="btn-group"> 
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                    <span class="sr-only"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="@item.FileUrl">下载</a></li>
-                                    <li><a href="/Upload/delete/@item.Id">删除</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                }
+                    <td>@Model[i].UpdateTime.ToString("yyyy-MM-dd HH:mm:ss") </td>
+                    <td>@Model[i].UpdateUser </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@Model[i].FileUrl">下载</a></li>
+                                <li><a href="/Upload/delete/@Model[i].Id">删除</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+}
             </tbody>
         </table>
 

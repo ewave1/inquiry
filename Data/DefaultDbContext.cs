@@ -87,6 +87,10 @@ namespace SmartSSO.Entities
         /// </summary>
         public DbSet<BaseHole> BaseHole { get; set; }
         /// <summary>
+        /// 标准件
+        /// </summary>
+        public DbSet<StandardSize> StandardSize { get; set; }
+        /// <summary>
         /// 时数
         /// </summary>
         public DbSet<MaterialHour> MaterialHour { get; set; }

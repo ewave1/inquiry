@@ -41,6 +41,7 @@ namespace SmartSSO.Controllers
             var timeRange = SetTimeRange(timeStart, timeEnd);
 
             ViewBag.CreateUser = CreateUser;
+            ViewBag.Page = page-1;
             var result = _inquiryService.GetAll(user, CreateUser, timeRange.TimeStart, timeRange.TimeEnd, page);
             if (result == null)
                 return    RedirectToAction("Login", "Home");
@@ -174,10 +175,18 @@ namespace SmartSSO.Controllers
         {
 
             var user = Request.Cookies[UserAuthorizationAttribute.CookieUserName]?.Value;
+            try
+            {
 
-            var result = _inquiryService.Create(model, user);
+                var result = _inquiryService.Create(model, user);
 
-            return Json(result);
+                return Json(result);
+            }
+            catch(Exception ex)
+            {
+                Console.Write(ex);
+                return Json(new RepResult {  Code = -1,Msg = ex.Message });
+                }
         }
 
         public ActionResult Delete(int id = 0)

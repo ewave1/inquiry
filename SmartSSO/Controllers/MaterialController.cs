@@ -216,6 +216,89 @@ namespace InquiryDemo.Controllers
 
         #endregion
 
+
+        #region 标准件
+
+
+        // GET: Base
+        public ActionResult StandardSizeList(string timeStart, string timeEnd, int? BaseId, int page = 1)
+        {
+            var timeRange = SetTimeRange(timeStart, timeEnd);
+            var result = _iservice.GetStandardSizes(timeRange.TimeStart, timeRange.TimeEnd, page);
+            if (result == null)
+                return RedirectToAction("Login", "Home");
+            return View(result);
+        }
+
+        public ActionResult LoadStandardSizes()
+        {
+            var lst = _iservice.GetStandardSizes(null, null, -1);
+
+            return Json(lst);
+        }
+
+        public ActionResult UpdateStandardSize(int? id)
+        {
+            var model = _iservice.GetStandardSize(id);
+            var action = "维护";
+            if (id == 0)
+                action = "新增";
+            ViewBag.Action = action;
+            ViewBag.CommitName = model != null && model.Id > 0 ? "修改" : "创建";
+
+            ViewBag.model = JsonConvert.SerializeObject(model);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public ActionResult UpdateStandardSize(StandardSizeModel model)
+        {
+            var user = GetCurrentUser();
+            var result = _iservice.UpdateStandardSize(model, user?.UserName);
+            if (result.Success)
+                return RedirectToAction("StandardSizeList");
+            ModelState.AddModelError("_error", result.Msg);
+
+            return View();
+        }
+
+
+        public ActionResult DeleteStandardSize(int id)
+        {
+            var result = _iservice.DeleteStandardSize(id);
+
+            return Json(result);
+
+        }
+
+        public ActionResult DeleteStandardSizeAll()
+        {
+            var result = _iservice.RemoveAllStandardSize();
+
+
+            return Json(result);
+
+        }
+
+        /// <summary>
+        /// 上传孔数的数据
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UploadStandardSize()
+        {
+            var user = GetCurrentUser();
+            var uploadFile = _iservice.UploadStandardSize(user?.UserName, Request);
+
+            return Json(uploadFile);
+
+        }
+
+
+        #endregion
+
         #region 孔数
 
 

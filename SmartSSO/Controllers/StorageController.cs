@@ -38,6 +38,7 @@ namespace InquiryDemo.Controllers
 
             var timeRange = SetTimeRange(timeStart, timeEnd);
             ViewBag.CreateUser = CreateUser;
+            ViewBag.Page = page;
             var result = _iservice.GetAll(CreateUser, timeRange.TimeStart, timeRange.TimeEnd,  page);
             if (result == null)
                 return RedirectToAction("Login", "Home");

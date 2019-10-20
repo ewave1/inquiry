@@ -161,6 +161,9 @@
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="Z.EntityFramework.Extensions, Version=3.15.15.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.3.15.15\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.Identity.Core">
@@ -233,6 +236,8 @@
     <Content Include="Content\Template\模具模板.xls" />
     <Content Include="Content\Template\材料物性模板.xlsx" />
     <Content Include="Content\Template\表面物性模板.xlsx" />
+    <Content Include="Content\Template\成品库存表.xls" />
+    <Content Include="Content\Template\标准件模板.xls" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -312,6 +317,8 @@
     <Content Include="Views\Material\UpdateMaterialStartAmount.cshtml" />
     <Content Include="Views\Material\UpdateMaterialStorage.cshtml" />
     <Content Include="Views\Material\MaterialStorageList.cshtml" />
+    <Content Include="Views\Material\StandardSizeList.cshtml" />
+    <Content Include="Views\Material\UpdateStandardSize.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -57,6 +57,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Z.EntityFramework.Extensions, Version=3.15.15.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.3.15.15\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheContext.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="Entities\DiscountSet.cs" />
     <Compile Include="Entities\InquiryLog.cs" />
     <Compile Include="Entities\ManageUser.cs" />
+    <Compile Include="Entities\Materials\StandardSize.cs" />
     <Compile Include="Entities\Materials\BaseHole.cs" />
     <Compile Include="Entities\Materials\MaterialRate.cs" />
     <Compile Include="Entities\Materials\MaterialHour.cs" />
@@ -168,6 +172,18 @@
     <Compile Include="Migrations\201803030541167_InitralCreate19.Designer.cs">
       <DependentUpon>201803030541167_InitralCreate19.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803261435312_InitralCreate20.cs" />
+    <Compile Include="Migrations\201803261435312_InitralCreate20.Designer.cs">
+      <DependentUpon>201803261435312_InitralCreate20.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808131454372_InitralCreate21.cs" />
+    <Compile Include="Migrations\201808131454372_InitralCreate21.Designer.cs">
+      <DependentUpon>201808131454372_InitralCreate21.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910200543433_InitralCreate22.cs" />
+    <Compile Include="Migrations\201910200543433_InitralCreate22.Designer.cs">
+      <DependentUpon>201910200543433_InitralCreate22.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\DiscountModel.cs" />
@@ -188,6 +204,7 @@
     <Compile Include="Models\UploadModel\MaterialRateModel.cs" />
     <Compile Include="Models\UploadModel\MaterialStartAmountModel.cs" />
     <Compile Include="Models\UploadModel\MaterialStorage.cs" />
+    <Compile Include="Models\UploadModel\StandardSizeModel.cs" />
     <Compile Include="Models\UploadModel\StorageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepResult.cs" />
@@ -260,6 +277,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803030541167_InitralCreate19.resx">
       <DependentUpon>201803030541167_InitralCreate19.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803261435312_InitralCreate20.resx">
+      <DependentUpon>201803261435312_InitralCreate20.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131454372_InitralCreate21.resx">
+      <DependentUpon>201808131454372_InitralCreate21.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910200543433_InitralCreate22.resx">
+      <DependentUpon>201910200543433_InitralCreate22.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

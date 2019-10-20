@@ -28,26 +28,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
-            {
+                @*@foreach (var item in Model)*@
+                @for (int i = 0; i < Model.Count; i++)
+    {
                 <tr>
-                    <td>@(item.Id)</td> 
-                    <td>@item.FileName </td>
-                     
+                    <td>@(i+1)</td>
+                    <td>@Model[i].FileName </td>
+
                     <td>
-                        <a href="@item.Url">下载</a>
+                        <a href="@Model[i].Url">下载</a>
                         @*<div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-                <span class="sr-only"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li></li>
-            </ul>
-        </div>*@
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li></li>
+                </ul>
+            </div>*@
                     </td>
                 </tr>
-        }
+}
             </tbody>
         </table>
     </div>

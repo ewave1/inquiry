@@ -43,6 +43,7 @@ namespace InquiryDemo.Controllers
 
             var timeRange = SetTimeRange(timeStart, timeEnd);
             ViewBag.CreateUser = CreateUser;
+            ViewBag.Page = page - 1;
             var result = _iservice.GetAll( CreateUser, timeRange.TimeStart, timeRange.TimeEnd,fileType, page);
             if (result == null)
                 return RedirectToAction("Login", "Home");
@@ -92,6 +93,7 @@ namespace InquiryDemo.Controllers
             lst.Add(new TemplateModel { Id = id++, FileName = "原料模板", Url = "/Content/Template/原料模板.xlsx" });
             lst.Add(new TemplateModel { Id = id++, FileName = "起订金额模板", Url = "/Content/Template/起订金额模板.xlsx" });
             lst.Add(new TemplateModel { Id = id++, FileName = "模具模板", Url = "/Content/Template/模具模板.xls" });
+            lst.Add(new TemplateModel { Id = id++, FileName = "标准件模板", Url = "/Content/Template/O型圈标准尺寸列表.xls" });
             return View(lst);
         }
     }

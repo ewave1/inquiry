@@ -13,6 +13,10 @@ namespace WY.SSO
     {
         protected void Application_Start()
         {
+            string licenseName = "63;100-EWAVE";//... PRO license name
+            string licenseKey = "930B1712911195483C7AD94DEFC9E6E5";//... PRO license key
+            Z.EntityFramework.Extensions.LicenseManager.AddLicense(licenseName, licenseKey);
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

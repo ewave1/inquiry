@@ -1,0 +1,62 @@
+﻿@model Data.Models.StandardSizeModel
+
+@{
+    ViewBag.Title = ViewBag.Action + "标准件";
+}
+
+<div class="row">
+
+    <div class="col-md-3">
+
+        @Html.Partial("Shared/_QuickMenu")
+
+    </div>
+    <div class="col-md-9 ">
+
+        <ol class="breadcrumb">
+            <li><a href="/Base">参数设定</a></li>
+            <li class="active">@ViewBag.Title</li>
+        </ol>
+
+        <div class="container">
+
+
+            @using (Html.BeginForm("UpdateStandardSize", "Material", new { bag = Json.Encode(ViewBag) }, FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SizeA, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.SizeA, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.SizeB, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.SizeB, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Code, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Code, new { @class = "form-control", style = "width: 280px" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ValidationSummary(false)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">@(ViewBag.CommitName)</button>
+                <a href="/Material/StandardSizeList" class="btn btn-default">取消</a>
+            </div>
+        </div>
+
+}
+        </div>
+    </div>
+</div>
